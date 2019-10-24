@@ -3,7 +3,12 @@ import NavBar from '@components/navbar'
 
 const createHistory = require("history").createBrowserHistory
 
-const history = createHistory();
+declare const BASENAME: string;
+
+const history = createHistory({
+    basename: `/${BASENAME}`
+    
+});
 export default history;
 export const withNavBar = (WrappedCompnented) => (props) => {
     const {goBack} = WrappedCompnented;
