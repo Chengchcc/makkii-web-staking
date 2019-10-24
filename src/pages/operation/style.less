@@ -1,0 +1,111 @@
+.operation-container {
+    height: 100%;
+    width: 100%;
+    background-color: #fff;
+}
+.operation-pool-basic {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    img {
+        height: 80px;
+        width:80px;
+        margin: 20px;
+        border-radius: 5px;
+    }
+    ul {
+        margin: 0px;
+        padding: 0px;
+        li {
+            list-style-type: none;
+            margin: 5px 0;
+            a {
+                text-decoration: none;
+            }
+        }
+        li:before {
+           content:  attr(data-label);
+        }
+    }
+}
+.operation-pool-detail {
+    margin: 20px auto;
+    display: grid;
+    padding: 0 5%;
+    grid-template-columns: repeat(3, 33.3%);
+    .operation-pool-detail-item {
+        .operation-pool-detail-item-value {
+            margin: 5px auto;
+            font-size: 20px;
+            font-weight: 200;
+            text-align: center;
+        }
+        .operation-pool-detail-item-title {
+            margin: 5px auto;
+            font-size: 10px;
+            font-weight: 50;
+            text-align: center;
+        }
+    }
+}
+
+.operation-account {
+    display: grid;
+    grid-template-columns: repeat(2, 50%);
+    .operation-account-info {
+        &:first-child {
+            border-right: 1px solid #ddd;
+        }
+        border-top: 1px solid #ddd;
+        padding: 10px;
+        .operation-account-info-value {
+            margin: 5px auto;
+            font-size: 20px;
+            font-weight: 200;
+            text-align: center;
+        }
+        .operation-account-info-title {
+            margin: 5px auto;
+            font-size: 10px;
+            font-weight: 50;
+            text-align: center;
+        }
+    }
+    .operation-button {
+        padding:10px;
+        &:last-child {
+            border-left: 1px solid #ddd;
+        }
+    }
+    
+}
+
+
+.operation-form-item {
+    display: grid;
+    padding: 20px 10px;
+    grid-template-columns: 40% 60%;
+    align-items: center;
+    .operation-form-label {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+    }
+    .operation-form-value {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: flex-start;
+        input {
+            width: 100px;
+        }
+        a {
+            color: #009AFB;
+        }
+    }
+}
+
+.operation-form-pool {
+    padding: 10px 0px;
+}

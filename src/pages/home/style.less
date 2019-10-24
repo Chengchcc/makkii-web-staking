@@ -1,0 +1,60 @@
+@import '../theme.less';
+
+.flex-container {
+    height: 100%;
+    width: 100%;
+    margin: 0 0;
+}
+
+.home-header {
+    background: #fff;
+}
+
+.header-account {
+    padding: 10px 10px;
+    margin: 0px auto;
+    .switch-account-button {
+        display: inline-block;
+        margin-left: 20px;
+        border-radius: 10%;
+        padding: 2px;
+        width: 50px;
+    }
+}
+
+.header-info {
+    display: grid;
+    grid-template-columns: repeat(2, 50%);
+}
+
+.header-info-item {
+    margin: 10px auto;
+
+    .header-info-item-value {
+        margin: 5px auto;
+        font-size: 20px;
+        font-weight: 200;
+        text-align: center;
+    }
+
+    .header-info-item-title {
+        margin: 5px auto;
+        font-size: 10px;
+        font-weight: 50;
+        text-align: center;
+    }
+}
+
+
+.home-button-container {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+
+    .home-button {
+        padding: 10px;
+
+        &:first-child {
+            border-right: 1px solid #ddd;
+        }
+    }
+}
