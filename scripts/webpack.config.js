@@ -1,8 +1,8 @@
 /* eslint-disable import/no-extraneous-dependencies */
 
 const HtmlPlugin = require('html-webpack-plugin');
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const webpack = require('webpack');
 const path = require('path');
 
@@ -20,7 +20,8 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, '../dist'),
-    filename: '[name].js',
+    filename: '[name].[hash:8].js',
+    chunkFilename: '[name]-[id].[hash:8].js',
     publicPath,
   },
   // Enable sourcemaps for debugging webpack's output.
@@ -45,11 +46,18 @@ module.exports = {
     new HtmlPlugin({
       title: 'Aion staking',
       filename: 'index.html',
-      template
+      template,
+      inject: true, // true->'head' || false->'body'
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeAttributeQuotes: true
+      },
+      chunksSortMode: 'dependency'
     }),
-    new ExtractTextPlugin({
-      filename: "[name].[contenthash].css",
-      disable: isDev,
+    new MiniCssExtractPlugin({
+      filename: '[name].[hash:8].css',
+      chunkFilename: '[name]-[id].[hash:8].css',
     }),
     new webpack.DefinePlugin({
       BASENAME: JSON.stringify(RELEVANT_PATH),
@@ -61,7 +69,7 @@ module.exports = {
       { test: /\.(js|jsx|ts|tsx)$/, exclude: /node_modules/, use: ['babel-loader'] },
       {
         test: [/\.less$/, /\.css$/], use: [
-          require.resolve('style-loader'),
+          !isDev? MiniCssExtractPlugin.loader:require.resolve('style-loader'),
           {
             loader: require.resolve('css-loader'),
             options: {
@@ -94,6 +102,14 @@ module.exports = {
         ],
       },
     ]
+  },
+  optimization: {
+    runtimeChunk: {
+      name: "manifest"
+    },
+    splitChunks: {
+      chunks: 'all'
+    }
   },
   mode, // 'production' or 'development' webpack mode
   devServer: {

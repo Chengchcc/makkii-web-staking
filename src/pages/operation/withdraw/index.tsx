@@ -6,6 +6,7 @@ import { formatAddress } from '@utils/index';
 import { gas_withdraw, gasPrice, AIONDECIMAL } from '@utils/constants.json';
 import BigNumber from 'bignumber.js';
 import { CommonButton } from '@components/button';
+import { call_withdraw } from '@utils/transaction';
 import FormItem from '../operation_form_item';
 import { commonGoback } from '../util';
 
@@ -41,6 +42,7 @@ const withdraw = props => {
     const handel_withdraw = (e: MouseEvent) => {
         e.preventDefault();
         // TODO handel withdraw
+        call_withdraw(operation.pool, amount)
     }
     return (
         <div className='operation-container'>

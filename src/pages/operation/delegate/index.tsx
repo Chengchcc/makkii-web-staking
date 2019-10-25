@@ -6,6 +6,7 @@ import { formatAddress } from '@utils/index';
 import {gas_delegate, gasPrice, AIONDECIMAL} from '@utils/constants.json';
 import BigNumber from 'bignumber.js';
 import { CommonButton } from '@components/button';
+import {call_delegate} from '@utils/transaction';
 import FormItem from '../operation_form_item';
 import { commonGoback } from '../util';
 
@@ -40,6 +41,7 @@ const delegate = props => {
     const { address, balance } = account;
     const handel_delegate = (e: MouseEvent)=>{
         e.preventDefault();
+        call_delegate(operation.pool, amount);
         // TODO handel delegate
     }
     return (

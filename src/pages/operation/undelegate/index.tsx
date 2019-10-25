@@ -6,6 +6,7 @@ import { formatAddress } from '@utils/index';
 import {gas_undelegate, gasPrice, AIONDECIMAL, period_block} from '@utils/constants.json';
 import BigNumber from 'bignumber.js';
 import { CommonButton } from '@components/button';
+import { call_undelegate } from '@utils/transaction';
 import FormItem from '../operation_form_item';
 import { commonGoback } from '../util';
 
@@ -42,6 +43,7 @@ const undelegate = props => {
     const handel_undelegate = (e: MouseEvent)=>{
         e.preventDefault();
         // TODO handel undelegate
+        call_undelegate(operation.pool, amount, 1)
     }
     return (
         <div className='operation-container'>
