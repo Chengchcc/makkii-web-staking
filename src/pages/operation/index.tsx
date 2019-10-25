@@ -162,19 +162,20 @@ const Pageoperation = props => {
         }));
         history.push('/withdraw')
     }
+    React.useEffect(()=>{
+        if (!operation.pool) {
+            history.replace('/poolList')
+        }
+        if (operationType.delegate === operation.type) {
+            history.replace('/delegate')
+        } else if (operationType.undelegate === operation.type) {
+            history.replace('/undelegate')
+        } else if (operationType.withdraw === operation.type) {
+            history.replace('/withdraw')
+        }
+    },[operation])
 
 
-
-    if (!operation.pool) {
-        history.replace('/poolList')
-    }
-    if (operationType.delegate === operation.type) {
-        history.replace('/delegate')
-    } else if (operationType.undelegate === operation.type) {
-        history.replace('/undelegate')
-    } else if (operationType.withdraw === operation.type) {
-        history.replace('/withdraw')
-    }
     const accountLabel = () => {
         if (!account) return null;
         return (
@@ -209,6 +210,7 @@ const Pageoperation = props => {
         </div>
     )
 }
+
 
 export default Pageoperation
 

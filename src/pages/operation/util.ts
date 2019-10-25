@@ -11,7 +11,5 @@ export const commonGoback = ()=>{
             type: operationType.default
         }
     }))
-    setTimeout(()=>{
-        history.go(-1);
-    }, 500);
+    history.go(-1)
 }

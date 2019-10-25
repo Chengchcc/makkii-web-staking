@@ -11,16 +11,19 @@ const history = createHistory({
 });
 export default history;
 export const withNavBar = (WrappedCompnented) => (props) => {
-    const {goBack} = WrappedCompnented;
+    const {goBack,canGoBack} = WrappedCompnented;
     const {history: history_} = window;
-    const canGoBack = history_.length >1;
+    let hasNavbar = history_.length >1;
+    if(canGoBack&&(typeof canGoBack ==='function')){
+        hasNavbar = hasNavbar && canGoBack();
+    }
     return (
         <>
-            <div style={{marginTop: canGoBack?'40px':'0px'}}>
+            <div style={{marginTop: hasNavbar?'40px':'0px'}}>
              <WrappedCompnented {...props} />
             </div>
             {
-                canGoBack ? <NavBar onLeftClick={() => {
+                hasNavbar ? <NavBar onLeftClick={() => {
                     if(goBack){
                         goBack();
                     }else {

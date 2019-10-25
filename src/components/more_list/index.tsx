@@ -38,7 +38,6 @@ const List: React.FC<Ilist<any>> = props => {
     }
 
     React.useEffect(()=>{
-        console.log('effect: ', state)
         if(state.action === STATS.refreshing){
             setState({
                 ...state,

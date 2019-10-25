@@ -6353,6 +6353,10 @@ make-dir@^3.0.0:
   dependencies:
     semver "^6.0.0"
 
+"makkii-webview-bridge@https://github.com/chaion/makkii-webview-bridge.git":
+  version "1.0.0"
+  resolved "https://github.com/chaion/makkii-webview-bridge.git#1ec4f01a6d71f7c86f3ba19464fe37afc5e089b6"
+
 mamacro@^0.0.3:
   version "0.0.3"
   resolved "https://registry.npm.taobao.org/mamacro/download/mamacro-0.0.3.tgz#ad2c9576197c9f1abf308d0787865bd975a3f3e4"
@@ -8262,6 +8266,11 @@ recursive-readdir@2.2.2:
   integrity sha1-mUb7MnThYo3m42svZxSVO0hFCU8=
   dependencies:
     minimatch "3.0.4"
+
+redux-devtools-extension@^2.13.8:
+  version "2.13.8"
+  resolved "https://registry.npm.taobao.org/redux-devtools-extension/download/redux-devtools-extension-2.13.8.tgz#37b982688626e5e4993ff87220c9bbb7cd2d96e1"
+  integrity sha1-N7mCaIYm5eSZP/hyIMm7t80tluE=
 
 redux@^4.0.0, redux@^4.0.4:
   version "4.0.4"

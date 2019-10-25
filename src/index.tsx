@@ -1,9 +1,10 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-nested-ternary */
-
+import 'makkii-webview-bridge';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import store, { createAction } from '@reducers/store';
 import App from './app';
 import './global.less'
 
@@ -33,6 +34,17 @@ if (!Date.prototype.Format) {
       return fmt;
   };
 }
+
+const {makkii} = window;
+if(makkii.isconnect){
+    makkii.getCurrentAccount().then(r=>{
+        store.dispatch(createAction('account/update')({
+            address:r
+        }))
+    })
+}
+
+
 
 ReactDOM.render(
   <App />,

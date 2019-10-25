@@ -3,7 +3,7 @@ import MoreList from '@components/more_list';
 import { PoolItem } from '@components/pool_item';
 import { useSelector, useDispatch } from 'react-redux';
 import { wsSend } from '@utils/websocket';
-import { createAction } from '@reducers/store';
+import store, { createAction } from '@reducers/store';
 
 const mapToState = ({ account }) => {
     return {
@@ -16,7 +16,6 @@ const poolList = props => {
     const {history} = props;
     const { pools,operation } = useSelector(mapToState);
     const dispatch = useDispatch();
-    console.log('pools=', Object.values(pools))
     const onRefresh = () => {
         wsSend({ method: 'pools', params: [] })
     }
@@ -46,5 +45,8 @@ const poolList = props => {
         />
     )
 }
-
+poolList.canGoback = ()=>{
+    const {account} = store.getState();
+    return account!==''
+}
 export default poolList;

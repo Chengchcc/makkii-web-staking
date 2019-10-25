@@ -196,6 +196,8 @@ const home = (props: Ihome) => {
             // wsSend({ method: 'transactions', params: [address] })
             // wsSend({ method: 'pools', params: [] })
             // wsSend({ method: 'undelegations', params: [address] })
+        }else{
+            toPoolList();
         }
     }, [address])
 

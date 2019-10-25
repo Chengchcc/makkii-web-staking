@@ -30,9 +30,11 @@ const withdraw = props => {
     const { account, operation, pools } = useSelector(maptoState);
     const { history } = props;
     const [amount, setAmount] = React.useState('')
-    if (operationType.withdraw !== operation.type) {
-        history.replace('/operation')
-    }
+    React.useEffect(()=>{
+        if (operationType.withdraw !== operation.type) {
+            history.replace('/operation')
+        }
+    },[operation])
     const pool = pools[operation.pool];
     const { meta } = pool;
     const { address, reward } = account;
