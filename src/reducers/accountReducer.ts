@@ -14,16 +14,19 @@ export interface IAccountState {
     undelegationAmount: BigNumber,
     rewards: BigNumber,
     delegations: { [poolAddres: string]: Idelegation }
+    delegationsPagination: {current:number, total: number}
+    undelegationsPagination: {current:number, total: number}
+    historyPagination:{current:number,total:number}
     undelegations: { [poolAddres: string]: Iundelegation }
     pools: { [poolAddres: string]: Ipool }
-    history: { [txHash: string]: Itransaction }
+    history: Array<Itransaction>
     operation: {
         pool: string, 
         type: operationType
     }
 }
 const defaultState2: IAccountState={
-    address: '0xa0c0792c2d2e97d6907b42440ffe64181080cdff145f70c6c2a3c5379a7d744a',
+    address: '',
     liquidBalance: new BigNumber(-1),
     stakedAmount: new BigNumber(-1),
     undelegationAmount: new BigNumber(-1),
@@ -31,7 +34,10 @@ const defaultState2: IAccountState={
     delegations: {},
     undelegations: {},
     pools: {},
-    history:{},
+    history:[],
+    delegationsPagination:{current:0, total:0},
+    undelegationsPagination:{current:0, total:0},
+    historyPagination:{current:0, total:0},
     operation: {
         pool:'',
         type: operationType.default
@@ -43,14 +49,17 @@ const defaultState: IAccountState = {
     stakedAmount: new BigNumber(200),
     undelegationAmount: new BigNumber(300),
     rewards: new BigNumber(400),
+    delegationsPagination:{current:0, total:0},
+    undelegationsPagination:{current:0, total:0},
+    historyPagination:{current:0, total:0},
     delegations: {
         '0xa0c0792c2d2e97d6907b42440ffe64181080cdff145f70c6c2a3c5379a7d744a':{
             stake: new BigNumber(100),
-            reward: new BigNumber(299),
+            rewards: new BigNumber(299),
         },
         '0xa0df2de13945675e009445e8bc6f3ec2f0a54262a6dc78c76c1a58e333322b64':{
             stake: new BigNumber(200),
-            reward: new BigNumber(399),
+            rewards: new BigNumber(399),
         },
     },
     undelegations: {
@@ -93,29 +102,33 @@ const defaultState: IAccountState = {
             performance: new BigNumber(Math.random())
         },
     },
-    history: {
-        '0xe34caf6d4ff9dccf3d7e1cb5324c52b3f74c44ed79055146737909363e104671':{
+    history: [
+        {
+            hash: "0xe34caf6d4ff9dccf3d7e1cb5324c52b3f74c44ed79055146737909363e104671",
             amount: new BigNumber(100),
             timestamp: '16dec7fe694',
             type: 'ADSPoolRegistered',
             pool: '0xa0c0792c2d2e97d6907b42440ffe64181080cdff145f70c6c2a3c5379a7d744a',
         },
-        '0xaff0360c0fbc5aa965c8338ec849a329b3d8c030a1b9ffb834e6fbb16477493c':{
+        {
+            hash: "0xaff0360c0fbc5aa965c8338ec849a329b3d8c030a1b9ffb834e6fbb16477493c",
             amount: new BigNumber(120),
             timestamp: '16dec7fe994',
             type: 'ADSPoolRegistered',
             pool: '0xa0c0792c2d2e97d6907b42440ffe64181080cdff145f70c6c2a3c5379a7d744a',
         },
-    },
+    ],
     operation: {
         pool:'',
         type: operationType.default
     }
 }
 
-const accountReducer = (state: IAccountState = defaultState, action): IAccountState => {
+const accountReducer = (state: IAccountState = defaultState2, action): IAccountState => {
     if (action.type === 'account/update') {
         return { ...state, ...action.payload }
+    }if(action.type === 'account/setAccount') {
+        return {...state, address: action.payload}
     }
     return state
 }

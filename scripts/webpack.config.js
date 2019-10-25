@@ -14,14 +14,18 @@ const template = path.resolve(__dirname, '../public/index.html');
 const { RELEVANT_PATH } = process.env;
 const publicPath = RELEVANT_PATH?`/${RELEVANT_PATH}/`:'/';
 const analyzerPlugin = isAnaylize ? [new BundleAnalyzerPlugin()] : [];
+const cssplugin = isDev? [new MiniCssExtractPlugin({
+  filename: '[name].[hash:8].css',
+  chunkFilename: '[name]-[id].[hash:8].css',
+})]:[]
 module.exports = {
   entry: {
     bundle: './src/index.tsx'
   },
   output: {
     path: path.resolve(__dirname, '../dist'),
-    filename: '[name].[hash:8].js',
-    chunkFilename: '[name]-[id].[hash:8].js',
+    filename: isDev?'[name].js':'[name].[hash:8].js',
+    chunkFilename: isDev?'[name].js':'[name]-[id].[hash:8].js',
     publicPath,
   },
   // Enable sourcemaps for debugging webpack's output.
@@ -43,21 +47,11 @@ module.exports = {
   },
   plugins: [
     ...analyzerPlugin,
+    ...cssplugin,
     new HtmlPlugin({
       title: 'Aion staking',
       filename: 'index.html',
       template,
-      inject: true, // true->'head' || false->'body'
-      minify: {
-        removeComments: true,
-        collapseWhitespace: true,
-        removeAttributeQuotes: true
-      },
-      chunksSortMode: 'dependency'
-    }),
-    new MiniCssExtractPlugin({
-      filename: '[name].[hash:8].css',
-      chunkFilename: '[name]-[id].[hash:8].css',
     }),
     new webpack.DefinePlugin({
       BASENAME: JSON.stringify(RELEVANT_PATH),
@@ -103,7 +97,7 @@ module.exports = {
       },
     ]
   },
-  optimization: {
+  optimization: isDev?{}:{
     runtimeChunk: {
       name: "manifest"
     },

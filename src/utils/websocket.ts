@@ -1,10 +1,9 @@
 /* eslint-disable no-param-reassign */
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import BigNumber from 'bignumber.js';
-import Axios from 'axios';
 import store, { createAction } from '../reducers/store';
 import { AIONDECIMAL } from './constants.json'
-import { hexCharCodeToStr, genPoolName} from '.';
+import { hexCharCodeToStr} from '.';
 
 const url = 'wss://staking.chaion.net/api'
 const ws = new ReconnectingWebSocket(url);
@@ -36,24 +35,16 @@ const process_pools = async (pools: { [address: string]: any }, callback) => {
             fee: new BigNumber(el.fee).shiftedBy(-6),
             active: el.active,
             metaDataurl: meta_data_url,
-            posBlkTotal: new BigNumber(el.pos_blk_total)
+            posBlkTotal: new BigNumber(el.pos_blk_total),
+            meta: {
+                name: el.meta_name,
+                logo: el.meta_logo,
+                url: el.meta_url,
+                tags: el.meta_tags,
+                version: el.meta_version,
+            }
         };
         total_stake = total_stake.plus(stakeTotal).plus(stakeSelf)
-        try {
-            // eslint-disable-next-line no-await-in-loop
-            // const { data } = await Axios.get(meta_data_url);
-            map[el.address].meta = {
-                name:genPoolName(), 
-                logo:'https://s3.amazonaws.com/keybase_processed_uploads/85a48000fca5fb9c255fc260274f5605_360_360.jpg', 
-                url: '' };
-        } catch (e) {
-            // TODO mock meta
-            map[el.address].meta = {
-                name:genPoolName(), 
-                logo:'https://s3.amazonaws.com/keybase_processed_uploads/85a48000fca5fb9c255fc260274f5605_360_360.jpg', 
-                url: '' }
-            console.log('get meta data error', meta_data_url, e)
-        }
     }
     Object.values(map).forEach((el:any)=>{
         el.stakeWeight = total_pos_blk.isEqualTo(0)? new BigNumber(0): el.posBlkTotal.dividedBy(total_pos_blk);
@@ -71,16 +62,17 @@ ws.onmessage = e => {
     const { method, result } = JSON.parse(e.data);
     switch (method) {
         case 'pools': 
-            console.log('get pools=>', result);
+            console.log('ws recv [pools] res=>', result);
             process_pools(result, (payload) => {
                 store.dispatch(createAction('account/update')(payload))
             })
             break;
         case 'delegations': {
             console.log('ws recv [delgations] res=>', result);
+            const {total_pages, current_page, data} =result;
             let stake = new BigNumber(0)
             let rewards = new BigNumber(0)
-            const delegations = {...result};
+            const delegations = {...data};
             Object.keys(delegations).forEach(v => {
                 delegations[v].rewards = new BigNumber(delegations[v].rewards).shiftedBy(AIONDECIMAL)
                 delegations[v].stake = new BigNumber(delegations[v].stake === '0x' ? 0 : delegations[v].stake).shiftedBy(AIONDECIMAL)
@@ -88,28 +80,31 @@ ws.onmessage = e => {
                 rewards = rewards.plus(delegations[v].rewards)
                 delegations[v].rewards = new BigNumber(delegations[v].rewards).shiftedBy(AIONDECIMAL)
             })
-            store.dispatch(createAction('account/update')({ stakedAmount: stake, rewards, delegations }))
+            store.dispatch(createAction('account/update')({ stakedAmount: stake, rewards, delegations, delegationsPagination:{current:current_page, total:total_pages} }))
         }
             break;
         case 'undelegations': {
-            console.log('ws recv [undelegations] res=>', result);          
+            console.log('ws recv [undelegations] res=>', result); 
+            const {total_pages, current_page, data} =result;
+
             let unDelegated = new BigNumber(0);
-            const undelegations = {...result};
+            const undelegations = {...data};
             Object.keys(undelegations).forEach(v => {
                 undelegations[v].amount = new BigNumber(undelegations[v].amount).shiftedBy(AIONDECIMAL)
                 unDelegated = unDelegated.plus(undelegations[v].amount)
             })
-            store.dispatch(createAction('account/update')({ undelegationAmount: unDelegated, undelegations }))
+            store.dispatch(createAction('account/update')({ undelegationAmount: unDelegated, undelegations,undelegationsPagination:{current:current_page, total:total_pages} }))
         }
             break;
         case 'transactions': {
-            console.log('ws recv [transactions] res=>', result);          
-            const history = {...result};
-            Object.keys(history).forEach(v => {
-                history[v].amount = new BigNumber(history[v].amount).shiftedBy(AIONDECIMAL)
-                if (history[v].amount.toString() === 'NaN') history[v].amount = new BigNumber(0)
+            console.log('ws recv [transactions] res=>', result);  
+            const {total_pages, current_page, data} =result;
+            const history = [...data];
+            history.forEach(v => {
+                v.amount = new BigNumber(v.amount).shiftedBy(AIONDECIMAL)
+                if (v.amount.toString() === 'NaN') v.amount = new BigNumber(0)
             })
-            store.dispatch(createAction('account/update')({ history }))
+            store.dispatch(createAction('account/update')({ history,historyPagination:{current:current_page, total:total_pages} }))
         }
             break;
         case 'eth_getBalance':

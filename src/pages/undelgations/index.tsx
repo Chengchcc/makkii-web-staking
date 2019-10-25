@@ -10,27 +10,27 @@ const mapToState = ({ account }) => {
         address: account.address,
         undelegations: account.undelegations,
         pools: account.pools,
-        undelegationAmount: account.undelegationAmount
+        undelegationAmount: account.undelegationAmount,
+        pagination: account.undelegationsPagination,
     }
 }
 
 const Undelegations = () => {
 
-    const { undelegations,pools,undelegationAmount,address } = useSelector(mapToState);
+    const { undelegations,pools,undelegationAmount,address,pagination } = useSelector(mapToState);
     const onRefresh = () => {
-        wsSend({ method: 'undelegations', params: [address] })
+        wsSend({ method: 'undelegations', params: [address, 0, 10] })
     }
     const onReachEnd = () => {
-        wsSend({ method: 'undelegations', params: [address] })
-
+        wsSend({ method: 'undelegations', params: [address, pagination.current+1, 10] })
     }
-
+    const hasMore = pagination.current + 1 <pagination.total;
     return (
         <MoreList
             title={`Pending Undelegation: ${undelegationAmount}AION`}
             onReachEnd={onReachEnd}
             onRefresh={onRefresh}
-            hasMore={false}
+            hasMore={hasMore}
             data={process_undelegations(undelegations)}
             renderItem={(el) => {
                 return <PoolItemMore pool={pools[el.poolAddress]} value={el} info={unDelegationInfo}/>

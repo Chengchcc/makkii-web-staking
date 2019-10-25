@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js';
 
 export interface Idelegation {
     stake: BigNumber,
-    reward: BigNumber,
+    rewards: BigNumber,
 }
 
 export interface Iundelegation {
@@ -28,6 +28,8 @@ export interface Ipool {
         name: string,
         logo: string,
         url: string,
+        tags?: Array<string>,
+        version?:string,
     }
 }
 export interface Itransaction {
@@ -35,4 +37,5 @@ export interface Itransaction {
     amount: BigNumber,
     timestamp: string,
     pool: string,
+    hash: string,
 }

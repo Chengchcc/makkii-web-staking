@@ -31,7 +31,13 @@ const poolList = props => {
             }
         }))
         history.push('/operation');
+        window.scrollTo(0, 0)
     }
+    React.useEffect(()=>{
+        if(Object.keys(pools).length===0){
+            wsSend({method:'pools', params:[]})
+        }
+    },[pools])
     return (
         <MoreList
             title='Pool List'
@@ -45,8 +51,9 @@ const poolList = props => {
         />
     )
 }
-poolList.canGoback = ()=>{
-    const {account} = store.getState();
-    return account!==''
+poolList.canGoBack = ()=>{
+    const {address} = store.getState().account;
+    console.log('canGoback', address);
+    return address!==''
 }
 export default poolList;

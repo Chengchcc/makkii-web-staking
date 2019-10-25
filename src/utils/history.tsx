@@ -12,8 +12,7 @@ const history = createHistory({
 export default history;
 export const withNavBar = (WrappedCompnented) => (props) => {
     const {goBack,canGoBack} = WrappedCompnented;
-    const {history: history_} = window;
-    let hasNavbar = history_.length >1;
+    let hasNavbar = history.length >1;
     if(canGoBack&&(typeof canGoBack ==='function')){
         hasNavbar = hasNavbar && canGoBack();
     }

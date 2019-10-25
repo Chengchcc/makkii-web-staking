@@ -5,6 +5,7 @@ import 'makkii-webview-bridge';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import store, { createAction } from '@reducers/store';
+import history from '@utils/history';
 import App from './app';
 import './global.less'
 
@@ -36,11 +37,13 @@ if (!Date.prototype.Format) {
 }
 
 const {makkii} = window;
-if(makkii.isconnect){
+console.log('makkii', makkii);
+if(makkii.isconnect()){
     makkii.getCurrentAccount().then(r=>{
         store.dispatch(createAction('account/update')({
             address:r
         }))
+        history.push('/home')
     })
 }
 

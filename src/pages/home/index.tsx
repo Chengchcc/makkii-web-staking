@@ -19,12 +19,12 @@ export const delegationInfo: Array<Iinfo> = [
     {
         title: 'Delegate',
         dataIndex: 'stake',
-        render: val => <span>{`${val} Aion`}</span>
+        render: val => <span>{`${val.toFixed(3)} AION`}</span>
     },
     {
         title: 'Rewards',
-        dataIndex: 'reward',
-        render: val => <span>{`${val} Aion`}</span>
+        dataIndex: 'rewards',
+        render: val => <span>{`${val.toFixed(5)} AION`}</span>
     }
 ];
 
@@ -37,7 +37,7 @@ export const unDelegationInfo: Array<Iinfo> = [
     {
         title: 'Amount',
         dataIndex: 'amount',
-        render: val => <span>{`${val} Aion`}</span>
+        render: val => <span>{`${val.toFixed(3)} AION`}</span>
     }
 ]
 
@@ -62,17 +62,6 @@ export const process_undelegations = (undelegations) => {
     }, [])
 }
 
-export const process_transaction = (history) => {
-    return Object.keys(history).reduce((arr, el) => {
-        arr.push({
-            ...history[el],
-            txhash: el,
-        })
-        return arr;
-    }, []);
-}
-
-
 interface Ihome {
     history: History,
 }
@@ -95,18 +84,26 @@ const accountInfo = [
     {
         title: 'Liquid balance',
         dataIndex: 'liquidBalance',
+        render: val=>val.gte(0) ? <span>{`${val.toFixed(3)} AION`}</span> :
+        <Spin size='30px' width='2px' />
     },
     {
         title: 'Staked Amount',
         dataIndex: 'stakedAmount',
+        render: val=>val.gte(0) ? <span>{`${val.toFixed(3)} AION`}</span> :
+        <Spin size='30px' width='2px' />
     },
     {
         title: 'Undelegation Amount',
         dataIndex: 'undelegationAmount',
+        render: val=>val.gte(0) ? <span>{`${val.toFixed(3)} AION`}</span> :
+        <Spin size='30px' width='2px' />
     },
     {
         title: 'Rewards',
         dataIndex: 'rewards',
+        render: val=>val.gte(0) ? <span>{`${val.toFixed(5)} AION`}</span> :
+        <Spin size='30px' width='2px' />
     }
 ]
 
@@ -115,15 +112,12 @@ const renderAccountInfo = (info, src) => {
         <div className='header-info'>
             {
                 info.map(el => {
-                    const { dataIndex, title } = el;
+                    const { dataIndex, title, render } = el;
                     const val = src[dataIndex]
                     return (
                         <div key={title} className='header-info-item '>
                             <div className='header-info-item-value'>
-                                {
-                                    val.gte(0) ? <span>{`${val} AION`}</span> :
-                                        <Spin size='30px' width='2px' />
-                                }
+                                {render(val)}
                             </div>
                             <div className='header-info-item-title'>{title}</div>
                         </div>
@@ -139,8 +133,6 @@ const home = (props: Ihome) => {
     const account = useSelector(mapToState);
     const dispath = useDispatch();
     const { address, pools, delegations, undelegations, history: transactions } = account;
-
-
     const toDelegate = e => {
         e.preventDefault();
         dispath(createAction('account/update')({
@@ -191,13 +183,11 @@ const home = (props: Ihome) => {
     }
     React.useEffect(() => {
         if (address !== '') {
-            // wsSend({ method: 'eth_getBalance', params: [address] })
-            // wsSend({ method: 'delegations', params: [address, 0, 10] })
-            // wsSend({ method: 'transactions', params: [address] })
-            // wsSend({ method: 'pools', params: [] })
-            // wsSend({ method: 'undelegations', params: [address] })
-        }else{
-            toPoolList();
+            wsSend({ method: 'eth_getBalance', params: [address] })
+            wsSend({ method: 'delegations', params: [address, 0, 10] })
+            wsSend({ method: 'transactions', params: [address, 0, 10] })
+            wsSend({ method: 'pools', params: [] })
+            wsSend({ method: 'undelegations', params: [address, 0, 10] })
         }
     }, [address])
 
@@ -205,6 +195,18 @@ const home = (props: Ihome) => {
     const handleSwitchAccount= (e)=>{
         e.preventDefault();
         // TODO handle switch account
+        const {makkii} = window;
+        if(makkii.isconnect()){
+            makkii.switchAccount().then(r=>{
+                dispath(createAction('account/update')({address:r}))
+            }).catch(err=>{
+                console.log('switch account error=>', err);
+            })
+        }else{
+            // TODO no makkii
+            console.log('not in makkii env')
+        }
+       
     }
 
     const renderPools = (title, lists_) => {
@@ -250,7 +252,7 @@ const home = (props: Ihome) => {
     const hasPools = Object.keys(pools).length > 0;
     const hasDelegations = Object.keys(delegations).length > 0;
     const hasUndelegations = Object.keys(undelegations).length > 0;
-    const hasHistory = Object.keys(transactions).length > 0;
+    const hasHistory = transactions.length > 0;
     return (
         <div className='flex-container'>
             <div className='home-header'>
@@ -268,7 +270,7 @@ const home = (props: Ihome) => {
             {hasPools && hasDelegations && renderPoolsMore('My Delegations', process_delegations(delegations).slice(0, 3), delegationInfo, toDelegations)}
             {hasPools && hasUndelegations && renderPoolsMore('Pending Undelegations', process_undelegations(undelegations).slice(0, 3), unDelegationInfo, toPendingUndlegation)}
             {hasPools && renderPools('Top pools', pools)}
-            {hasPools && hasHistory && renderTransaction('Stake History', process_transaction(transactions).slice(0, 3), toHistoryList)}
+            {hasPools && hasHistory && renderTransaction('Stake History',transactions.slice(0, 3), toHistoryList)}
         </div>
     )
 }

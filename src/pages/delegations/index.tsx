@@ -11,26 +11,27 @@ const mapToState = ({ account }) => {
         delegations: account.delegations,
         pools: account.pools,
         stakedAmount: account.stakedAmount,
+        pagination: account.delegationsPagination,
     }
 }
 
 const Delegations = () => {
 
-    const { delegations,pools,stakedAmount,address } = useSelector(mapToState);
+    const { delegations,pools,stakedAmount,address,pagination } = useSelector(mapToState);
     const onRefresh = () => {
-        wsSend({ method: 'delegations', params: [address] })
+        wsSend({ method: 'delegations', params: [address, 0, 10] })
     }
     const onReachEnd = () => {
-        wsSend({ method: 'delegations', params: [address] })
+        wsSend({ method: 'delegations', params: [address, pagination.current, 10] })
 
     }
-
+    const hasMore = pagination.current + 1 <pagination.total;
     return (
         <MoreList
             title={`My Delegations: ${stakedAmount} AION`}
             onReachEnd={onReachEnd}
             onRefresh={onRefresh}
-            hasMore={false}
+            hasMore={hasMore}
             data={process_delegations(delegations)}
             renderItem={(el) => {
                 return <PoolItemMore pool={pools[el.poolAddress]} value={el} info={delegationInfo}/>

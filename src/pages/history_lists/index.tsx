@@ -1,7 +1,6 @@
 import React from 'react';
 import MoreList from '@components/more_list';
 import TransactionItem from '@components/transaction_item';
-import {process_transaction } from '@pages/home';
 import { useSelector } from 'react-redux';
 import { wsSend } from '@utils/websocket';
 
@@ -10,27 +9,29 @@ const mapToState = ({ account }) => {
         address:account.address,
         transactions: account.history,
         pools: account.pools,
+        pagination: account.historyPagination
     }
 }
 
 const HistoryLists = () => {
 
-    const { transactions,pools,address } = useSelector(mapToState);
+    const { transactions,pools,address, pagination } = useSelector(mapToState);
     const onRefresh = () => {
-        wsSend({ method: 'transactions', params: [address] })
+        wsSend({ method: 'transactions', params: [address, 0, 10] })
     }
     const onReachEnd = () => {
-        wsSend({ method: 'transactions', params: [address] })
+        wsSend({ method: 'transactions', params: [address, pagination.current+1, 10] })
 
     }
+    const hasMore = pagination.current + 1 <pagination.total;
 
     return (
         <MoreList
             title="Stake History"
             onReachEnd={onReachEnd}
             onRefresh={onRefresh}
-            hasMore={false}
-            data={process_transaction(transactions)}
+            hasMore={hasMore}
+            data={transactions}
             renderItem={(el) => {
                 return <TransactionItem pool={pools[el.pool]} transaction={el}/>
             }}

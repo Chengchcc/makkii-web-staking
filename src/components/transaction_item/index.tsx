@@ -3,12 +3,10 @@ import { Itransaction, Ipool } from '@interfaces/types';
 import { formatTxHash } from '@utils/index'
 import './style.less';
 
-interface Itransaction2 extends Itransaction {
-    txhash: string
-}
+
 interface ItransactionItem {
     pool: Ipool
-    transaction: Itransaction2
+    transaction: Itransaction
 }
 
 const tansferType = type => {
@@ -27,13 +25,13 @@ const tansferType = type => {
 
 const TransactionItem: React.FC<ItransactionItem> = props => {
     const { transaction, pool } = props;
-    const { txhash, type, amount, timestamp } = transaction;
+    const { hash, type, amount, timestamp } = transaction;
     const { meta } = pool;
-    const date = new Date(parseInt(timestamp, 16)).Format('yyyy-MM-dd hh:mm', 24)
+    const date = new Date(parseInt(timestamp, 16)*1000).Format('yyyy-MM-dd hh:mm', 24)
     return (
         <div className='transaction-item'>
             <div className='transcation-item-header'>
-                {formatTxHash(txhash)}
+                {formatTxHash(hash)}
             </div>
             <div className='transaction-info'>
                 <div className='transaction-pool'>
@@ -44,7 +42,7 @@ const TransactionItem: React.FC<ItransactionItem> = props => {
                     <div className='transaction-pool-label'>{date}</div>
                     <div className='transaction-pool-label'>
                         <span>{tansferType(type)} </span>
-                        <span>{`${amount} Aion`}</span>
+                        <span>{`${amount} AION`}</span>
                     </div>
                 </div>
             </div>
