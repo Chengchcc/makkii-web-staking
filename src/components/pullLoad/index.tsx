@@ -47,7 +47,6 @@ let startX = 0;
 let startY = 0;
 
 let Tcontainer = document.body;
-
 const pullLoad: React.FC<Iprops> = props => {
 
     const {offsetScrollTop, downEnough, distanceBottom, handleAction} = props;

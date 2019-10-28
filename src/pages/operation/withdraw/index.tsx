@@ -7,6 +7,8 @@ import { gas_withdraw, gasPrice, AIONDECIMAL } from '@utils/constants.json';
 import BigNumber from 'bignumber.js';
 import { CommonButton } from '@components/button';
 import { call_withdraw } from '@utils/transaction';
+import {alert} from '@components/modal'
+import Image from '@components/default-img'
 import FormItem from '../operation_form_item';
 import { commonGoback } from '../util';
 
@@ -30,7 +32,7 @@ const maptoState = ({ account }) => {
 const withdraw = props => {
     const { account, operation, pools } = useSelector(maptoState);
     const { history } = props;
-    const [amount, setAmount] = React.useState('')
+    const inputRef = React.useRef(null)
     React.useEffect(()=>{
         if (operationType.withdraw !== operation.type) {
             history.replace('/operation')
@@ -39,27 +41,35 @@ const withdraw = props => {
     const pool = pools[operation.pool];
     const { meta } = pool;
     const { address, reward } = account;
-    const btnDisabled = validateAmount(amount);
     const handle_withdraw = (e: MouseEvent) => {
         e.preventDefault();
         // TODO handle withdraw
-        if(btnDisabled) return;
+        const amount = inputRef.current.value;
+        const valid = validateAmount(amount);
+        if(!valid) {
+            alert({
+                title: 'error', message: 'Invalid amount', actions: [
+                    {
+                        title: 'Ok',
+                    },
+                ]
+            })
+            return;
+        }
         call_withdraw(operation.pool, amount)
     }
     return (
         <div className='operation-container'>
             <FormItem label='From' className='operation-form-pool'>
-                <img src={meta.logo} className='pool-logo' alt="" />
+                <Image src={meta.logo} className='pool-logo' alt="" />
                 <span style={{marginLeft:'10px'}}>{meta.name}</span>
             </FormItem>
             <FormItem label='To'>{formatAddress(address)}</FormItem>
             <FormItem label='Withdraw'>
-                <input value={amount} onChange={e => {
-                    setAmount(e.target.value)
-                }} /> &nbsp; AION  &nbsp;
+                <input type='number' ref={inputRef} /> &nbsp; AION  &nbsp;
                 <a onClick={e => {
                     e.preventDefault();
-                    setAmount(reward.minus(fee_withdraw).toString())
+                    inputRef.current.value = reward.minus(fee_withdraw).toString()
                 }}>All</a>
             </FormItem>
             <FormItem label='Transaction Fee'>
@@ -68,7 +78,7 @@ const withdraw = props => {
             <div style={{ padding: '20px 10px' }}>
                 Rewards in this pools:  {reward.toString()} AION
             </div>
-            <CommonButton title='withdraw' onClick={handle_withdraw} disabled={btnDisabled}/>
+            <CommonButton title='withdraw' onClick={handle_withdraw}/>
         </div>
     )
 }

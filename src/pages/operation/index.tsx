@@ -6,7 +6,7 @@ import './style.less';
 import { formatAddress } from '@utils/index';
 import { CommonButton } from '@components/button';
 import { createAction } from '@reducers/store';
-import { idea } from 'react-syntax-highlighter/dist/styles/hljs';
+import Image from '@components/default-img'
 
 const mapToState = ({ account }) => {
     const poolAddress = account.operation.pool || "";
@@ -136,7 +136,7 @@ const Pageoperation = props => {
 
     const toDelegate = () => {
         const {makkii} = window;
-        if(makkii.isconnect()){
+        // if(makkii.isconnect()){
             dispatch(createAction('account/update')({
                 operation: {
                     ...operation,
@@ -144,9 +144,9 @@ const Pageoperation = props => {
                 }
             }));
             history.push('/delegate')
-        }else{
+        // }else{
             // TODO no makkii 
-        }
+        // }
         
     }
 
@@ -203,7 +203,7 @@ const Pageoperation = props => {
     return (
         <div className='operation-container'>
             <div className='operation-pool-basic'>
-                <img src={logo} alt="" />
+                <Image src={logo} alt="" />
                 <ul>
                     <li data-label="Name: ">{name}</li>
                     <li data-label="Status: "><span className={active === '0x01' ? 'poolActive' : 'poolInActive'} /> {

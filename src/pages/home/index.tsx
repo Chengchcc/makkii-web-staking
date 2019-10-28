@@ -84,26 +84,26 @@ const accountInfo = [
     {
         title: 'Liquid balance',
         dataIndex: 'liquidBalance',
-        render: val=>val.gte(0) ? <span>{`${val.toFixed(3)} AION`}</span> :
-        <Spin size='30px' width='2px' />
+        render: val => val.gte(0) ? <span>{`${val.toFixed(3)} AION`}</span> :
+            <Spin size='30px' width='2px' />
     },
     {
         title: 'Staked Amount',
         dataIndex: 'stakedAmount',
-        render: val=>val.gte(0) ? <span>{`${val.toFixed(3)} AION`}</span> :
-        <Spin size='30px' width='2px' />
+        render: val => val.gte(0) ? <span>{`${val.toFixed(3)} AION`}</span> :
+            <Spin size='30px' width='2px' />
     },
     {
         title: 'Undelegation Amount',
         dataIndex: 'undelegationAmount',
-        render: val=>val.gte(0) ? <span>{`${val.toFixed(3)} AION`}</span> :
-        <Spin size='30px' width='2px' />
+        render: val => val.gte(0) ? <span>{`${val.toFixed(3)} AION`}</span> :
+            <Spin size='30px' width='2px' />
     },
     {
         title: 'Rewards',
         dataIndex: 'rewards',
-        render: val=>val.gte(0) ? <span>{`${val.toFixed(5)} AION`}</span> :
-        <Spin size='30px' width='2px' />
+        render: val => val.gte(0) ? <span>{`${val.toFixed(5)} AION`}</span> :
+            <Spin size='30px' width='2px' />
     }
 ]
 
@@ -192,21 +192,22 @@ const home = (props: Ihome) => {
     }, [address])
 
 
-    const handleSwitchAccount= (e)=>{
+    const handleSwitchAccount = (e) => {
         e.preventDefault();
         // TODO handle switch account
-        const {makkii} = window;
-        if(makkii.isconnect()){
-            makkii.switchAccount().then(r=>{
-                dispath(createAction('account/update')({address:r}))
-            }).catch(err=>{
+     
+        const { makkii } = window;
+        if (makkii.isconnect()) {
+            makkii.switchAccount().then(r => {
+                dispath(createAction('account/update')({ address: r }))
+            }).catch(err => {
                 console.log('switch account error=>', err);
             })
-        }else{
+        } else {
             // TODO no makkii
             console.log('not in makkii env')
         }
-       
+
     }
 
     const renderPools = (title, lists_) => {
@@ -258,8 +259,8 @@ const home = (props: Ihome) => {
             <div className='home-header'>
                 <div className='header-account'>
                     <span style={{ fontSize: '16px' }}>My Account:</span>&nbsp;
-                    <span style={{fontSize:'12px'}}>{`${formatAddress(address)}`}</span>
-                    <CommonButton className='switch-account-button' title="switch" onClick={handleSwitchAccount}/>
+                    <span style={{ fontSize: '12px' }}>{`${formatAddress(address)}`}</span>
+                    <CommonButton className='switch-account-button' title="switch" onClick={handleSwitchAccount} />
                 </div>
                 {renderAccountInfo(accountInfo, account)}
             </div>
@@ -270,7 +271,7 @@ const home = (props: Ihome) => {
             {hasPools && hasDelegations && renderPoolsMore('My Delegations', process_delegations(delegations).slice(0, 3), delegationInfo, toDelegations)}
             {hasPools && hasUndelegations && renderPoolsMore('Pending Undelegations', process_undelegations(undelegations).slice(0, 3), unDelegationInfo, toPendingUndlegation)}
             {hasPools && renderPools('Top pools', pools)}
-            {hasPools && hasHistory && renderTransaction('Stake History',transactions.slice(0, 3), toHistoryList)}
+            {hasPools && hasHistory && renderTransaction('Stake History', transactions.slice(0, 3), toHistoryList)}
         </div>
     )
 }

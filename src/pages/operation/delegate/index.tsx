@@ -7,6 +7,8 @@ import {gas_delegate, gasPrice, AIONDECIMAL} from '@utils/constants.json';
 import BigNumber from 'bignumber.js';
 import { CommonButton } from '@components/button';
 import {call_delegate} from '@utils/transaction';
+import {alert} from '@components/modal';
+import Image from '@components/default-img'
 import FormItem from '../operation_form_item';
 import { commonGoback } from '../util';
 
@@ -30,7 +32,7 @@ const maptoState = ({ account }) => {
 const delegate = props => {
     const { account, operation, pools } = useSelector(maptoState);
     const { history } = props;
-    const [amount, setAmount] = React.useState('')
+    const inputRef = React.useRef(null);
     React.useEffect(()=>{
         if (operationType.delegate !== operation.type) {
             history.replace('/operation')
@@ -39,28 +41,36 @@ const delegate = props => {
     const pool = pools[operation.pool];
     const { meta } = pool;
     const { address, balance } = account;
-    const btnDisabled =  !validateAmount(amount);
     const handle_delegate = (e: MouseEvent)=>{
         e.preventDefault();
-        if(btnDisabled) return;
+        // TODO handle delegate
+        const amount = inputRef.current.value;
+        const valid =  validateAmount(amount);
+        if(!valid) {
+            alert({
+                title: 'error', message: 'Invalid amount', actions: [
+                    {
+                        title: 'Ok',
+                    },
+                ]
+            })
+            return;
+        }
         const tx = call_delegate(operation.pool, amount);
         console.log('delegate Tx=>', tx);
-        // TODO handle delegate
     }
     return (
         <div className='operation-container'>
             <FormItem label='From'>{formatAddress(address)}</FormItem>
             <FormItem label='To' className='operation-form-pool'>
-                <img src={meta.logo} className='pool-logo' alt="" />
+                <Image src={meta.logo} className='pool-logo' alt="" />
                 <span style={{marginLeft:'10px'}}>{meta.name}</span>
             </FormItem>
             <FormItem label='Delegate Amount'>
-                <input value={amount} onChange={e=>{
-                    setAmount(e.target.value)
-                }}/> &nbsp; AION  &nbsp;
+                <input  ref={inputRef} type='number'/> &nbsp; AION  &nbsp;
                 <a onClick={e=>{
                     e.preventDefault();
-                    setAmount(balance.minus(fee_delegate).toString())
+                    inputRef.current.value = balance.minus(fee_delegate).toString()
                 }}>All</a>
             </FormItem>
             <FormItem label='Transaction Fee'>
@@ -69,8 +79,10 @@ const delegate = props => {
             <div style={{padding:'20px 10px'}}>
              Your liquid amount is {balance.toString()} AION.
             </div>
-            <CommonButton title='delegate' onClick={handle_delegate} disabled={btnDisabled}/>
+            <CommonButton title='delegate' onClick={handle_delegate}/>
+           
         </div>
+        
     )
 }
 delegate.goBack = commonGoback;

@@ -7,6 +7,8 @@ import {gas_undelegate, gasPrice, AIONDECIMAL, period_block} from '@utils/consta
 import BigNumber from 'bignumber.js';
 import { CommonButton } from '@components/button';
 import { call_undelegate } from '@utils/transaction';
+import {alert} from '@components/modal'
+import Image from '@components/default-img'
 import FormItem from '../operation_form_item';
 import { commonGoback } from '../util';
 
@@ -31,7 +33,7 @@ const maptoState = ({ account }) => {
 const undelegate = props => {
     const { account, operation, pools } = useSelector(maptoState);
     const { history } = props;
-    const [amount, setAmount] = React.useState('')
+    const inputRef = React.useRef(null);
     React.useEffect(()=>{
         if (operationType.undelegate !== operation.type) {
             history.replace('/operation')
@@ -40,28 +42,36 @@ const undelegate = props => {
     const pool = pools[operation.pool];
     const { meta } = pool;
     const { address, staked } = account;
-    const btnDisabled = !validateAmount(amount);
     const handle_undelegate = (e: MouseEvent)=>{
         e.preventDefault();
         // TODO handle undelegate
-        if(btnDisabled) return;
+        const amount = inputRef.current.value;
+        const valid = validateAmount(amount);
+        if(!valid) {
+            alert({
+                title: 'error', message: 'Invalid amount', actions: [
+                    {
+                        title: 'Ok',
+                    },
+                ]
+            })
+            return;
+        }
         call_undelegate(operation.pool, amount, 1)
     }
     return (
         <div className='operation-container'>
             <FormItem label='From' className='operation-form-pool'>
-                <img src={meta.logo} className='pool-logo' alt="" />
+                <Image src={meta.logo} className='pool-logo' alt="" />
                 <span style={{marginLeft:'10px'}}>{meta.name}</span>
             </FormItem>
             <FormItem label='To'>{formatAddress(address)}</FormItem>
             <FormItem label='Lock Period'>{`${period_block} blocks`}</FormItem>
             <FormItem label='Undelegate Amount'>
-                <input value={amount} onChange={e=>{
-                    setAmount(e.target.value)
-                }}/> &nbsp; AION  &nbsp;
+                <input type='number' ref={inputRef} /> &nbsp; AION  &nbsp;
                 <a onClick={e=>{
                     e.preventDefault();
-                    setAmount(staked.minus(fee_delegate).toString())
+                    inputRef.current.value= staked.minus(fee_delegate).toString()
                 }}>All</a>
             </FormItem>
             <FormItem label='Transaction Fee'>
@@ -70,7 +80,7 @@ const undelegate = props => {
             <div style={{padding:'20px 10px'}}>
                 You have delegated {staked.toString()} AION to this pool
             </div>
-            <CommonButton title='undelegate' onClick={handle_undelegate} disabled={btnDisabled}/>
+            <CommonButton title='undelegate' onClick={handle_undelegate} />
         </div>
     )
 }

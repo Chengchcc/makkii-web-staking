@@ -67,10 +67,8 @@ const List: React.FC<Ilist<any>> = props => {
                     <ReactPullLoad
                         downEnough={150}
                         className="loadList"
-                        isBlockContainer
                         action={state.action}
                         handleAction={handleAction}
-                        style={{ paddingTop: 0 }}
                         hasMore={hasMore}
                         distanceBottom={1000}>
                         <ul>

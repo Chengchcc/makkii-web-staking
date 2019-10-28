@@ -6429,9 +6429,9 @@ make-dir@^3.0.0:
   dependencies:
     semver "^6.0.0"
 
-"makkii-webview-bridge@https://github.com/chaion/makkii-webview-bridge.git":
+"makkii-webview-bridge@https://github.com/chaion/makkii-webview-bridge.git#65dfb9b05af435951c800492de42497012d1b56b":
   version "1.0.0"
-  resolved "https://github.com/chaion/makkii-webview-bridge.git#1ec4f01a6d71f7c86f3ba19464fe37afc5e089b6"
+  resolved "https://github.com/chaion/makkii-webview-bridge.git#65dfb9b05af435951c800492de42497012d1b56b"
 
 mamacro@^0.0.3:
   version "0.0.3"
@@ -8171,13 +8171,6 @@ react-popper@^1.3.4:
     prop-types "^15.6.1"
     typed-styles "^0.0.7"
     warning "^4.0.2"
-
-react-pullload@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.npm.taobao.org/react-pullload/download/react-pullload-1.2.0.tgz#9631879d9135e3919dc2130b934751a2690e7a3b"
-  integrity sha1-ljGHnZE145GdwhMLk0dRomkOejs=
-  dependencies:
-    prop-types "^15.6.0"
 
 react-redux@^7.1.0-rc.1:
   version "7.1.0-rc.1"

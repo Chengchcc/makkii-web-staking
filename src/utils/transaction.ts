@@ -1,13 +1,15 @@
+/* eslint-disable no-return-await */
 import BigNumber from 'bignumber.js'
 import {gasPrice, gas_delegate, gas_withdraw, gas_undelegate, POOL_REGISTRY, AIONDECIMAL} from '@utils/constants.json';
 import ABICoder from '../libs/web3-avm-abi'
 
 
 const abi = new ABICoder()
+const {makkii} = window;
 const build_transaction = (to:string, gasPrice_:string, gasLimit:string, data:string, amount:string)=>{
     return {
         to,
-        amount: amount || 0, // value.shiftedBy(18),
+        amount: new BigNumber(amount).shiftedBy(18).toFixed() || 0, // value.shiftedBy(18),
         type: 1,
         gasPrice:gasPrice_,
         gasLimit,
@@ -15,7 +17,18 @@ const build_transaction = (to:string, gasPrice_:string, gasLimit:string, data:st
     }
 }
 
-export const call_delegate = (pool, amount) => {
+const sendTx = async (tx) => {
+    console.log('sendTx=>', tx);
+    try{
+       return await makkii.sendTx(tx)
+    }catch(error) {
+        console.log('sendTx error', error)
+        return false
+    }
+
+}
+
+export const call_delegate = async (pool, amount) => {
     const data = abi.encodeMethod(
         'delegate',
         [
@@ -35,10 +48,10 @@ export const call_delegate = (pool, amount) => {
         new BigNumber(amount).shiftedBy(AIONDECIMAL).toFixed()
     )
     // TODO call makkii
-    return tx;
+    return await sendTx(tx);
 }
 
-export const call_withdraw = (pool, amount) => {
+export const call_withdraw = async (pool, amount) => {
     const data = abi.encodeMethod(
         'withdraw',
         [
@@ -57,11 +70,11 @@ export const call_withdraw = (pool, amount) => {
         new BigNumber(amount).shiftedBy(AIONDECIMAL).toFixed()
     )
     // TODO call makkii
-    return tx;
+    return await sendTx(tx);
 }
 
 
-export const call_undelegate = (pool, amount, fee) => {
+export const call_undelegate = async (pool, amount, fee) => {
     const data = abi.encodeMethod(
         'undelegate',
         [
@@ -85,5 +98,5 @@ export const call_undelegate = (pool, amount, fee) => {
         new BigNumber(amount).shiftedBy(AIONDECIMAL).toFixed()
     )
     // TODO call makkii
-    return tx;
+    return await sendTx(tx);
 }

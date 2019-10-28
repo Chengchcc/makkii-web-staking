@@ -1,6 +1,7 @@
 import React from 'react';
 import { Itransaction, Ipool } from '@interfaces/types';
 import { formatTxHash } from '@utils/index'
+import Image from '@components/default-img'
 import './style.less';
 
 
@@ -35,7 +36,7 @@ const TransactionItem: React.FC<ItransactionItem> = props => {
             </div>
             <div className='transaction-info'>
                 <div className='transaction-pool'>
-                    <img src={meta.logo} className='pool-logo' alt="" /> &nbsp;
+                    <Image src={meta.logo} className='pool-logo' alt="" /> &nbsp;
                     {meta.name}
                 </div>
                 <div>
