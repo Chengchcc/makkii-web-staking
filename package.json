@@ -13,9 +13,8 @@
     "build:dev":"npm run clean; cross-env NODE_ENV=development cross-env RELEVANT_PATH=staking  webpack --config ./scripts/webpack.config.js",
     "prestart":"npm run build:dev",
     "start": "cross-env NODE_ENV=development cross-env RELEVANT_PATH=staking  webpack-dev-server --config ./scripts/webpack.config.js  --hot ",
-    "build:dist": "npm run clean; cross-env NODE_ENV=production cross-env RELEVANT_PATH=./  webpack --config ./scripts/webpack.config.js",
-    "deploy": "cross-env RELEVANT_PATH=staking node scripts/deploy.js",
-    "package": "npm run dist",
+    "build:dist": "npm run clean; cross-env NODE_ENV=production cross-env RELEVANT_PATH=/staking  webpack --config ./scripts/webpack.config.js",
+    "package": "npm run build:dist",
     "prepackage": "npm run clean",
     "lint": "eslint src --fix --ext tsx",
     "postinstall": "cd src/libs/web3-avm-abi; npm install; cd -"

@@ -14,7 +14,7 @@ const template = path.resolve(__dirname, '../public/index.html');
 const { RELEVANT_PATH } = process.env;
 const publicPath = RELEVANT_PATH?`/${RELEVANT_PATH}/`:'/';
 const analyzerPlugin = isAnaylize ? [new BundleAnalyzerPlugin()] : [];
-const cssplugin = isDev? [new MiniCssExtractPlugin({
+const cssplugin = !isDev? [new MiniCssExtractPlugin({
   filename: '[name].[hash:8].css',
   chunkFilename: '[name]-[id].[hash:8].css',
 })]:[]
@@ -62,20 +62,13 @@ module.exports = {
     rules: [
       { test: /\.(js|jsx|ts|tsx)$/, exclude: /node_modules/, use: ['babel-loader'] },
       {
-        test: [/\.less$/, /\.css$/], use: [
+        test: [/\.less$/], use: [
           !isDev? MiniCssExtractPlugin.loader:require.resolve('style-loader'),
           {
             loader: require.resolve('css-loader'),
-            options: {
-              importLoaders: 1,
-            },
           },
           {
             loader: require.resolve('less-loader'),
-            options: {
-              importLoaders: 1,
-              javascriptEnabled: true
-            },
           },
         ]
       },
