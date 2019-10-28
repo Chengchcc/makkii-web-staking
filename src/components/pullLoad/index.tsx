@@ -1,284 +1,193 @@
+/* eslint-disable no-param-reassign */
+import React from 'react';
+import { STATS } from './constants';
+import HeadNode from './HeadNode';
+import FooterNode from './FooterNode';
+import './style.less';
 
-// import React, { Component } from 'react'
-// import { findDOMNode } from 'react-dom';
-// import { STATS } from './constants';
-// import HeadNode from './HeadNode';
-// import FooterNode from './FooterNode';
+export {
+    STATS
+}
 
-// function addEvent(obj, type, fn) {
-//     if (obj.attachEvent) {
-//         obj[`e${  type  }${fn}`] = fn;
-//         obj[type + fn] = function () { obj[`e${  type  }${fn}`](window.event); }
-//         obj.attachEvent(`on${  type}`, obj[type + fn]);
-//     } else
-//         obj.addEventListener(type, fn, false, { passive: false });
-// }
-// function removeEvent(obj, type, fn) {
-//     if (obj.detachEvent) {
-//         obj.detachEvent(`on${  type}`, obj[type + fn]);
-//         obj[type + fn] = null;
-//     } else
-//         obj.removeEventListener(type, fn, false);
-// }
+interface Iprops {
+    action: STATS
+    handleAction: (...data:any) => any
+    hasMore?: boolean
+    offsetScrollTop?: number
+    downEnough?: number
+    distanceBottom?: number
+    isBlockContainer?: boolean
+    HeadNode?: any
+    FooterNode?: any
+    className?: string
+}
 
 
-// interface IProps {
-//     action: string
-//     handleAction: (data: any) => any
-//     haseMore?: boolean
-//     offsetScrollTop?: number
-//     downEnough?: number
-//     distanceBottom?: number
-//     isBlockContainer?: boolean
-//     HeadNode?: any
-//     FooterNode?: any
-//     className?: string
-// }
+const defaultProps = {
+    hasMore: true,
+    offsetScrollTop: 1,
+    downEnough: 100,
+    distanceBottom: 100,
+    isBlockContainer: false,
+    className: "",
+    HeadNode,     // refresh message react dom
+    FooterNode, // refresh loading react dom
+}
 
-//  const defaultProps = {
-//     hasMore: true,
-//     offsetScrollTop: 1,
-//     downEnough: 100,
-//     distanceBottom: 100,
-//     isBlockContainer: false,
-//     className: "",
-//     HeadNode,     // refresh message react dom
-//     FooterNode, // refresh loading react dom
-// };
-// export default class ReactPullLoad extends Component<IProps, {}> {
-//     // set props default values
-   
 
-//     state = {
-//         pullHeight: 0
-//     };
+const easing = distance => {
+    const t = distance;
+    const b = 0;
+    const d = window.screen.availHeight;
+    const c = d / 2.5;
+    return c * Math.sin(t / d * (Math.PI / 2)) + b;
+}
 
-//     defaultConfig: any;
+let startX = 0;
+let startY = 0;
 
-//     startX: any;
+let Tcontainer = document.body;
 
-//     startY: any;
+const pullLoad: React.FC<Iprops> = props => {
 
-//     // container = null;
+    const {offsetScrollTop, downEnough, distanceBottom, handleAction} = props;
+    const [state, setState] = React.useState({
+        pullHeight: 0
+    }) 
 
-//     componentDidMount() {
-//         const { isBlockContainer, offsetScrollTop, downEnough, distanceBottom } = this.props
-//         this.defaultConfig = {
-//             container: isBlockContainer ? findDOMNode(this) : document.body,
-//             offsetScrollTop,
-//             downEnough,
-//             distanceBottom
-//         };
-//         // console.info("downEnough = ", downEnough, this.defaultConfig.downEnough)
-//         /*
-//           As below reason handle touch event self ( widthout react defualt touch)
-//           Unable to preventDefault inside passive event listener due to target being treated as passive. See https://www.chromestatus.com/features/5093566007214080
-//         */
-//         addEvent(this.refs.container, "touchstart", this.onTouchStart)
-//         addEvent(this.refs.container, "touchmove", this.onTouchMove)
-//         addEvent(this.refs.container, "touchend", this.onTouchEnd)
-//     }
+    const getScrollTop = ()=> {
+        if(Tcontainer) {
+            if(Tcontainer === document.body) {
+                return document.documentElement.scrollTop || document.body.scrollTop;
+            }
+            return Tcontainer.scrollTop
+        }
+        return 0;
+    }
 
-//     // 未考虑到 children 及其他 props 改变的情况
-//     // shouldComponentUpdate(nextProps, nextState) {
-//     //   if(this.props.action === nextProps.action && this.state.pullHeight === nextState.pullHeight){
-//     //     //console.info("[ReactPullLoad] info new action is equal to old action",this.state.pullHeight,nextState.pullHeight);
-//     //     return false
-//     //   } else{
-//     //     return true
-//     //   }
-//     // }
+    const canRefresh = () => {
+        return [STATS.refreshing, STATS.loading].indexOf(props.action) < 0;
+    }
 
-//     componentWillUnmount() {
-//         removeEvent(this.refs.container, "touchstart", this.onTouchStart)
-//         removeEvent(this.refs.container, "touchmove", this.onTouchMove)
-//         removeEvent(this.refs.container, "touchend", this.onTouchEnd)
-//     }
+    const onPullDownMove = data => {
+        if(!canRefresh()) return;
+        let loaderState;
+        let diff = data[0].touchMoveY - data[0].touchStartY;
+        if(diff<0) diff =0;
+        diff = easing(diff);
+        if(diff> downEnough) {
+            loaderState = STATS.enough
+        }else {
+            loaderState = STATS.pulling
+        }
+        setState({
+            pullHeight: diff,
+        })
+        handleAction(loaderState)
+    }
 
-//     componentWillReceiveProps(nextProps) {
-//         if (nextProps.action === STATS.refreshed) {
-//             setTimeout(() => {
-//                 this.props.handleAction(STATS.reset)
-//             }, 1000)
-//         }
-//     }
+    const onPullDownRefresh = ()=> {
+        if(!canRefresh()) return;
+        setState({pullHeight: 0})
+        if(props.action === STATS.pulling) {
+            handleAction(STATS.reset)
+        }else {
+            handleAction(STATS.refreshing)
+        }
+    }
 
-//     getScrollTop = () => {
-//         if (this.defaultConfig.container) {
-//             if (this.defaultConfig.container === document.body) {
-//                 return document.documentElement.scrollTop || document.body.scrollTop;
-//             }
-//             return this.defaultConfig.container.scrollTop;
-//         } 
-//             return 0;
-        
-//     }
+    const onPullUpMove = () => {
+        if(!canRefresh()||!props.hasMore) return;
+        setState({pullHeight: 0})
+        handleAction(STATS.loading)
+    }
 
-//     setScrollTop = (value) => {
-//         if (this.defaultConfig.container) {
-//             let scrollH = this.defaultConfig.container.scrollHeight;
-//             if (value < 0) { value = 0 }
-//             if (value > scrollH) { value = scrollH }
-//             return this.defaultConfig.container.scrollTop = value;
-//         } 
-//             return 0;
-        
-//     }
+    const onTouchStart = (event: TouchEvent) => {
+        const targetEvent = event.changedTouches[0];
+        startX = targetEvent.clientX;
+        startY = targetEvent.clientY;
+    }
 
-//     // 拖拽的缓动公式 - easeOutSine
-//     easing = (distance) => {
-//         // t: current time, b: begInnIng value, c: change In value, d: duration
-//         let t = distance;
-//         let b = 0;
-//         let d = screen.availHeight; // 允许拖拽的最大距离
-//         let c = d / 2.5; // 提示标签最大有效拖拽距离
+    const onTouchMove = (event: TouchEvent) => {
+        const scrollTop = getScrollTop();
+        const scrollH = Tcontainer.scrollHeight;
+        const containerH = Tcontainer === document.body? document.documentElement.clientHeight:Tcontainer.offsetHeight;
+        const targetEvent = event.changedTouches[0];
+        const curX = targetEvent.clientX;
+        const curY = targetEvent.clientY;
+        const diffX = curX - startX;
+        const diffY = curY - startY;
+        if(Math.abs(diffY) > 5 && Math.abs(diffY) > Math.abs(diffX)) {
+            if(diffY > 5 && scrollTop < offsetScrollTop) {
+                event.preventDefault();
+                onPullDownMove([{
+                    touchMoveY: curY,
+                    touchStartY: startY
+                }]);
+            }else if(diffY<0 && (scrollH - scrollTop - containerH) < distanceBottom) {
+                onPullUpMove();
+            }
+        }
+    }
 
-//         return c * Math.sin(t / d * (Math.PI / 2)) + b;
-//     }
+    const onTouchEnd = (event: TouchEvent) => {
+        const scrollTop = getScrollTop();
+        const targetEvent = event.changedTouches[0];
+        const curX = targetEvent.clientX;
+        const curY = targetEvent.clientY;
+        const diffX = curX - startX;
+        const diffY = curY - startY;
 
-//     canRefresh = () => {
-//         return [STATS.refreshing, STATS.loading].indexOf(this.props.action) < 0;
-//     }
+        if(Math.abs(diffY) > 5 && Math.abs(diffY) > Math.abs(diffX)) {
+            if(diffY > 5 && scrollTop < offsetScrollTop) {
+                onPullDownRefresh();
+            }
+        }
+    }
 
-//     onPullDownMove = (data) => {
-//         if (!this.canRefresh()) return false;
+    React.useEffect(()=>{
+        // add Listener
+        Tcontainer = props.isBlockContainer?document.getElementById('pullLoadContainer'): document.body;
+        Tcontainer.addEventListener('touchstart', onTouchStart)
+        Tcontainer.addEventListener('touchmove', onTouchMove)
+        Tcontainer.addEventListener('touchend', onTouchEnd)
+        return ()=>{
+            Tcontainer.removeEventListener('touchstart', onTouchStart)
+            Tcontainer.removeEventListener('touchmove', onTouchMove)
+            Tcontainer.removeEventListener('touchend', onTouchEnd)
+        }
+    },[]);
 
-//         let loaderState; let diff = data[0].touchMoveY - data[0].touchStartY;
-//         if (diff < 0) {
-//             diff = 0;
-//         }
-//         diff = this.easing(diff);
-//         if (diff > this.defaultConfig.downEnough) {
-//             loaderState = STATS.enough
-//         } else {
-//             loaderState = STATS.pulling
-//         }
-//         this.setState({
-//             pullHeight: diff,
-//         })
-//         this.props.handleAction(loaderState)
-//     }
+    React.useEffect(()=>{
+        if(props.action === STATS.refreshed){
+            setTimeout(() => {
+                handleAction(STATS.reset)
+            }, 1000)
+        }
+    }, [props.action])
+    const {pullHeight} = state;
+    const msgStyle = pullHeight ? {
+        WebkitTransform: `translate3d(0, ${pullHeight}px, 0)`,
+        transform: `translate3d(0, ${pullHeight}px, 0)`
+    } : null;
+    const boxClassName = `${props.className} pull-load state-${props.action}`;
+    const {children} = props;
+    return (
+        <div className={boxClassName} id='pullLoadContainer'>
+            <div className="pull-load-body" style={msgStyle}>
+                <div className="pull-load-head">
+                    <HeadNode loaderState={props.action} />
+                </div>
+                {children}
+                <div className="pull-load-footer">
+                    <FooterNode loaderState={props.action} hasMore={props.hasMore} />
+                </div>
+            </div>
+        </div>
+    )
+}
 
-//     onPullDownRefresh = () => {
-//         if (!this.canRefresh()) return false;
 
-//         if (this.props.action === STATS.pulling) {
-//             this.setState({ pullHeight: 0 })
-//             this.props.handleAction(STATS.reset)
-//         } else {
-//             this.setState({
-//                 pullHeight: 0,
-//             })
-//             this.props.handleAction(STATS.refreshing)
-//         }
-//     }
+pullLoad.defaultProps = defaultProps;
 
-//     onPullUpMove = (data) => {
-//         if (!this.canRefresh()) return false;
-
-//         // const { hasMore, onLoadMore} = this.props
-//         // if (this.props.hasMore) {
-//         this.setState({
-//             pullHeight: 0,
-//         })
-//         this.props.handleAction(STATS.loading)
-//         // }
-//     }
-
-//     onTouchStart = (event) => {
-//         let targetEvent = event.changedTouches[0];
-//         this.startX = targetEvent.clientX;
-//         this.startY = targetEvent.clientY;
-//     }
-
-//     onTouchMove = (event) => {
-//         const scrollTop = this.getScrollTop();
-//             let scrollH = this.defaultConfig.container.scrollHeight;
-//             let conH = this.defaultConfig.container === document.body ? document.documentElement.clientHeight : this.defaultConfig.container.offsetHeight;
-//             let targetEvent = event.changedTouches[0];
-//             let curX = targetEvent.clientX;
-//             let curY = targetEvent.clientY;
-//             let diffX = curX - this.startX;
-//             let diffY = curY - this.startY;
-
-//         // 判断垂直移动距离是否大于5 && 横向移动距离小于纵向移动距离
-//         if (Math.abs(diffY) > 5 && Math.abs(diffY) > Math.abs(diffX)) {
-//             // 滚动距离小于设定值 &&回调onPullDownMove 函数，并且回传位置值
-//             if (diffY > 5 && scrollTop < this.defaultConfig.offsetScrollTop) {
-//                 // 阻止执行浏览器默认动作
-//                 event.preventDefault();
-//                 this.onPullDownMove([{
-//                     touchStartY: this.startY,
-//                     touchMoveY: curY
-//                 }]);
-//             } // 滚动距离距离底部小于设定值
-//             else if (diffY < 0 && (scrollH - scrollTop - conH) < this.defaultConfig.distanceBottom) {
-//                 // 阻止执行浏览器默认动作
-//                 // event.preventDefault();
-//                 this.onPullUpMove([{
-//                     touchStartY: this.startY,
-//                     touchMoveY: curY
-//                 }]);
-//             }
-//         }
-//     }
-
-//     onTouchEnd = (event) => {
-//         let scrollTop = this.getScrollTop();
-//             let targetEvent = event.changedTouches[0];
-//             let curX = targetEvent.clientX;
-//             let curY = targetEvent.clientY;
-//             let diffX = curX - this.startX;
-//             let diffY = curY - this.startX;
-
-//         // 判断垂直移动距离是否大于5 && 横向移动距离小于纵向移动距离
-//         if (Math.abs(diffY) > 5 && Math.abs(diffY) > Math.abs(diffX)) {
-//             if (diffY > 5 && scrollTop < this.defaultConfig.offsetScrollTop) {
-//                 // 回调onPullDownRefresh 函数，即满足刷新条件
-//                 this.onPullDownRefresh();
-//             }
-//         }
-//     }
-
-//     render() {
-//         const {
-//             children,
-//             action,
-//             handleAction,
-//             hasMore,
-//             className,
-//             offsetScrollTop,
-//             downEnough,
-//             distanceBottom,
-//             isBlockContainer,
-//             HeadNode,
-//             FooterNode,
-//             ...other
-//         } = this.props
-
-//         const { pullHeight } = this.state
-
-//         const msgStyle = pullHeight ? {
-//             WebkitTransform: `translate3d(0, ${pullHeight}px, 0)`,
-//             transform: `translate3d(0, ${pullHeight}px, 0)`
-//         } : null;
-
-//         const boxClassName = `${className} pull-load state-${action}`;
-
-//         return (
-//             <div {...other}
-//                 className={boxClassName}
-//                 ref="container">
-//                 <div className="pull-load-body" style={msgStyle}>
-//                     <div className="pull-load-head">
-//                         <HeadNode loaderState={action} />
-//                     </div>
-//                     {children}
-//                     <div className="pull-load-footer">
-//                         <FooterNode loaderState={action} hasMore={hasMore} />
-//                     </div>
-//                 </div>
-//             </div>
-//         )
-//     }
-// }
+export default pullLoad;

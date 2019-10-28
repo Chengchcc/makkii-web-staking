@@ -2,7 +2,7 @@ import React from 'react'
 import '../style.less';
 import { useSelector } from 'react-redux';
 import { operationType } from '@reducers/accountReducer';
-import { formatAddress } from '@utils/index';
+import { formatAddress, validateAmount } from '@utils/index';
 import {gas_undelegate, gasPrice, AIONDECIMAL, period_block} from '@utils/constants.json';
 import BigNumber from 'bignumber.js';
 import { CommonButton } from '@components/button';
@@ -40,9 +40,11 @@ const undelegate = props => {
     const pool = pools[operation.pool];
     const { meta } = pool;
     const { address, staked } = account;
-    const handel_undelegate = (e: MouseEvent)=>{
+    const btnDisabled = !validateAmount(amount);
+    const handle_undelegate = (e: MouseEvent)=>{
         e.preventDefault();
-        // TODO handel undelegate
+        // TODO handle undelegate
+        if(btnDisabled) return;
         call_undelegate(operation.pool, amount, 1)
     }
     return (
@@ -68,7 +70,7 @@ const undelegate = props => {
             <div style={{padding:'20px 10px'}}>
                 You have delegated {staked.toString()} AION to this pool
             </div>
-            <CommonButton title='undelegate' onClick={handel_undelegate}/>
+            <CommonButton title='undelegate' onClick={handle_undelegate} disabled={btnDisabled}/>
         </div>
     )
 }

@@ -2,7 +2,7 @@ import React from 'react'
 import '../style.less';
 import { useSelector } from 'react-redux';
 import { operationType } from '@reducers/accountReducer';
-import { formatAddress } from '@utils/index';
+import { formatAddress, validateAmount } from '@utils/index';
 import {gas_delegate, gasPrice, AIONDECIMAL} from '@utils/constants.json';
 import BigNumber from 'bignumber.js';
 import { CommonButton } from '@components/button';
@@ -39,10 +39,13 @@ const delegate = props => {
     const pool = pools[operation.pool];
     const { meta } = pool;
     const { address, balance } = account;
-    const handel_delegate = (e: MouseEvent)=>{
+    const btnDisabled =  !validateAmount(amount);
+    const handle_delegate = (e: MouseEvent)=>{
         e.preventDefault();
-        call_delegate(operation.pool, amount);
-        // TODO handel delegate
+        if(btnDisabled) return;
+        const tx = call_delegate(operation.pool, amount);
+        console.log('delegate Tx=>', tx);
+        // TODO handle delegate
     }
     return (
         <div className='operation-container'>
@@ -66,7 +69,7 @@ const delegate = props => {
             <div style={{padding:'20px 10px'}}>
              Your liquid amount is {balance.toString()} AION.
             </div>
-            <CommonButton title='delegate' onClick={handel_delegate}/>
+            <CommonButton title='delegate' onClick={handle_delegate} disabled={btnDisabled}/>
         </div>
     )
 }

@@ -28,7 +28,10 @@ export function hexCharCodeToStr(hexCharCodeStr) {
     return result_str.join('')
 }
 
-
+export const validateAmount = amount => {
+    const reg = /^[0-9]?((\.[0-9]+)|([0-9]+(\.[0-9]*)?))$/;
+    return reg.test(amount)
+}
 
 
 // TODO mock

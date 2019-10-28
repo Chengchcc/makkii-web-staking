@@ -26,7 +26,7 @@ export interface IAccountState {
     }
 }
 const defaultState2: IAccountState={
-    address: '',
+    address: '0xa0c0792c2d2e97d6907b42440ffe64181080cdff145f70c6c2a3c5379a7d744a',
     liquidBalance: new BigNumber(-1),
     stakedAmount: new BigNumber(-1),
     undelegationAmount: new BigNumber(-1),

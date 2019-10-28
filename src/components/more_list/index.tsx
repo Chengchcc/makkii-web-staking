@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactPullLoad, { STATS } from 'react-pullload';
+import ReactPullLoad, { STATS } from '@components/pullLoad';
 import Spin from '@components/spin'
 import './style.less';
 

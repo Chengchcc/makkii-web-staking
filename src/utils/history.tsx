@@ -18,7 +18,7 @@ export const withNavBar = (WrappedCompnented) => (props) => {
     }
     return (
         <>
-            <div style={{marginTop: hasNavbar?'40px':'0px'}}>
+            <div style={{marginTop: hasNavbar?'35px':'0px'}}>
              <WrappedCompnented {...props} />
             </div>
             {

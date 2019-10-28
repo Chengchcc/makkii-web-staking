@@ -2,7 +2,7 @@ import React from 'react'
 import '../style.less';
 import { useSelector } from 'react-redux';
 import { operationType } from '@reducers/accountReducer';
-import { formatAddress } from '@utils/index';
+import { formatAddress, validateAmount } from '@utils/index';
 import { gas_withdraw, gasPrice, AIONDECIMAL } from '@utils/constants.json';
 import BigNumber from 'bignumber.js';
 import { CommonButton } from '@components/button';
@@ -39,9 +39,11 @@ const withdraw = props => {
     const pool = pools[operation.pool];
     const { meta } = pool;
     const { address, reward } = account;
-    const handel_withdraw = (e: MouseEvent) => {
+    const btnDisabled = validateAmount(amount);
+    const handle_withdraw = (e: MouseEvent) => {
         e.preventDefault();
-        // TODO handel withdraw
+        // TODO handle withdraw
+        if(btnDisabled) return;
         call_withdraw(operation.pool, amount)
     }
     return (
@@ -66,7 +68,7 @@ const withdraw = props => {
             <div style={{ padding: '20px 10px' }}>
                 Rewards in this pools:  {reward.toString()} AION
             </div>
-            <CommonButton title='withdraw' onClick={handel_withdraw} />
+            <CommonButton title='withdraw' onClick={handle_withdraw} disabled={btnDisabled}/>
         </div>
     )
 }

@@ -32,7 +32,6 @@
     "makkii-webview-bridge": "https://github.com/chaion/makkii-webview-bridge.git",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
-    "react-pullload": "^1.2.0",
     "react-redux": "^7.1.0-rc.1",
     "react-router-dom": "^5.1.2",
     "reconnecting-websocket": "^4.2.0",
