@@ -20,6 +20,7 @@ interface Iprops {
     HeadNode?: any
     FooterNode?: any
     className?: string
+    style?: Object
 }
 
 
@@ -49,7 +50,7 @@ let startY = 0;
 let Tcontainer = document.body;
 const pullLoad: React.FC<Iprops> = props => {
 
-    const {offsetScrollTop, downEnough, distanceBottom, handleAction} = props;
+    const {offsetScrollTop, downEnough, distanceBottom, handleAction, style={}} = props;
     const [state, setState] = React.useState({
         pullHeight: 0
     }) 
@@ -172,7 +173,7 @@ const pullLoad: React.FC<Iprops> = props => {
     const boxClassName = `${props.className} pull-load state-${props.action}`;
     const {children} = props;
     return (
-        <div className={boxClassName} id='pullLoadContainer'>
+        <div className={boxClassName} style={style} id='pullLoadContainer'>
             <div className="pull-load-body" style={msgStyle}>
                 <div className="pull-load-head">
                     <HeadNode loaderState={props.action} />
