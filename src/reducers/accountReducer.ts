@@ -19,14 +19,14 @@ export interface IAccountState {
     historyPagination:{current:number,total:number}
     undelegations: { [poolAddres: string]: Iundelegation }
     pools: { [poolAddres: string]: Ipool }
-    history: Array<Itransaction>
+    history: {[hash: string]: Itransaction}
     operation: {
         pool: string, 
         type: operationType
     }
 }
 const defaultState2: IAccountState={
-    address: '0xa0c0792c2d2e97d6907b42440ffe64181080cdff145f70c6c2a3c5379a7d744a',
+    address: '0xa095541186b2e53698244e231274a0754678664d2655d0e233aa3b9a03d21ef4',
     liquidBalance: new BigNumber(-1),
     stakedAmount: new BigNumber(-1),
     undelegationAmount: new BigNumber(-1),
@@ -34,7 +34,7 @@ const defaultState2: IAccountState={
     delegations: {},
     undelegations: {},
     pools: {},
-    history:[],
+    history:{},
     delegationsPagination:{current:0, total:0},
     undelegationsPagination:{current:0, total:0},
     historyPagination:{current:0, total:0},
@@ -102,22 +102,22 @@ const defaultState: IAccountState = {
             performance: new BigNumber(Math.random())
         },
     },
-    history: [
-        {
+    history: {
+        "0xe34caf6d4ff9dccf3d7e1cb5324c52b3f74c44ed79055146737909363e104671":{
             hash: "0xe34caf6d4ff9dccf3d7e1cb5324c52b3f74c44ed79055146737909363e104671",
             amount: new BigNumber(100),
             timestamp: '16dec7fe694',
             type: 'ADSPoolRegistered',
             pool: '0xa0c0792c2d2e97d6907b42440ffe64181080cdff145f70c6c2a3c5379a7d744a',
         },
-        {
+        "0xaff0360c0fbc5aa965c8338ec849a329b3d8c030a1b9ffb834e6fbb16477493c":{
             hash: "0xaff0360c0fbc5aa965c8338ec849a329b3d8c030a1b9ffb834e6fbb16477493c",
             amount: new BigNumber(120),
             timestamp: '16dec7fe994',
             type: 'ADSPoolRegistered',
             pool: '0xa0c0792c2d2e97d6907b42440ffe64181080cdff145f70c6c2a3c5379a7d744a',
         },
-    ],
+    },
     operation: {
         pool:'',
         type: operationType.default

@@ -41,12 +41,12 @@ const withdraw = props => {
     const pool = pools[operation.pool];
     const { meta } = pool;
     const { address, reward } = account;
-    const handle_withdraw = (e: MouseEvent) => {
+    const handle_withdraw = async (e: MouseEvent) => {
         e.preventDefault();
         // TODO handle withdraw
         const amount = inputRef.current.value;
         const valid = validateAmount(amount);
-        if(!valid) {
+        if(!valid  || parseFloat(amount) === 0) {
             alert({
                 title: 'error', message: 'Invalid amount', actions: [
                     {
@@ -56,7 +56,12 @@ const withdraw = props => {
             })
             return;
         }
-        call_withdraw(operation.pool, amount)
+        const res = await call_withdraw(operation.pool, amount)
+        if(res) {
+            // send success
+        }else {
+            // send fail
+        }
     }
     return (
         <div className='operation-container'>
@@ -69,7 +74,8 @@ const withdraw = props => {
                 <input type='number' ref={inputRef} /> &nbsp; AION  &nbsp;
                 <a onClick={e => {
                     e.preventDefault();
-                    inputRef.current.value = reward.minus(fee_withdraw).toString()
+                    const amount = reward.minus(fee_withdraw);
+                    inputRef.current.value = amount.gte(0)?reward.minus(fee_withdraw).toString():'0'
                 }}>All</a>
             </FormItem>
             <FormItem label='Transaction Fee'>

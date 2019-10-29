@@ -31,6 +31,6 @@ export const useListenKeyboard = () => {
         return ()=>{
             window.removeEventListener('resize', resize);
         }
-    },[])
+    })
     return enable
 }

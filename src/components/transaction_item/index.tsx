@@ -13,13 +13,13 @@ interface ItransactionItem {
 const tansferType = type => {
     switch (type) {
         case 'ADSDelegated':
-            return 'Delegation';
+            return 'Delegate:';
         case 'ADSUndelegated':
-            return 'Undelegation';
+            return 'Undelegate:';
         case 'ADSWithdraw':
-            return 'Withdraw';
+            return 'Withdraw:';
         default:
-            return 'Normal'
+            return 'Normal:'
     }
 }
 

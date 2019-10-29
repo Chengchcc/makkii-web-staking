@@ -1,9 +1,10 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable no-param-reassign */
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import BigNumber from 'bignumber.js';
 import store, { createAction } from '../reducers/store';
 import { AIONDECIMAL } from './constants.json'
-import { hexCharCodeToStr} from '.';
+import { hexCharCodeToStr } from '.';
 
 const url = 'wss://staking.chaion.net/api'
 const ws = new ReconnectingWebSocket(url);
@@ -31,7 +32,7 @@ const process_pools = async (pools: { [address: string]: any }, callback) => {
         map[el.address] = {
             address: el.address,
             stakeTotal: new BigNumber(el.stake_total).shiftedBy(AIONDECIMAL),
-            stakeSelf:  new BigNumber(el.stake_self).shiftedBy(AIONDECIMAL),
+            stakeSelf: new BigNumber(el.stake_self).shiftedBy(AIONDECIMAL),
             fee: new BigNumber(el.fee).shiftedBy(-6),
             active: el.active,
             metaDataurl: meta_data_url,
@@ -46,22 +47,22 @@ const process_pools = async (pools: { [address: string]: any }, callback) => {
         };
         total_stake = total_stake.plus(stakeTotal).plus(stakeSelf)
     }
-    Object.values(map).forEach((el:any)=>{
-        el.stakeWeight = total_pos_blk.isEqualTo(0)? new BigNumber(0): el.posBlkTotal.dividedBy(total_pos_blk);
+    Object.values(map).forEach((el: any) => {
+        el.stakeWeight = total_pos_blk.isEqualTo(0) ? new BigNumber(0) : el.posBlkTotal.dividedBy(total_pos_blk);
         const stake = el.stakeTotal.plus(el.stakeSelf);
-        if(total_stake.isEqualTo(0)||stake.isEqualTo(0) || el.stakeWeight.isEqualTo(0)){
+        if (total_stake.isEqualTo(0) || stake.isEqualTo(0) || el.stakeWeight.isEqualTo(0)) {
             el.performance = new BigNumber(0)
-        }else{
+        } else {
             el.performance = el.stakeWeight.dividedBy(el.stakeTotal.plus(el.stakeSelf).dividedBy(total_stake))
 
         }
     });
-    callback({pools:map});
+    callback({ pools: map });
 }
 ws.onmessage = e => {
     const { method, result } = JSON.parse(e.data);
     switch (method) {
-        case 'pools': 
+        case 'pools':
             console.log('ws recv [pools] res=>', result);
             process_pools(result, (payload) => {
                 store.dispatch(createAction('account/update')(payload))
@@ -69,10 +70,10 @@ ws.onmessage = e => {
             break;
         case 'delegations': {
             console.log('ws recv [delgations] res=>', result);
-            const {total_pages, current_page, data} =result;
+            const { total_pages, current_page, data } = result;
             let stake = new BigNumber(0)
             let rewards = new BigNumber(0)
-            const delegations = {...data};
+            const delegations = { ...data };
             Object.keys(delegations).forEach(v => {
                 delegations[v].rewards = new BigNumber(delegations[v].rewards).shiftedBy(AIONDECIMAL)
                 delegations[v].stake = new BigNumber(delegations[v].stake === '0x' ? 0 : delegations[v].stake).shiftedBy(AIONDECIMAL)
@@ -80,31 +81,43 @@ ws.onmessage = e => {
                 rewards = rewards.plus(delegations[v].rewards)
                 delegations[v].rewards = new BigNumber(delegations[v].rewards).shiftedBy(AIONDECIMAL)
             })
-            store.dispatch(createAction('account/update')({ stakedAmount: stake, rewards, delegations, delegationsPagination:{current:current_page, total:total_pages} }))
+            const { delegations: oldDelegations } = store.getState().account
+            store.dispatch(createAction('account/update')(
+                { stakedAmount: stake, rewards, delegations: { ...oldDelegations, ...delegations }, delegationsPagination: { current: current_page, total: total_pages } }
+                ))
         }
             break;
         case 'undelegations': {
-            console.log('ws recv [undelegations] res=>', result); 
-            const {total_pages, current_page, data} =result;
+            console.log('ws recv [undelegations] res=>', result);
+            const { total_pages, current_page, data } = result;
 
             let unDelegated = new BigNumber(0);
-            const undelegations = {...data};
+            const undelegations = { ...data };
             Object.keys(undelegations).forEach(v => {
                 undelegations[v].amount = new BigNumber(undelegations[v].amount).shiftedBy(AIONDECIMAL)
+                undelegations[v].blockNumber = undelegations[v].block_number
                 unDelegated = unDelegated.plus(undelegations[v].amount)
             })
-            store.dispatch(createAction('account/update')({ undelegationAmount: unDelegated, undelegations,undelegationsPagination:{current:current_page, total:total_pages} }))
+            const { undelegations: oldUndelegations } = store.getState().account
+            store.dispatch(createAction('account/update')(
+                { undelegationAmount: unDelegated, undelegations: { ...oldUndelegations, ...undelegations }, undelegationsPagination: { current: current_page, total: total_pages } }
+                ))
         }
             break;
         case 'transactions': {
-            console.log('ws recv [transactions] res=>', result);  
-            const {total_pages, current_page, data} =result;
-            const history = [...data];
-            history.forEach(v => {
+            console.log('ws recv [transactions] res=>', result);
+            const { total_pages, current_page, data } = result;
+            const history_ = [...data];
+            const history = history_.reduce((map,v)=> {
                 v.amount = new BigNumber(v.amount).shiftedBy(AIONDECIMAL)
                 if (v.amount.toString() === 'NaN') v.amount = new BigNumber(0)
-            })
-            store.dispatch(createAction('account/update')({ history,historyPagination:{current:current_page, total:total_pages} }))
+                map[v.hash] = v;
+                return map
+            }, {});
+            const { history: oldHistory } = store.getState().account
+            store.dispatch(createAction('account/update')(
+                { history: { ...oldHistory, ...history }, historyPagination: { current: current_page, total: total_pages } }
+                ))
         }
             break;
         case 'eth_getBalance':

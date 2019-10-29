@@ -11,6 +11,7 @@ import TransactionItem from '@components/transaction_item';
 import { createAction } from '@reducers/store';
 import operation from '@pages/operation';
 import { CommonButton } from '@components/button';
+import {alert} from '@components/modal'
 import Card from './card';
 import './style.less';
 
@@ -62,6 +63,9 @@ export const process_undelegations = (undelegations) => {
     }, [])
 }
 
+export const process_transctions = transctions => {
+    return Object.values(transctions).sort((a: any, b: any) => a.timestamp - b.timestamp)
+}
 interface Ihome {
     history: History,
 }
@@ -131,6 +135,7 @@ const renderAccountInfo = (info, src) => {
 const home = (props: Ihome) => {
     const { history } = props;
     const account = useSelector(mapToState);
+    const [loading, setLoading] = React.useState(false);
     const dispath = useDispatch();
     const { address, pools, delegations, undelegations, history: transactions } = account;
     const toDelegate = e => {
@@ -183,6 +188,7 @@ const home = (props: Ihome) => {
     }
     React.useEffect(() => {
         if (address !== '') {
+            setLoading(true)
             wsSend({ method: 'eth_getBalance', params: [address] })
             wsSend({ method: 'delegations', params: [address, 0, 10] })
             wsSend({ method: 'transactions', params: [address, 0, 10] })
@@ -190,12 +196,15 @@ const home = (props: Ihome) => {
             wsSend({ method: 'undelegations', params: [address, 0, 10] })
         }
     }, [address])
-
-
+    React.useEffect(() => {
+        if (loading) {
+            setLoading(false)
+        }
+    }, [transactions, pools, undelegations, delegations]);
     const handleSwitchAccount = (e) => {
         e.preventDefault();
         // TODO handle switch account
-     
+
         const { makkii } = window;
         if (makkii.isconnect()) {
             makkii.switchAccount().then(r => {
@@ -206,6 +215,13 @@ const home = (props: Ihome) => {
         } else {
             // TODO no makkii
             console.log('not in makkii env')
+            alert({
+                title:'error',
+                message: 'please open by Makkii',
+                actions: [{
+                    title: 'Ok'
+                }]
+            })
         }
 
     }
@@ -253,7 +269,7 @@ const home = (props: Ihome) => {
     const hasPools = Object.keys(pools).length > 0;
     const hasDelegations = Object.keys(delegations).length > 0;
     const hasUndelegations = Object.keys(undelegations).length > 0;
-    const hasHistory = transactions.length > 0;
+    const hasHistory = Object.keys(transactions).length > 0;
     return (
         <div className='flex-container'>
             <div className='home-header'>
@@ -268,10 +284,18 @@ const home = (props: Ihome) => {
                 <CommonButton className='home-button' title='delegate' onClick={toDelegate} />
                 <CommonButton className='home-button' title='withdraw' onClick={toWithDraw} />
             </div>
-            {hasPools && hasDelegations && renderPoolsMore('My Delegations', process_delegations(delegations).slice(0, 3), delegationInfo, toDelegations)}
-            {hasPools && hasUndelegations && renderPoolsMore('Pending Undelegations', process_undelegations(undelegations).slice(0, 3), unDelegationInfo, toPendingUndlegation)}
-            {hasPools && renderPools('Top pools', pools)}
-            {hasPools && hasHistory && renderTransaction('Stake History', transactions.slice(0, 3), toHistoryList)}
+
+            {!loading && hasPools && hasDelegations && renderPoolsMore('My Delegations', process_delegations(delegations).slice(0, 3), delegationInfo, toDelegations)}
+            {!loading && hasPools && hasUndelegations && renderPoolsMore('Pending Undelegations', process_undelegations(undelegations).slice(0, 3), unDelegationInfo, toPendingUndlegation)}
+            {!loading && hasPools && renderPools('Top pools', pools)}
+            {!loading && hasPools && hasHistory && renderTransaction('Stake History', process_transctions(transactions).slice(0, 3), toHistoryList)}
+
+            {loading &&
+                <div style={{display:'flex', flex:1,alignItems:'center', justifyContent:'center'}}>
+                    <Spin />
+                </div>
+            }
+
         </div>
     )
 }

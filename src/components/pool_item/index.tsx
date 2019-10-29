@@ -82,6 +82,7 @@ export const PoolItem: React.FC<IPoolItem> = props => {
         <div className='pool-item-thrid' onClick={e => {
             e.preventDefault();
             toPool(pool.address)
+            window.scrollTo(0, 0)
         }}>
             <div className='pool-base'>
                 <Image src={meta.logo} className='pool-logo' alt="" />

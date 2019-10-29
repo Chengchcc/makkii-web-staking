@@ -31,7 +31,6 @@ const poolList = props => {
             }
         }))
         history.push('/operation');
-        window.scrollTo(0, 0)
     }
     React.useEffect(()=>{
         if(Object.keys(pools).length===0){

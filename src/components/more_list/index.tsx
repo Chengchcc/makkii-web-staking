@@ -19,7 +19,6 @@ const List: React.FC<Ilist<any>> = props => {
         action: STATS.init,
         isLoading: true,
     })
-
     const handleAction = (action) => {
         if (action === state.action ||
             action === STATS.refreshing && state.action === STATS.loading ||
@@ -40,23 +39,23 @@ const List: React.FC<Ilist<any>> = props => {
     }
 
     React.useEffect(() => {
+        const newState = {...state};
+        let update = false;
         if (state.isLoading&&data.length>0) {
-            setState({
-                ...state,
-                isLoading: false,
-            })
+            newState.isLoading = false
+            update = true;
         }
         if (state.action === STATS.refreshing) {
-            setState({
-                ...state,
-                action: STATS.refreshed
-            })
+            newState.action = STATS.refreshed
+            update = true;
         } else if (state.action === STATS.loading) {
-            setState({
-                ...state,
-                action: STATS.reset
-            })
+            newState.action = STATS.reset
+            update = true;
         }
+        if(update){
+            setState(newState)
+        }
+        
     }, [data]);
     const style = {height: window.innerHeight-80}
     return (
@@ -72,7 +71,7 @@ const List: React.FC<Ilist<any>> = props => {
                         action={state.action}
                         handleAction={handleAction}
                         hasMore={hasMore}
-                        distanceBottom={1000}>
+                        distanceBottom={1}>
                         <ul>
                             {
                                 data.map((item, index) => {

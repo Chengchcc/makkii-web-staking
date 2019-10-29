@@ -12,7 +12,7 @@ import Image from '@components/default-img'
 import FormItem from '../operation_form_item';
 import { commonGoback } from '../util';
 
-const fee_delegate = new BigNumber(gas_undelegate).times(gasPrice).shiftedBy(AIONDECIMAL);
+const fee_undelegate = new BigNumber(gas_undelegate).times(gasPrice).shiftedBy(AIONDECIMAL);
 
 const maptoState = ({ account }) => {
     const { delegations, operation } = account;
@@ -42,12 +42,12 @@ const undelegate = props => {
     const pool = pools[operation.pool];
     const { meta } = pool;
     const { address, staked } = account;
-    const handle_undelegate = (e: MouseEvent)=>{
+    const handle_undelegate = async (e: MouseEvent)=>{
         e.preventDefault();
         // TODO handle undelegate
         const amount = inputRef.current.value;
         const valid = validateAmount(amount);
-        if(!valid) {
+        if(!valid  || parseFloat(amount) === 0) {
             alert({
                 title: 'error', message: 'Invalid amount', actions: [
                     {
@@ -57,7 +57,13 @@ const undelegate = props => {
             })
             return;
         }
-        call_undelegate(operation.pool, amount, 1)
+        const res = await call_undelegate(operation.pool, amount, 1)
+        if(res){
+            // send success
+
+        }else {
+            // send fail
+        }
     }
     return (
         <div className='operation-container'>
@@ -71,11 +77,12 @@ const undelegate = props => {
                 <input type='number' ref={inputRef} /> &nbsp; AION  &nbsp;
                 <a onClick={e=>{
                     e.preventDefault();
-                    inputRef.current.value= staked.minus(fee_delegate).toString()
+                    const amount = staked.minus(fee_undelegate);
+                    inputRef.current.value = amount.gte(0)?staked.minus(fee_undelegate).toString():'0'
                 }}>All</a>
             </FormItem>
             <FormItem label='Transaction Fee'>
-                Approx. {fee_delegate.toFixed(8)} AION
+                Approx. {fee_undelegate.toFixed(8)} AION
             </FormItem>
             <div style={{padding:'20px 10px'}}>
                 You have delegated {staked.toString()} AION to this pool

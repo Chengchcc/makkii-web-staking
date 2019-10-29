@@ -3,6 +3,7 @@ import MoreList from '@components/more_list';
 import TransactionItem from '@components/transaction_item';
 import { useSelector } from 'react-redux';
 import { wsSend } from '@utils/websocket';
+import { process_transctions } from '@pages/home';
 
 const mapToState = ({ account }) => {
     return {
@@ -21,7 +22,6 @@ const HistoryLists = () => {
     }
     const onReachEnd = () => {
         wsSend({ method: 'transactions', params: [address, pagination.current+1, 10] })
-
     }
     const hasMore = pagination.current + 1 <pagination.total;
 
@@ -31,7 +31,7 @@ const HistoryLists = () => {
             onReachEnd={onReachEnd}
             onRefresh={onRefresh}
             hasMore={hasMore}
-            data={transactions}
+            data={process_transctions(transactions)}
             renderItem={(el) => {
                 return <TransactionItem pool={pools[el.pool]} transaction={el}/>
             }}

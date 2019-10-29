@@ -6,6 +6,7 @@ import './style.less';
 import { formatAddress } from '@utils/index';
 import { CommonButton } from '@components/button';
 import { createAction } from '@reducers/store';
+import {alert} from '@components/modal';
 import Image from '@components/default-img'
 
 const mapToState = ({ account }) => {
@@ -136,7 +137,7 @@ const Pageoperation = props => {
 
     const toDelegate = () => {
         const {makkii} = window;
-        // if(makkii.isconnect()){
+        if(makkii.isconnect()){
             dispatch(createAction('account/update')({
                 operation: {
                     ...operation,
@@ -144,9 +145,16 @@ const Pageoperation = props => {
                 }
             }));
             history.push('/delegate')
-        // }else{
+        }else{
             // TODO no makkii 
-        // }
+            alert({
+                title:'error',
+                message: 'please open by Makkii',
+                actions: [{
+                    title: 'Ok'
+                }]
+            })
+        }
         
     }
 
@@ -210,7 +218,7 @@ const Pageoperation = props => {
                         active === '0x01' ? 'Active' : 'Inactive'
                     }</li>
                     <li data-label="Address: ">{formatAddress(poolAddress)}</li>
-                    <li><a href={url} target='_blank' rel="noopener noreferrer">Pool Home</a></li>
+                    <li><a href={url} target='_blank' rel="noopener noreferrer">HomePage</a></li>
                 </ul>
             </div>
             {accountLabel()}

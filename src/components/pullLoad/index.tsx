@@ -25,7 +25,6 @@ interface Iprops {
 
 
 const defaultProps = {
-    hasMore: true,
     offsetScrollTop: 1,
     downEnough: 100,
     distanceBottom: 100,
@@ -50,7 +49,8 @@ let startY = 0;
 let Tcontainer = document.body;
 const pullLoad: React.FC<Iprops> = props => {
 
-    const {offsetScrollTop, downEnough, distanceBottom, handleAction, style={}} = props;
+    const {offsetScrollTop, downEnough, distanceBottom, handleAction, style={}, hasMore} = props;
+
     const [state, setState] = React.useState({
         pullHeight: 0
     }) 
@@ -97,7 +97,7 @@ const pullLoad: React.FC<Iprops> = props => {
     }
 
     const onPullUpMove = () => {
-        if(!canRefresh()||!props.hasMore) return;
+        if(!canRefresh()||!hasMore) return;
         setState({pullHeight: 0})
         handleAction(STATS.loading)
     }
@@ -152,11 +152,12 @@ const pullLoad: React.FC<Iprops> = props => {
         Tcontainer.addEventListener('touchmove', onTouchMove)
         Tcontainer.addEventListener('touchend', onTouchEnd)
         return ()=>{
+            console.log('[debug] remove listener')
             Tcontainer.removeEventListener('touchstart', onTouchStart)
             Tcontainer.removeEventListener('touchmove', onTouchMove)
             Tcontainer.removeEventListener('touchend', onTouchEnd)
         }
-    },[]);
+    });
 
     React.useEffect(()=>{
         if(props.action === STATS.refreshed){

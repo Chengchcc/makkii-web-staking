@@ -1,8 +1,10 @@
 @import '../theme.less';
 
 .flex-container {
+    display: flex;
+    flex-direction: column;
     height: 100%;
-    width: 100%;
+    float: 1;
     margin: 0 0;
 }
 
@@ -24,23 +26,20 @@
 
 .header-info {
     display: grid;
-    grid-template-columns: repeat(2, 50%);
+    grid-template-columns: repeat(2, auto);
 }
 
 .header-info-item {
     margin: 10px auto;
-
     .header-info-item-value {
         margin: 5px auto;
         font-size: 20px;
-        font-weight: 200;
         text-align: center;
     }
 
     .header-info-item-title {
         margin: 5px auto;
         font-size: 10px;
-        font-weight: 50;
         text-align: center;
     }
 }
