@@ -28,7 +28,7 @@
     "axios": "^0.19.0",
     "bignumber.js": "^9.0.0",
     "history": "^4.10.1",
-    "makkii-webview-bridge": "https://github.com/chaion/makkii-webview-bridge.git#65dfb9b05af435951c800492de42497012d1b56b",
+    "makkii-webview-bridge": "https://github.com/chaion/makkii-webview-bridge.git#933db99693f2cde78a5ef03f53fe07d954a7fa6d",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
     "react-redux": "^7.1.0-rc.1",

@@ -7,8 +7,18 @@ declare const BASENAME: string;
 
 const history = createHistory({
     basename: `/${BASENAME}`
-    
 });
+history.listen((location, action)=>{
+    console.log('history update=>',location, action)
+    // @ts-ignore
+    if (window.ReactNativeWebView) {
+        // @ts-ignore
+        window.ReactNativeWebView.postMessage(JSON.stringify({
+            type: 'historyUpdated'
+        }));
+    }
+});
+
 export default history;
 export const withNavBar = (WrappedCompnented) => (props) => {
     const {goBack,canGoBack} = WrappedCompnented;

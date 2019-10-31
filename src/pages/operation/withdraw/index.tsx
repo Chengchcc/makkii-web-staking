@@ -46,7 +46,8 @@ const withdraw = props => {
         // TODO handle withdraw
         const amount = inputRef.current.value;
         const valid = validateAmount(amount);
-        if(!valid  || parseFloat(amount) === 0) {
+        const insufficientBalance = new BigNumber(amount).plus(fee_withdraw).gt(reward);
+        if(!valid  || parseFloat(amount) === 0 || insufficientBalance) {
             alert({
                 title: 'error', message: 'Invalid amount', actions: [
                     {

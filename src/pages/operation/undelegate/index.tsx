@@ -47,7 +47,8 @@ const undelegate = props => {
         // TODO handle undelegate
         const amount = inputRef.current.value;
         const valid = validateAmount(amount);
-        if(!valid  || parseFloat(amount) === 0) {
+        const insufficientBalance = new BigNumber(amount).plus(fee_undelegate).gt(staked);
+        if(!valid  || parseFloat(amount) === 0 || insufficientBalance) {
             alert({
                 title: 'error', message: 'Invalid amount', actions: [
                     {

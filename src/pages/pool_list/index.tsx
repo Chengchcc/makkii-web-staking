@@ -4,6 +4,7 @@ import { PoolItem } from '@components/pool_item';
 import { useSelector, useDispatch } from 'react-redux';
 import { wsSend } from '@utils/websocket';
 import store, { createAction } from '@reducers/store';
+import { operationType } from '@reducers/accountReducer';
 
 const mapToState = ({ account }) => {
     return {
@@ -30,7 +31,15 @@ const poolList = props => {
                 pool,
             }
         }))
-        history.push('/operation');
+        if(operationType.default === operation.type) {
+            history.push('/operation');
+        }else if (operationType.delegate === operation.type) {
+            history.push('/delegate');
+        }else if (operationType.undelegate === operation.type) {
+            history.push('/undelegate');
+        }else if (operationType.withdraw === operation.type) {
+            history.push('/withdraw');
+        }
     }
     React.useEffect(()=>{
         if(Object.keys(pools).length===0){

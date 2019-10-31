@@ -121,7 +121,9 @@ ws.onmessage = e => {
         }
             break;
         case 'eth_getBalance':
-            store.dispatch(createAction('account/update')({ liquidBalance: new BigNumber(result).shiftedBy(AIONDECIMAL) }))
+            console.log('ws recv [eth_getBalance] res=>', result);
+
+            store.dispatch(createAction('account/update')({ liquidBalance: new BigNumber(result||0).shiftedBy(AIONDECIMAL) }))
             break;
         default:
             break
@@ -130,6 +132,7 @@ ws.onmessage = e => {
 }
 
 export const wsSend = (payload, time = 1) => {
+    console.log('ws send =>', payload)
     if (ws === null || time < 1) return
     if (ws.readyState !== 1) {
         setTimeout(() => {

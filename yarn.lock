@@ -6429,9 +6429,9 @@ make-dir@^3.0.0:
   dependencies:
     semver "^6.0.0"
 
-"makkii-webview-bridge@https://github.com/chaion/makkii-webview-bridge.git#65dfb9b05af435951c800492de42497012d1b56b":
+"makkii-webview-bridge@https://github.com/chaion/makkii-webview-bridge.git#933db99693f2cde78a5ef03f53fe07d954a7fa6d":
   version "1.0.0"
-  resolved "https://github.com/chaion/makkii-webview-bridge.git#65dfb9b05af435951c800492de42497012d1b56b"
+  resolved "https://github.com/chaion/makkii-webview-bridge.git#933db99693f2cde78a5ef03f53fe07d954a7fa6d"
 
 mamacro@^0.0.3:
   version "0.0.3"

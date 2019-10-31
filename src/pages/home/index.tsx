@@ -219,8 +219,15 @@ const home = (props: Ihome) => {
                 title:'error',
                 message: 'please open by Makkii',
                 actions: [{
-                    title: 'Ok'
-                }]
+                    title: 'Ok',
+                    onPress: ()=>{
+                        
+                    }
+                },
+                {
+                    title: 'Cancel'
+                }
+            ]
             })
         }
 
