@@ -1,4 +1,6 @@
 /* eslint-disable camelcase */
+import store, { createAction } from '@reducers/store';
+import {alert} from '@components/modal';
 
 export const formatAddress = address => {
     return `${address.slice(0, 10)  }...${  address.slice(-10)}`
@@ -43,4 +45,34 @@ export const genPoolName = ()=> {
         str += Template.charAt(parseInt(`${Math.random()*26}`,10))
     }
     return str;
+}
+
+
+export const handleSwitchAccount = () => {
+    const { makkii } = window;
+    if (makkii.isconnect()) {
+        makkii.switchAccount().then(r => {
+            console.log('handleSwitchAccount', r);
+            store.dispatch(createAction('account/update')({ address: r }))
+        }).catch(err => {
+            console.log('switch account error=>', err);
+        })
+    } else {
+        console.log('not in makkii env')
+        alert({
+            title:'error',
+            message: 'Please open by Makkii',
+            actions: [{
+                title: 'Ok',
+                onPress: ()=>{
+                    
+                }
+            },
+            {
+                title: 'Cancel'
+            }
+        ]
+        })
+    }
+
 }

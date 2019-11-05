@@ -59,7 +59,7 @@ const List: React.FC<Ilist<any>> = props => {
     }, [data]);
     const style = {height: window.innerHeight-80}
     return (
-        <div style={{ margin: 0, padding: 0, overflow:"hidden" }}>
+        <div style={{ margin: 0, padding: 0,overflow:"hidden" }}>
             <div className='list-title'>{title}</div>
             {
                 !state.isLoading ?

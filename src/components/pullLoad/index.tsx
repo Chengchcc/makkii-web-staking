@@ -152,7 +152,6 @@ const pullLoad: React.FC<Iprops> = props => {
         Tcontainer.addEventListener('touchmove', onTouchMove)
         Tcontainer.addEventListener('touchend', onTouchEnd)
         return ()=>{
-            console.log('[debug] remove listener')
             Tcontainer.removeEventListener('touchstart', onTouchStart)
             Tcontainer.removeEventListener('touchmove', onTouchMove)
             Tcontainer.removeEventListener('touchend', onTouchEnd)

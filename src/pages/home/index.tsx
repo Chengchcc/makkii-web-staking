@@ -4,14 +4,13 @@ import { History } from 'history'
 import { operationType } from '@reducers/accountReducer';
 import Spin from '@components/spin';
 import { useSelector, useDispatch } from 'react-redux';
-import { formatAddress } from '@utils/index';
+import { formatAddress, handleSwitchAccount } from '@utils/index';
 import { wsSend } from '@utils/websocket';
 import { PoolItem, PoolItemMore, Iinfo } from '@components/pool_item';
 import TransactionItem from '@components/transaction_item';
 import { createAction } from '@reducers/store';
 import operation from '@pages/operation';
 import { CommonButton } from '@components/button';
-import {alert} from '@components/modal'
 import Card from './card';
 import './style.less';
 
@@ -201,37 +200,7 @@ const home = (props: Ihome) => {
             setLoading(false)
         }
     }, [transactions, pools, undelegations, delegations]);
-    const handleSwitchAccount = (e) => {
-        e.preventDefault();
-        // TODO handle switch account
 
-        const { makkii } = window;
-        if (makkii.isconnect()) {
-            makkii.switchAccount().then(r => {
-                dispath(createAction('account/update')({ address: r }))
-            }).catch(err => {
-                console.log('switch account error=>', err);
-            })
-        } else {
-            // TODO no makkii
-            console.log('not in makkii env')
-            alert({
-                title:'error',
-                message: 'please open by Makkii',
-                actions: [{
-                    title: 'Ok',
-                    onPress: ()=>{
-                        
-                    }
-                },
-                {
-                    title: 'Cancel'
-                }
-            ]
-            })
-        }
-
-    }
 
     const renderPools = (title, lists_) => {
         const lists = Object.values(lists_).slice(0, 3);

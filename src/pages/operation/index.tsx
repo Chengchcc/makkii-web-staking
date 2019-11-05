@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { operationType } from '@reducers/accountReducer';
 import Bignumber from 'bignumber.js';
 import './style.less';
-import { formatAddress } from '@utils/index';
+import { formatAddress, handleSwitchAccount } from '@utils/index';
 import { CommonButton } from '@components/button';
 import { createAction } from '@reducers/store';
 import {alert} from '@components/modal';
@@ -61,14 +61,14 @@ const poolDetailInfo = [
         title: 'self-bond',
         dataIndex: 'stakeSelf',
         render: val => {
-            return <span>{val.toNumber()}</span>
+            return <span>{val.toNumber().toFixed(2)}</span>
         }
     },
     {
         title: 'total staked',
         dataIndex: 'stakeTotal',
         render: val => {
-            return <span>{val.toNumber()}</span>
+            return <span>{val.toNumber().toFixed(2)}</span>
         }
     }
 ]
@@ -138,18 +138,30 @@ const Pageoperation = props => {
     const toDelegate = () => {
         const {makkii} = window;
         if(makkii.isconnect()){
-            dispatch(createAction('account/update')({
-                operation: {
-                    ...operation,
-                    type: operationType.delegate
-                }
-            }));
-            history.push('/delegate')
+            if(!account) {
+                alert({
+                    title:'error',
+                    message: 'Please import an account first',
+                    actions: [{
+                        title: 'Ok',
+                        onPress: handleSwitchAccount
+                    }]
+                })
+            }else {
+                dispatch(createAction('account/update')({
+                    operation: {
+                        ...operation,
+                        type: operationType.delegate
+                    }
+                }));
+                history.push('/delegate')
+            }
+            
         }else{
             // TODO no makkii 
             alert({
                 title:'error',
-                message: 'please open by Makkii',
+                message: 'Please open by Makkii',
                 actions: [{
                     title: 'Ok'
                 }]
