@@ -3,10 +3,10 @@
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import BigNumber from 'bignumber.js';
 import store, { createAction } from '../reducers/store';
-import { AIONDECIMAL } from './constants.json'
+import { AIONDECIMAL, WS_URL } from './constants.json'
 import { hexCharCodeToStr } from '.';
 
-const url = 'wss://staking.chaion.net/api'
+const url = WS_URL
 const ws = new ReconnectingWebSocket(url);
 /**
 name:
