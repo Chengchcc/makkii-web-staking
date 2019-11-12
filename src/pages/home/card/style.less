@@ -1,5 +1,4 @@
 .card-container{
-    background: #fff;
     width: 95%;
     margin: 20px auto;
     border-radius: 5px;
@@ -14,6 +13,7 @@
     flex-direction: row;
     justify-content: space-between;
     font-family: sans-serif;
+    background-color: #e1dccd;
     &>span {
         display: block;
         &>a {
@@ -23,17 +23,19 @@
     }
 }
 .card-body {
-    margin: 0px 5px;
+    margin: 0;
     padding: 0;
     ul {
         margin: 0;
         padding: 0;
+        overflow-x: hidden;
         li:last-child{
             border-bottom: 1px solid #ddd;
         }
         li {
-            border-top: 1px solid #ddd;
+            margin-top: 10px;
             list-style-type: none;
+            background-color: #e1dccd;
         }
     }
 }

@@ -21,12 +21,12 @@ export interface IAccountState {
     pools: { [poolAddres: string]: Ipool }
     history: {[hash: string]: Itransaction}
     operation: {
-        pool: string, 
+        pool: string,
         type: operationType
     }
 }
 const defaultState2: IAccountState={
-    address: '',
+    address: '0xa0c0792c2d2e97d6907b42440ffe64181080cdff145f70c6c2a3c5379a7d744a',
     liquidBalance: new BigNumber(-1),
     stakedAmount: new BigNumber(-1),
     undelegationAmount: new BigNumber(-1),
@@ -44,7 +44,7 @@ const defaultState2: IAccountState={
     }
 }
 const defaultState: IAccountState = {
-    address: '0xa0c0792c2d2e97d6907b42440ffe64181080cdff145f70c6c2a3c5379a7d744a',
+    address: '0xa0abf11a86e717aa751b0cc2559910317ebf89fc9f8ac3109e54d2d509d0ce78',
     liquidBalance: new BigNumber(100),
     stakedAmount: new BigNumber(200),
     undelegationAmount: new BigNumber(300),

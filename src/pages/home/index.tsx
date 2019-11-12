@@ -273,15 +273,15 @@ const home = (props: Ihome) => {
         <div className='flex-container'>
             <div className='home-header'>
                 <div className='header-account'>
-                    <span style={{ fontSize: '16px' }}>My Account:</span>&nbsp;
+                    <span style={{ fontSize: '16px' }}>My Account:</span>
                     <span style={{ fontSize: '12px' }}>{`${formatAddress(address)}`}</span>
-                    <CommonButton className='switch-account-button' title="switch" onClick={handleSwitchAccount} />
+                    <CommonButton className='switch-account-button button-orange' title="switch" onClick={handleSwitchAccount} />
                 </div>
                 {renderAccountInfo(accountInfo, account)}
             </div>
             <div className='home-button-container'>
-                <CommonButton className='home-button' title='Delegate' onClick={toDelegate} />
-                <CommonButton className='home-button' title='Withdraw' onClick={toWithDraw} />
+                <CommonButton className='home-button button-orange' title='Delegate' onClick={toDelegate} />
+                <CommonButton className='home-button button-orange' title='Withdraw' onClick={toWithDraw} />
             </div>
 
             {!loading && hasPools && hasDelegations && renderPoolsMore('My Delegations', process_delegations(delegations).slice(0, 3), delegationInfo, toDelegations)}
