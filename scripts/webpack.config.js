@@ -111,4 +111,8 @@ module.exports = {
     port: 8080,
     publicPath,
   },
+  watchOptions: {
+    aggregateTimeout: 300,
+    poll: 1000
+  }
 };

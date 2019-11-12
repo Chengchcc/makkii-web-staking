@@ -31,6 +31,7 @@ const poolList = props => {
                 pool,
             }
         }))
+        console.log('pools is:', pool)
         if(operationType.default === operation.type) {
             history.push('/operation');
         }else if (operationType.delegate === operation.type) {

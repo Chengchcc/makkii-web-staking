@@ -84,9 +84,9 @@ export const PoolItem: React.FC<IPoolItem> = props => {
             toPool(pool.address)
             window.scrollTo(0, 0)
         }}>
-            <div className='pool-base'>
+            {/* <div className='pool-base'>
                 <Image src={meta.logo} className='pool-logo' alt="" />
-                <div style={{ marginTop: '10px' }}>
+                <div>
                     <span className={active === '0x01' ? 'poolActive' : 'poolInActive'} />
                     &nbsp;
                     {formatPoolName(meta.name || pool.address)}
@@ -95,7 +95,16 @@ export const PoolItem: React.FC<IPoolItem> = props => {
             <div className='pool-info'>
                 {lists(INFOS, pool, {})}
             </div>
-            <IconRight className='pool-detail-img' color='red' />
+            <IconRight className='pool-detail-img'/> */}
+            <div className="left-logo" style={{backgroundImage: meta.logo ? `url(${meta.logo})` : `url(${require('@img/default.png')})`}}>
+                {/*<div style={{borderColor: active === "0x01" ? "#08de00" : "#e84f4f"}}></div>*/}
+            </div>
+            <div style={{backgroundColor: active === "0x01" ? "#08de00" : "#e84f4f"}}></div>
+            <span>{meta.name || pool.address}</span>
+            <IconRight className='pool-detail-img'/>
+            <div className="stake-weight">
+               {pool.performance.multipliedBy(100, 10).toFixed(5)}%
+            </div>
         </div>
     )
 }
