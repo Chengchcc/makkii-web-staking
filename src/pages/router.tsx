@@ -12,7 +12,7 @@ import PageOperation from '@pages/operation';
 import { withNavBar } from '@utils/history';
 import { useSelector } from 'react-redux';
 
-
+import './theme.less'
 
 const withLockByAccount = (WrappedComponent) => props=> {
     // lock by account, if no account, can not visit
@@ -27,7 +27,7 @@ const withLockByAccount = (WrappedComponent) => props=> {
         }
     }, [address]);
     return lock? <div/>:<WrappedComponent {...props} />
-    
+
 }
 
 const router = ({ history }) => {

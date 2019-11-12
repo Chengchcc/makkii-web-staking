@@ -40,7 +40,7 @@ const poolDetailInfo = [
             // eslint-disable-next-line no-nested-ternary
             const [color, text] = n < 90 ? ['red', 'poor'] : n > 95 ? ['green', 'high'] : ['#ff9910', 'medium'];
 
-            return <span style={{ color }}>{text}</span>
+            return <span>{text}</span>
         }
     },
     {
@@ -156,9 +156,9 @@ const Pageoperation = props => {
                 }));
                 history.push('/delegate')
             }
-            
+
         }else{
-            // TODO no makkii 
+            // TODO no makkii
             alert({
                 title:'error',
                 message: 'Please open by Makkii',
@@ -167,7 +167,7 @@ const Pageoperation = props => {
                 }]
             })
         }
-        
+
     }
 
     const toUndelegate = () => {
@@ -189,7 +189,7 @@ const Pageoperation = props => {
         }));
         history.push('/withdraw')
     }
-    
+
     React.useEffect(()=>{
         if (!operation.pool) {
             history.replace('/poolList')
@@ -212,14 +212,14 @@ const Pageoperation = props => {
     }
 
     const { meta: { logo, name, url }, active, address: poolAddress } = pool;
-   
+
 
     return (
         <div className='operation-container'>
             <div className='operation-pool-basic'>
                 <Image src={logo} alt="" />
                 <ul>
-                    <li data-label="Name: ">{name}</li>
+                    <li data-label="Name: ">{name || poolAddress}</li>
                     <li data-label="Status: "><span className={active === '0x01' ? 'poolActive' : 'poolInActive'} /> {
                         active === '0x01' ? 'Active' : 'Inactive'
                     }</li>

@@ -78,6 +78,7 @@ const lists = (info, src, extra) => {
 export const PoolItem: React.FC<IPoolItem> = props => {
     const { pool, toPool } = props;
     const { meta, active } = pool;
+    console.log('pool is:', pool)
     return (
         <div className='pool-item-thrid' onClick={e => {
             e.preventDefault();
@@ -86,16 +87,16 @@ export const PoolItem: React.FC<IPoolItem> = props => {
         }}>
             <div className='pool-base'>
                 <Image src={meta.logo} className='pool-logo' alt="" />
-                <div style={{ marginTop: '10px' }}>
+                <div>
                     <span className={active === '0x01' ? 'poolActive' : 'poolInActive'} />
                     &nbsp;
-                    {meta.name}
+                    <span title={meta.name || pool.address}>{meta.name || pool.address}</span>
                 </div>
             </div>
             <div className='pool-info'>
                 {lists(INFOS, pool, {})}
             </div>
-            <IconRight className='pool-detail-img' color='red' />
+            <IconRight className='pool-detail-img'/>
         </div>
     )
 }

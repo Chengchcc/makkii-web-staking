@@ -13,7 +13,17 @@
 }
 
 .pool-base {
-    padding:10px 0px;
+    padding:10px 0;
+    >div:nth-child(2){
+        margin-top: 20px;
+        >span:nth-child(2){
+            width: calc(100% - 30px);
+            display: inline-block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
 }
 .pool-meta {
     display: flex;
@@ -26,7 +36,7 @@
 }
 
 .pool-info {
-    padding: 5px 5px;
+    padding: 0px 5px;
 }
 .pool-info-label-list{
     margin: 10px auto;
@@ -35,4 +45,5 @@
 .pool-detail-img {
     height: 20px;
     width: 20px;
+    fill:#000;
 }
