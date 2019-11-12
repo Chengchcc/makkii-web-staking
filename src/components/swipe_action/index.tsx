@@ -6,10 +6,15 @@ class SwipeAction extends Component {
         super(props);
         this.state = {
             left: 0,
+            transition: ""
         };
         this.startX = 0;
-        this.timer = null
+        this.timer = null;
     }
+    componentWillUnmount(): void {
+        if(this.timer) clearTimeout(this.timer);
+    }
+
     render() {
         return (
          <div className="swiper-action">
@@ -27,13 +32,18 @@ class SwipeAction extends Component {
                       } else if (res < -100) {
                           res = -100;
                       }
-                      this.setState({left: res});
-                      if(this.timer) clearInterval(this.timer);
-                      this.timer = setTimeout(() => {
-                          this.setState({left: 0});
-                      }, 3000);
+                      this.setState({left: res, transition: ""});
+                      this.startX = nowX;
+                      if (this.timer){
+                          clearInterval(this.timer);
+                      }
+                      if (diff) {
+                          this.timer = setTimeout(() => {
+                              this.setState({left: 0, transition: "left 170ms linear"});
+                          }, 3000);
+                      }
                       // console.log("start move:", e.target, touch.clientX, touch.clientY);
-                  }} style={{left: this.state.left}}>
+                  }} style={{left: this.state.left, transition: this.state.transition}}>
                  {this.props.children}
              </div>
          </div>

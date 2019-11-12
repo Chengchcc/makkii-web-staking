@@ -1,8 +1,47 @@
 .pool-item-thrid {
     display: grid;
-    grid-template-columns: 40% 50% 10%;
-    padding: 5px 10px;
+    grid-template-columns: 24% 16% 50% 10%;
+    padding: 0 10px 0 0;
     align-items: center;
+    position: relative;
+    height:60px;
+    overflow: visible;
+    >.left-logo{
+        height: 60px;
+        width: 60px;
+        background-repeat: no-repeat;
+        background-size: 100%;
+        position: relative;
+        >div{
+            border-width: 8px;
+            border-style: solid;
+            border-left-color: transparent!important;
+            border-top-color: transparent!important;
+            border-right-color: #000;
+            border-bottom-color: #000;
+            width: 0;
+            height: 0;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+        }
+    }
+    >div:nth-child(2){
+        width: 10px;
+        height: 10px;
+        display: inline-block;
+        border-radius: 50%;
+    }
+    >span:nth-child(3){
+        width: 140px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    >.stake-weight{
+        position: absolute;
+        width: 100px;
+        right:-110px;
+    }
 }
 
 .pool-item-two {
