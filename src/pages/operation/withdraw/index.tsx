@@ -85,7 +85,7 @@ const withdraw = props => {
             <div style={{ padding: '20px 10px' }}>
                 Rewards in this pools:  {reward.toString()} AION
             </div>
-            <CommonButton title='withdraw' onClick={handle_withdraw}/>
+            <CommonButton title='Withdraw' onClick={handle_withdraw}/>
         </div>
     )
 }

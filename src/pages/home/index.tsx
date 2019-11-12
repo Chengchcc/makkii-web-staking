@@ -19,7 +19,7 @@ export const delegationInfo: Array<Iinfo> = [
     {
         title: 'Delegate',
         dataIndex: 'stake',
-        render: val => <span>{`${val.toFixed(3)} AION`}</span>
+        render: val => <span>{`${val.toFixed(5)} AION`}</span>
     },
     {
         title: 'Rewards',
@@ -87,23 +87,23 @@ const accountInfo = [
     {
         title: 'Liquid balance',
         dataIndex: 'liquidBalance',
-        render: val => val.gte(0) ? <span>{`${val.toFixed(3)} AION`}</span> :
+        render: val => val.gte(0) ? <span>{`${val.toFixed(5)} AION`}</span> :
             <Spin size='30px' width='2px' />
     },
     {
         title: 'Staked Amount',
         dataIndex: 'stakedAmount',
-        render: val => val.gte(0) ? <span>{`${val.toFixed(3)} AION`}</span> :
+        render: val => val.gte(0) ? <span>{`${val.toFixed(5)} AION`}</span> :
             <Spin size='30px' width='2px' />
     },
     {
-        title: 'Undelegation Amount',
+        title: 'Currently Undelegating',
         dataIndex: 'undelegationAmount',
-        render: val => val.gte(0) ? <span>{`${val.toFixed(3)} AION`}</span> :
+        render: val => val.gte(0) ? <span>{`${val.toFixed(5)} AION`}</span> :
             <Spin size='30px' width='2px' />
     },
     {
-        title: 'Rewards',
+        title: 'Total Rewards',
         dataIndex: 'rewards',
         render: val => val.gte(0) ? <span>{`${val.toFixed(5)} AION`}</span> :
             <Spin size='30px' width='2px' />
@@ -134,7 +134,10 @@ const renderAccountInfo = (info, src) => {
 const home = (props: Ihome) => {
     const { history } = props;
     const account = useSelector(mapToState);
-    const [loading, setLoading] = React.useState(false);
+    const [poolLoading, setPoolLoading] = React.useState(false);
+    const [myDelegationsLoading, setMyDelegationsLoading] = React.useState(false);
+    const [undelegationsLoading, setUndelegationsLoading] = React.useState(false);
+    const [transactionsLoading, setTransactionsLoading] = React.useState(false);
     const dispath = useDispatch();
     const { address, pools, delegations, undelegations, history: transactions } = account;
     const toDelegate = e => {
@@ -187,7 +190,10 @@ const home = (props: Ihome) => {
     }
     React.useEffect(() => {
         if (address !== '') {
-            setLoading(true)
+            setPoolLoading(true)
+            setMyDelegationsLoading(true)
+            setUndelegationsLoading(true)
+            setTransactionsLoading(true)
             wsSend({ method: 'eth_getBalance', params: [address] })
             wsSend({ method: 'delegations', params: [address, 0, 10] })
             wsSend({ method: 'transactions', params: [address, 0, 10] })
@@ -196,10 +202,25 @@ const home = (props: Ihome) => {
         }
     }, [address])
     React.useEffect(() => {
-        if (loading) {
-            setLoading(false)
+        if (transactionsLoading) {
+            setTransactionsLoading(false)
         }
-    }, [transactions, pools, undelegations, delegations]);
+    }, [transactions]);
+    React.useEffect(() => {
+        if (poolLoading) {
+            setPoolLoading(false)
+        }
+    }, [pools]);
+    React.useEffect(() => {
+        if (undelegationsLoading) {
+            setUndelegationsLoading(false)
+        }
+    }, [undelegations]);
+    React.useEffect(() => {
+        if (myDelegationsLoading) {
+            setMyDelegationsLoading(false)
+        }
+    }, [delegations]);
 
 
     const renderPools = (title, lists_) => {
@@ -246,6 +267,8 @@ const home = (props: Ihome) => {
     const hasDelegations = Object.keys(delegations).length > 0;
     const hasUndelegations = Object.keys(undelegations).length > 0;
     const hasHistory = Object.keys(transactions).length > 0;
+    const loading = poolLoading || myDelegationsLoading || undelegationsLoading || transactionsLoading;
+    console.log(poolLoading, myDelegationsLoading,undelegationsLoading,transactionsLoading);
     return (
         <div className='flex-container'>
             <div className='home-header'>
@@ -257,8 +280,8 @@ const home = (props: Ihome) => {
                 {renderAccountInfo(accountInfo, account)}
             </div>
             <div className='home-button-container'>
-                <CommonButton className='home-button' title='delegate' onClick={toDelegate} />
-                <CommonButton className='home-button' title='withdraw' onClick={toWithDraw} />
+                <CommonButton className='home-button' title='Delegate' onClick={toDelegate} />
+                <CommonButton className='home-button' title='Withdraw' onClick={toWithDraw} />
             </div>
 
             {!loading && hasPools && hasDelegations && renderPoolsMore('My Delegations', process_delegations(delegations).slice(0, 3), delegationInfo, toDelegations)}

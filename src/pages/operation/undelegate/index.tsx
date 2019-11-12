@@ -88,7 +88,7 @@ const undelegate = props => {
             <div style={{padding:'20px 10px'}}>
                 You have delegated {staked.toString()} AION to this pool
             </div>
-            <CommonButton title='undelegate' onClick={handle_undelegate} />
+            <CommonButton title='Undelegate' onClick={handle_undelegate} />
         </div>
     )
 }

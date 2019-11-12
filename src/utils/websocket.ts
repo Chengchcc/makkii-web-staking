@@ -45,17 +45,12 @@ const process_pools = async (pools: { [address: string]: any }, callback) => {
                 version: el.meta_version,
             }
         };
-        total_stake = total_stake.plus(stakeTotal).plus(stakeSelf)
+        total_stake = total_stake.plus(stakeTotal)
     }
     Object.values(map).forEach((el: any) => {
-        el.stakeWeight = total_pos_blk.isEqualTo(0) ? new BigNumber(0) : el.posBlkTotal.dividedBy(total_pos_blk);
-        const stake = el.stakeTotal.plus(el.stakeSelf);
-        if (total_stake.isEqualTo(0) || stake.isEqualTo(0) || el.stakeWeight.isEqualTo(0)) {
-            el.performance = new BigNumber(0)
-        } else {
-            el.performance = el.stakeWeight.dividedBy(el.stakeTotal.plus(el.stakeSelf).dividedBy(total_stake))
-
-        }
+        el.posWeight = total_pos_blk.isEqualTo(0) ? new BigNumber(0) : el.posBlkTotal.dividedBy(total_pos_blk);
+        el.stakeWeight = total_stake.isEqualTo(0)? new BigNumber(0) : el.stakeTotal.dividedBy(total_stake);
+        el.performance = el.stakeWeight.isEqualTo(0)? new BigNumber(0): el.posWeight.dividedBy(el.stakeWeight);
     });
     callback({ pools: map });
 }

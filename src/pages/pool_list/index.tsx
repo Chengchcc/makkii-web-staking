@@ -43,6 +43,7 @@ const poolList = props => {
     }
     React.useEffect(()=>{
         if(Object.keys(pools).length===0){
+            console.log("send pools");
             wsSend({method:'pools', params:[]})
         }
     },[pools])

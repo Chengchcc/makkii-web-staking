@@ -7,7 +7,7 @@ import { gas_delegate, gasPrice, AIONDECIMAL } from '@utils/constants.json';
 import BigNumber from 'bignumber.js';
 import { CommonButton } from '@components/button';
 import { call_delegate } from '@utils/transaction';
-import { alert } from '@components/modal';
+import Modal, { alert } from '@components/modal';
 import Image from '@components/default-img'
 import FormItem from '../operation_form_item';
 import { commonGoback } from '../util';
@@ -30,6 +30,7 @@ const maptoState = ({ account }) => {
 
 
 const delegate = props => {
+    const [modalState, setModalState] = React.useState({visible: false, txHash: ''});
     const { account, operation, pools } = useSelector(maptoState);
     const { history } = props;
     const inputRef = React.useRef(null);
@@ -61,10 +62,19 @@ const delegate = props => {
         if (res) {
             // send succss
             console.log('delegate Tx=>', res);
-
+            setModalState({
+                visible: true,
+                txHash: res
+            });
         } else {
             // send fail
         }
+    }
+    const hideModal = ()=> {
+        setModalState({
+            visible: false,
+            txHash: ''
+        });
     }
     return (
         <div className='operation-container'>
@@ -82,13 +92,26 @@ const delegate = props => {
                 }}>All</a>
             </FormItem>
             <FormItem label='Transaction Fee'>
-                Approx. {fee_delegate.toFixed(8)} AION
+                Approx. {fee_delegate.toFixed(5)} AION
             </FormItem>
             <div style={{ padding: '20px 10px' }}>
                 Your liquid amount is {balance.toString()} AION.
             </div>
-            <CommonButton title='delegate' onClick={handle_delegate} />
-
+            <CommonButton title='Delegate' onClick={handle_delegate} />
+            <Modal
+                visible={modalState.visible}
+                title={''}
+                hide={hideModal}
+                actions={[{title:'Ok', onPress:()=>{
+                    history.replace('/home');
+                }}]}
+                className='tx_result_modal'
+            >
+                <p>Transaction sent, waiting for block finalization.</p>
+                <p>Transaction will be displayed only after finalization</p>
+                <p>{modalState.txHash}</p>
+                <p>TODO: 请加上复制按钮</p>
+            </Modal>
         </div>
 
     )

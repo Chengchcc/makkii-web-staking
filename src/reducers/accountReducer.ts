@@ -86,6 +86,7 @@ const defaultState: IAccountState = {
             posBlkTotal: new BigNumber(100),
             stakeTotal: new BigNumber(100),
             stakeSelf: new BigNumber(100),
+            posWeight: new BigNumber(Math.random()),
             stakeWeight: new BigNumber(Math.random()),
             performance: new BigNumber(Math.random())
         },
@@ -98,6 +99,7 @@ const defaultState: IAccountState = {
             posBlkTotal: new BigNumber(100),
             stakeTotal: new BigNumber(100),
             stakeSelf: new BigNumber(100),
+            posWeight: new BigNumber(Math.random()),
             stakeWeight: new BigNumber(Math.random()),
             performance: new BigNumber(Math.random())
         },

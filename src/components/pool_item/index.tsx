@@ -3,6 +3,7 @@ import React from 'react';
 import { Ipool } from '@interfaces/types';
 import IconRight from '@img/arrow_right.svg';
 import Image from '@components/default-img';
+import { formatPoolName} from '@utils/index';
 import './style.less';
 
 interface IPoolItem {
@@ -25,24 +26,23 @@ export interface Iinfo {
 const INFOS: Array<Iinfo> = [
     {
         title: 'Capacity',
-        dataIndex: 'stakeSelf',
-        render: (val) => <span>{val * 99} AION</span>
+        render: (val) => <span>{val.stakeSelf.times(100).minus(val.stakeTotal).toFixed(0)} AION</span>
     },
     {
         title: 'Total Staked',
         dataIndex: 'stakeTotal',
-        render: (val) => <span>{val.toFixed(3)} AION</span>
+        render: (val) => <span>{`${val.toFixed(0)}`} AION</span>
     },
     {
-        title: 'Self Bond',
-        dataIndex: 'stakeSelf',
-        render: (val) => <span>{val.toFixed(3)} AION</span>
+        title: 'Fees',
+        dataIndex: 'fee',
+        render: (val) => <span>{`${val.times(100).toFixed(4)}`}% AION</span>
     },
     {
         title: 'Weight',
         dataIndex: 'stakeWeight',
         render: val => {
-            return <span>{val.times(100).toFixed(2)} %</span>
+            return <span>{val.times(100).toFixed(4)} %</span>
         }
     }
 ]
@@ -89,7 +89,7 @@ export const PoolItem: React.FC<IPoolItem> = props => {
                 <div style={{ marginTop: '10px' }}>
                     <span className={active === '0x01' ? 'poolActive' : 'poolInActive'} />
                     &nbsp;
-                    {meta.name}
+                    {formatPoolName(meta.name || pool.address)}
                 </div>
             </div>
             <div className='pool-info'>
@@ -109,7 +109,7 @@ export const PoolItemMore: React.FC<IPoolItemWithMore> = props => {
             <div className='pool-meta'>
                 <Image src={meta.logo} className='pool-logo' alt="" />
                 <div className='pool-meta-name'>
-                    {meta.name}
+                    {formatPoolName(meta.name || pool.address)}
                 </div>
             </div>
             <div className='pool-info'>

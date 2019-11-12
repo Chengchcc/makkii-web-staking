@@ -26,63 +26,62 @@ const mapToState = ({ account }) => {
 
 const poolDetailInfo = [
     {
-        title: 'validator fee',
+        title: 'Fees',
         dataIndex: 'fee',
         render: val => {
             return <span>{val.times(100).toFixed(4)} %</span>
         }
     },
     {
-        title: 'performance',
+        title: 'Performance',
         dataIndex: 'performance',
         render: val => {
             const n = val.times(100).toFixed(2);
             // eslint-disable-next-line no-nested-ternary
-            const [color, text] = n < 90 ? ['red', 'poor'] : n > 95 ? ['green', 'high'] : ['#ff9910', 'medium'];
+            const [color, text] = n < 90 ? ['red', 'Poor'] : n > 95 ? ['green', 'Excellent'] : ['#ff9910', 'Moderate'];
 
             return <span style={{ color }}>{text}</span>
         }
     },
     {
-        title: 'stake weight',
+        title: 'Stake Weight',
         dataIndex: 'stakeWeight',
         render: val => {
-            return <span>{val.times(100).toFixed(2)} %</span>
+            return <span>{val.times(100).toFixed(4)} %</span>
         }
     },
     {
-        title: 'capacity',
+        title: 'Capacity',
+        render: val => {
+            return <span>{val.stakeSelf.times(100).minus(val.stakeTotal).toFixed(4)}</span>
+        }
+    },
+    {
+        title: 'Self Bond',
         dataIndex: 'stakeSelf',
         render: val => {
-            return <span>{val.times(99).toFixed(2)}</span>
+            return <span>{val.toNumber().toFixed(4)}</span>
         }
     },
     {
-        title: 'self-bond',
-        dataIndex: 'stakeSelf',
-        render: val => {
-            return <span>{val.toNumber().toFixed(2)}</span>
-        }
-    },
-    {
-        title: 'total staked',
+        title: 'Total Staked',
         dataIndex: 'stakeTotal',
         render: val => {
-            return <span>{val.toNumber().toFixed(2)}</span>
+            return <span>{val.toNumber().toFixed(4)}</span>
         }
     }
 ]
 
 const accountDetailInfo = [
     {
-        title: 'Amount Delegated to this pool',
+        title: 'Amount delegated to this pool',
         dataIndex: 'stake',
-        render: val => <span>{`${val} AION`}</span>
+        render: val => <span>{`${val.toFixed(5)} AION`}</span>
     },
     {
-        title: 'Rewards Earned in this pool',
+        title: 'Rewards earned in this pool',
         dataIndex: 'reward',
-        render: val => <span>{`${val} AION`}</span>
+        render: val => <span>{`${val.toFixed(5)} AION`}</span>
     }
 ]
 
@@ -202,8 +201,8 @@ const Pageoperation = props => {
         return (
             <div className='operation-account' >
                 {renderAccountDetail(accountDetailInfo, account)}
-                <CommonButton className='operation-button' title='un-delegate' onClick={toUndelegate} />
-                <CommonButton className='operation-button' title='withdraw' onClick={toWithdraw} />
+                <CommonButton className='operation-button' title='Un-delegate' onClick={toUndelegate} />
+                <CommonButton className='operation-button' title='Withdraw' onClick={toWithdraw} />
             </div>
         )
     }
@@ -219,12 +218,12 @@ const Pageoperation = props => {
             <div className='operation-pool-basic'>
                 <Image src={logo} alt="" />
                 <ul>
-                    <li data-label="Name: ">{name}</li>
-                    <li data-label="Status: "><span className={active === '0x01' ? 'poolActive' : 'poolInActive'} /> {
+                    {name&& <li>{name}</li>}
+                    <li><span className={active === '0x01' ? 'poolActive' : 'poolInActive'} /> {
                         active === '0x01' ? 'Active' : 'Inactive'
                     }</li>
-                    <li data-label="Address: ">{formatAddress(poolAddress)}</li>
-                    <li><a href={url} target='_blank' rel="noopener noreferrer">HomePage</a></li>
+                    <li>{formatAddress(poolAddress)}</li>
+                    {url && <li><a href={url} target='_blank' rel="noopener noreferrer">{url}</a></li> }
                 </ul>
             </div>
             {accountLabel()}

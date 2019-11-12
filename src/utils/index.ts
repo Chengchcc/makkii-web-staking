@@ -2,6 +2,13 @@
 import store, { createAction } from '@reducers/store';
 import {alert} from '@components/modal';
 
+export const formatPoolName = poolName => {
+    let newPoolName = poolName[0].toUpperCase() + poolName.substr(1);
+    if (newPoolName.length > 20) {
+        newPoolName = newPoolName.substr(0, 17) + '...';
+    }
+    return newPoolName;
+}
 export const formatAddress = address => {
     return `${address.slice(0, 10)  }...${  address.slice(-10)}`
 }

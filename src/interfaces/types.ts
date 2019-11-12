@@ -23,6 +23,7 @@ export interface Ipool {
     metaDataurl: string,
     posBlkTotal: BigNumber,
     stakeWeight: BigNumber,
+    posWeight: BigNumber,
     performance: BigNumber,
     meta?: {
         name: string,

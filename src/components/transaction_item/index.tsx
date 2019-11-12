@@ -43,7 +43,7 @@ const TransactionItem: React.FC<ItransactionItem> = props => {
                     <div className='transaction-pool-label'>{date}</div>
                     <div className='transaction-pool-label'>
                         <span>{tansferType(type)} </span>
-                        <span>{`${amount} AION`}</span>
+                        <span>{`${amount.toFixed(5)} AION`}</span>
                     </div>
                 </div>
             </div>

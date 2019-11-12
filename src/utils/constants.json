@@ -1,8 +1,8 @@
 {
     "AIONDECIMAL": -18,
-    "gas_delegate": 809702,
+    "gas_delegate": 2000000,
     "gas_withdraw": 2000000,
-    "gas_undelegate": 1286616,
+    "gas_undelegate": 2000000,
     "gas_send": 21000,
     "gas_transfer": 625386,
     "gasPrice": 10000000000,
