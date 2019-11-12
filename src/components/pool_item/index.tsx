@@ -78,7 +78,6 @@ const lists = (info, src, extra) => {
 export const PoolItem: React.FC<IPoolItem> = props => {
     const { pool, toPool } = props;
     const { meta, active } = pool;
-    console.log('pool is:', pool)
     return (
         <div className='pool-item-thrid' onClick={e => {
             e.preventDefault();
