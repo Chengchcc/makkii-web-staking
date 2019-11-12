@@ -40,10 +40,10 @@ class SwipeAction extends Component {
                       }
                       this.setState({left: res, transition: ""});
                       this.startX = nowX;
-                      if (this.timer){
-                          clearInterval(this.timer);
-                      }
                       if (diff) {
+                          if (this.timer){
+                              clearInterval(this.timer);
+                          }
                           this.timer = setTimeout(() => {
                               this.setState({left: 0, transition: "left 170ms linear"});
                           }, 3000);
