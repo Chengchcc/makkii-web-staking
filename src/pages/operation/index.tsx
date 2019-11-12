@@ -18,7 +18,7 @@ const mapToState = ({ account }) => {
         account: account.address !== '' ? {
             address: account.address,
             stake: delegation.stake || new Bignumber(0),
-            reward: delegation.reward || new Bignumber(0)
+            rewards: delegation.rewards || new Bignumber(0)
         } : undefined
     }
 }
@@ -80,7 +80,7 @@ const accountDetailInfo = [
     },
     {
         title: 'Rewards earned in this pool',
-        dataIndex: 'reward',
+        dataIndex: 'rewards',
         render: val => <span>{`${val.toFixed(5)} AION`}</span>
     }
 ]
@@ -198,11 +198,12 @@ const Pageoperation = props => {
 
     const accountLabel = () => {
         if (!account) return null;
+        console.log("aaa", account);
         return (
             <div className='operation-account' >
                 {renderAccountDetail(accountDetailInfo, account)}
-                <CommonButton className='operation-button' title='Un-delegate' onClick={toUndelegate} />
-                <CommonButton className='operation-button' title='Withdraw' onClick={toWithdraw} />
+                <CommonButton className='operation-button' title='Un-delegate' onClick={toUndelegate} disabled={account.stake.toNumber() === 0}/>
+                <CommonButton className='operation-button' title='Withdraw' onClick={toWithdraw} disabled={account.rewards.toNumber() === 0}/>
             </div>
         )
     }

@@ -68,6 +68,13 @@ const delegate = props => {
             });
         } else {
             // send fail
+            alert({
+                title: 'error', message: 'Sent fail', actions: [
+                    {
+                        title: 'Ok',
+                    },
+                ]
+            })
         }
     }
     const hideModal = ()=> {

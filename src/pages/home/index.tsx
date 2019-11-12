@@ -41,10 +41,10 @@ export const unDelegationInfo: Array<Iinfo> = [
     }
 ]
 
-export const process_delegations = (deleagtions) => {
-    return Object.keys(deleagtions).reduce((arr, el) => {
+export const process_delegations = (delegations) => {
+    return Object.keys(delegations).reduce((arr, el) => {
         arr.push({
-            ...deleagtions[el],
+            ...delegations[el],
             poolAddress: el,
         })
         return arr;
@@ -243,7 +243,7 @@ const home = (props: Ihome) => {
                 title={title}
                 lists={lists}
                 renderItem={(el, key) => {
-                    return <PoolItemMore key={key} pool={pools[el.poolAddress]} value={el} info={info} />
+                    return <PoolItemMore key={key} pool={pools[el.poolAddress]} value={el} info={info} toPool={toPool}/>
                 }}
                 handleMore={handleMore}
             />
@@ -261,7 +261,6 @@ const home = (props: Ihome) => {
             />
         )
     }
-
 
     const hasPools = Object.keys(pools).length > 0;
     const hasDelegations = Object.keys(delegations).length > 0;
@@ -281,7 +280,7 @@ const home = (props: Ihome) => {
             </div>
             <div className='home-button-container'>
                 <CommonButton className='home-button' title='Delegate' onClick={toDelegate} />
-                <CommonButton className='home-button' title='Withdraw' onClick={toWithDraw} />
+                <CommonButton className='home-button' title='Withdraw' onClick={toWithDraw} disabled={account.rewards.isEqualTo(0)}/>
             </div>
 
             {!loading && hasPools && hasDelegations && renderPoolsMore('My Delegations', process_delegations(delegations).slice(0, 3), delegationInfo, toDelegations)}

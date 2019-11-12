@@ -11,6 +11,7 @@ import {alert} from '@components/modal'
 import Image from '@components/default-img'
 import FormItem from '../operation_form_item';
 import { commonGoback } from '../util';
+import Modal from '@components/modal';
 
 const fee_undelegate = new BigNumber(gas_undelegate).times(gasPrice).shiftedBy(AIONDECIMAL);
 
@@ -31,6 +32,7 @@ const maptoState = ({ account }) => {
 
 
 const undelegate = props => {
+    const [modalState, setModalState] = React.useState({visible: false, txHash: ''});
     const { account, operation, pools } = useSelector(maptoState);
     const { history } = props;
     const inputRef = React.useRef(null);
@@ -47,7 +49,7 @@ const undelegate = props => {
         // TODO handle undelegate
         const amount = inputRef.current.value;
         const valid = validateAmount(amount);
-        const insufficientBalance = new BigNumber(amount).plus(fee_undelegate).gt(staked);
+        const insufficientBalance = new BigNumber(amount).gt(staked);
         if(!valid  || parseFloat(amount) === 0 || insufficientBalance) {
             alert({
                 title: 'error', message: 'Invalid amount', actions: [
@@ -58,13 +60,29 @@ const undelegate = props => {
             })
             return;
         }
-        const res = await call_undelegate(operation.pool, amount, 1)
+        const res = await call_undelegate(operation.pool, amount, 0)
         if(res){
             // send success
-
+            setModalState({
+                visible: true,
+                txHash: res
+            });
         }else {
             // send fail
+            alert({
+                title: 'error', message: 'Sent fail', actions: [
+                    {
+                        title: 'Ok',
+                    },
+                ]
+            })
         }
+    }
+    const hideModal = ()=> {
+        setModalState({
+            visible: false,
+            txHash: ''
+        });
     }
     return (
         <div className='operation-container'>
@@ -83,12 +101,26 @@ const undelegate = props => {
                 }}>All</a>
             </FormItem>
             <FormItem label='Transaction Fee'>
-                Approx. {fee_undelegate.toFixed(8)} AION
+                Approx. {fee_undelegate.toFixed(5)} AION
             </FormItem>
             <div style={{padding:'20px 10px'}}>
                 You have delegated {staked.toString()} AION to this pool
             </div>
             <CommonButton title='Undelegate' onClick={handle_undelegate} />
+            <Modal
+                visible={modalState.visible}
+                title={''}
+                hide={hideModal}
+                actions={[{title:'Ok', onPress:()=>{
+                    history.replace('/home');
+                }}]}
+                className='tx_result_modal'
+            >
+                <p>Transaction sent, waiting for block finalization.</p>
+                <p>Transaction will be displayed only after finalization</p>
+                <p>{modalState.txHash}</p>
+                <p>TODO: 请加上复制按钮</p>
+            </Modal>
         </div>
     )
 }

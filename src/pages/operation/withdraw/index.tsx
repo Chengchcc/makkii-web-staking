@@ -7,7 +7,7 @@ import { gas_withdraw, gasPrice, AIONDECIMAL } from '@utils/constants.json';
 import BigNumber from 'bignumber.js';
 import { CommonButton } from '@components/button';
 import { call_withdraw } from '@utils/transaction';
-import {alert} from '@components/modal'
+import Modal, {alert} from '@components/modal'
 import Image from '@components/default-img'
 import FormItem from '../operation_form_item';
 import { commonGoback } from '../util';
@@ -22,7 +22,7 @@ const maptoState = ({ account }) => {
         operation,
         account: {
             address: account.address,
-            reward: delegation.reward || new BigNumber(0)
+            rewards: delegation.rewards || new BigNumber(0)
         }
     }
 }
@@ -30,9 +30,9 @@ const maptoState = ({ account }) => {
 
 
 const withdraw = props => {
+    const [modalState, setModalState] = React.useState({visible: false, txHash: ''});
     const { account, operation, pools } = useSelector(maptoState);
     const { history } = props;
-    const inputRef = React.useRef(null)
     React.useEffect(()=>{
         if (operationType.withdraw !== operation.type) {
             history.replace('/operation')
@@ -40,13 +40,13 @@ const withdraw = props => {
     },[operation])
     const pool = pools[operation.pool];
     const { meta } = pool;
-    const { address, reward } = account;
+    const { address, rewards } = account;
     const handle_withdraw = async (e: MouseEvent) => {
         e.preventDefault();
         // TODO handle withdraw
-        const amount = inputRef.current.value;
+        const amount = rewards;
         const valid = validateAmount(amount);
-        const insufficientBalance = new BigNumber(amount).plus(fee_withdraw).gt(reward);
+        const insufficientBalance = new BigNumber(amount).gt(rewards);
         if(!valid  || parseFloat(amount) === 0 || insufficientBalance) {
             alert({
                 title: 'error', message: 'Invalid amount', actions: [
@@ -57,12 +57,29 @@ const withdraw = props => {
             })
             return;
         }
-        const res = await call_withdraw(operation.pool, amount)
+        const res = await call_withdraw(operation.pool)
         if(res) {
             // send success
+            setModalState({
+                visible: true,
+                txHash: res
+            });
         }else {
             // send fail
+            alert({
+                title: 'error', message: 'Sent fail', actions: [
+                    {
+                        title: 'Ok',
+                    },
+                ]
+            })
         }
+    }
+    const hideModal = ()=> {
+        setModalState({
+            visible: false,
+            txHash: ''
+        });
     }
     return (
         <div className='operation-container'>
@@ -72,20 +89,26 @@ const withdraw = props => {
             </FormItem>
             <FormItem label='To'>{formatAddress(address)}</FormItem>
             <FormItem label='Withdraw'>
-                <input type='number' ref={inputRef} /> &nbsp; AION  &nbsp;
-                <a onClick={e => {
-                    e.preventDefault();
-                    const amount = reward.minus(fee_withdraw);
-                    inputRef.current.value = amount.gte(0)?reward.minus(fee_withdraw).toString():'0'
-                }}>All</a>
+                <span>{rewards.toString()}&nbsp; AION &nbsp;</span>
             </FormItem>
             <FormItem label='Transaction Fee'>
-                Approx. {fee_withdraw.toFixed(8)} AION
+                Approx. {fee_withdraw.toFixed(5)} AION
             </FormItem>
-            <div style={{ padding: '20px 10px' }}>
-                Rewards in this pools:  {reward.toString()} AION
-            </div>
             <CommonButton title='Withdraw' onClick={handle_withdraw}/>
+            <Modal
+                visible={modalState.visible}
+                title={''}
+                hide={hideModal}
+                actions={[{title:'Ok', onPress:()=>{
+                    history.replace('/home');
+                }}]}
+                className='tx_result_modal'
+            >
+                <p>Transaction sent, waiting for block finalization.</p>
+                <p>Transaction will be displayed only after finalization</p>
+                <p>{modalState.txHash}</p>
+                <p>TODO: 请加上复制按钮</p>
+            </Modal>
         </div>
     )
 }

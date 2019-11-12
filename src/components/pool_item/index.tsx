@@ -15,6 +15,7 @@ interface IPoolItemWithMore {
     pool: Ipool
     value: any
     info: Array<Iinfo>
+    toPool: (pool: string) => any
 }
 
 export interface Iinfo {
@@ -111,10 +112,14 @@ export const PoolItem: React.FC<IPoolItem> = props => {
 
 
 export const PoolItemMore: React.FC<IPoolItemWithMore> = props => {
-    const { pool, info, value } = props;
+    const { pool, info, value, toPool } = props;
     const { meta } = pool;
     return (
-        <div className='pool-item-two'>
+        <div className='pool-item-two' onClick={e=>{
+            e.preventDefault();
+            toPool(pool.address)
+            window.scrollTo(0, 0)
+        }}>
             <div className='pool-meta'>
                 <Image src={meta.logo} className='pool-logo' alt="" />
                 <div className='pool-meta-name'>

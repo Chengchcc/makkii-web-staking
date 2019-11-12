@@ -74,7 +74,7 @@ ws.onmessage = e => {
                 delegations[v].stake = new BigNumber(delegations[v].stake === '0x' ? 0 : delegations[v].stake).shiftedBy(AIONDECIMAL)
                 stake = stake.plus(delegations[v].stake)
                 rewards = rewards.plus(delegations[v].rewards)
-                delegations[v].rewards = new BigNumber(delegations[v].rewards).shiftedBy(AIONDECIMAL)
+                delegations[v].rewards = new BigNumber(delegations[v].rewards)
             })
             const { delegations: oldDelegations } = store.getState().account
             store.dispatch(createAction('account/update')(

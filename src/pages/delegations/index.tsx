@@ -2,8 +2,10 @@ import React from 'react';
 import MoreList from '@components/more_list';
 import { PoolItemMore } from '@components/pool_item';
 import {process_delegations,delegationInfo } from '@pages/home';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { wsSend } from '@utils/websocket';
+import { createAction } from '@reducers/store';
+import { operationType } from '@reducers/accountReducer';
 
 const mapToState = ({ account }) => {
     return {
@@ -15,8 +17,8 @@ const mapToState = ({ account }) => {
     }
 }
 
-const Delegations = () => {
-
+const Delegations = (props) => {
+    const {history} = props;
     const { delegations,pools,stakedAmount,address,pagination } = useSelector(mapToState);
     const onRefresh = () => {
         wsSend({ method: 'delegations', params: [address, 0, 10] })
@@ -24,6 +26,16 @@ const Delegations = () => {
     const onReachEnd = () => {
         wsSend({ method: 'delegations', params: [address, pagination.current, 10] })
 
+    }
+    const dispatch = useDispatch();
+    const toPool = (pool) => {
+        dispatch(createAction('account/update')({
+            operation: {
+                operation: operationType.default,
+                pool,
+            }
+        }))
+        history.push('/operation');
     }
     const hasMore = pagination.current + 1 <pagination.total;
     return (
@@ -34,7 +46,7 @@ const Delegations = () => {
             hasMore={hasMore}
             data={process_delegations(delegations)}
             renderItem={(el) => {
-                return <PoolItemMore pool={pools[el.poolAddress]} value={el} info={delegationInfo}/>
+                return <PoolItemMore pool={pools[el.poolAddress]} value={el} info={delegationInfo} toPool={toPool}/>
             }}
         />
     )

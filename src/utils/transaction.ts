@@ -51,9 +51,9 @@ export const call_delegate = async (pool, amount) => {
     return await sendTx(tx);
 }
 
-export const call_withdraw = async (pool, amount) => {
+export const call_withdraw = async (pool) => {
     const data = abi.encodeMethod(
-        'withdraw',
+        'withdrawRewards',
         [
             'Address'
         ],
@@ -67,7 +67,7 @@ export const call_withdraw = async (pool, amount) => {
         gasPrice.toFixed(),
         gas_withdraw.toFixed(),
         data,
-        new BigNumber(amount).shiftedBy(AIONDECIMAL).toFixed()
+        '0'
     )
     // TODO call makkii
     return await sendTx(tx);
@@ -84,8 +84,8 @@ export const call_undelegate = async (pool, amount, fee) => {
         ],
         [
             pool,
-            new BigNumber(amount).shiftedBy(AIONDECIMAL).toFixed(),
-            new BigNumber(fee).shiftedBy(AIONDECIMAL).toFixed()
+            new BigNumber(amount).shiftedBy(-AIONDECIMAL).toFixed(),
+            new BigNumber(fee).shiftedBy(-AIONDECIMAL).toFixed()
         ]
     )
 
@@ -95,7 +95,7 @@ export const call_undelegate = async (pool, amount, fee) => {
         gasPrice.toFixed(),
         gas_undelegate.toFixed(),
         data,
-        new BigNumber(amount).shiftedBy(AIONDECIMAL).toFixed()
+        '0'
     )
     // TODO call makkii
     return await sendTx(tx);
