@@ -1,0 +1,19 @@
+.common-message {
+    position: relative;
+    top: 0;
+    margin: 0 auto;
+    width: 200px;
+    background-color: #fff;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.25);
+    border-radius: 6px;
+    padding: 6px;
+    text-align: center;
+    transform: scale(0);
+    transition: top 200ms linear, transform 200ms linear, opacity 200ms linear;
+    opacity: 0;
+    &.message-animation {
+        top: 24px;
+        transform: scale(1);
+        opacity: 1;
+    }
+}
