@@ -9,13 +9,17 @@ import { operationType } from '@reducers/accountReducer';
 const mapToState = ({ account }) => {
     return {
         pools: account.pools,
-        operation: account.operation
-    }
+        operation: account.operation,
+        delegations: account.delegations,
+    };
 }
 
 const poolList = props => {
     const {history} = props;
-    const { pools,operation } = useSelector(mapToState);
+    let { pools, operation, delegations } = useSelector(mapToState);
+    /*pools = Object.values(pools).filter((v) => {
+        console.log('pools is:', delegations[v]);
+    });*/
     const dispatch = useDispatch();
     const onRefresh = () => {
         wsSend({ method: 'pools', params: [] })

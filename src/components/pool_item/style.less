@@ -9,22 +9,8 @@
     >.left-logo{
         height: 60px;
         width: 60px;
-        background-repeat: no-repeat;
-        background-size: 100%;
-        position: relative;
-        >div{
-            border-width: 8px;
-            border-style: solid;
-            border-left-color: transparent!important;
-            border-top-color: transparent!important;
-            border-right-color: #000;
-            border-bottom-color: #000;
-            width: 0;
-            height: 0;
-            position: absolute;
-            bottom: 0;
-            right: 0;
-        }
+        background-size: 100%!important;
+        box-sizing: border-box;
     }
     >div:nth-child(2){
         width: 10px;
@@ -36,11 +22,15 @@
         width: 140px;
         overflow: hidden;
         text-overflow: ellipsis;
+        text-transform: capitalize;
     }
     >.stake-weight{
         position: absolute;
         width: 100px;
         right:-110px;
+    }
+    >.pool-detail-img{
+        margin-left: 10px;
     }
 }
 

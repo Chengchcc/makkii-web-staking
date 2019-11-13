@@ -1,5 +1,6 @@
-import React, { Component } from 'react'
-import './index.scss'
+import React, { Component } from 'react';
+import './index.less';
+
 class Message extends Component {
     constructor(props) {
         super(props)

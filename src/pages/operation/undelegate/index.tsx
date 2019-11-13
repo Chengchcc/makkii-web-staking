@@ -12,6 +12,7 @@ import Image from '@components/default-img'
 import FormItem from '../operation_form_item';
 import { commonGoback } from '../util';
 import Modal from '@components/modal';
+import {copyInputValue} from "@utils/util";
 
 const fee_undelegate = new BigNumber(gas_undelegate).times(gasPrice).shiftedBy(AIONDECIMAL);
 
@@ -85,14 +86,20 @@ const undelegate = props => {
         });
     }
     return (
-        <div className='operation-container'>
+        <div className='operation-container undelegate-form'>
             <FormItem label='From' className='operation-form-pool'>
                 <Image src={meta.logo} className='pool-logo' alt="" />
-                <span style={{marginLeft:'10px'}}>{meta.name}</span>
+                <span style={{marginLeft:'10px'}}>{meta.name || address}</span>
             </FormItem>
             <FormItem label='To'>{formatAddress(address)}</FormItem>
+            <FormItem label='Transaction Fee'>
+                ≈ {fee_undelegate.toFixed(5)} AION
+            </FormItem>
             <FormItem label='Lock Period'>{`${period_block} blocks`}</FormItem>
-            <FormItem label='Undelegate Amount'>
+            <FormItem label="Delegated Amount">
+                {staked.toFixed(5)} AION
+            </FormItem>
+            <FormItem label='Undelegate Amount' className="undelegate-input">
                 <input type='number' ref={inputRef} /> &nbsp; AION  &nbsp;
                 <a onClick={e=>{
                     e.preventDefault();
@@ -100,26 +107,19 @@ const undelegate = props => {
                     inputRef.current.value = amount.gte(0)?staked.minus(fee_undelegate).toString():'0'
                 }}>All</a>
             </FormItem>
-            <FormItem label='Transaction Fee'>
-                Approx. {fee_undelegate.toFixed(5)} AION
-            </FormItem>
-            <div style={{padding:'20px 10px'}}>
-                You have delegated {staked.toFixed(5)} AION to this pool
-            </div>
             <CommonButton title='Undelegate' className='button-orange' onClick={handle_undelegate} />
             <Modal
                 visible={modalState.visible}
                 title={''}
                 hide={hideModal}
-                actions={[{title:'Ok', onPress:()=>{
+                actions={[{title: <div className="button button-orange">OK</div>, onPress:()=>{
                     history.replace('/home');
                 }}]}
                 className='tx_result_modal'
             >
                 <p>Transaction sent, waiting for block finalization.</p>
-                <p>Transaction will be displayed only after finalization</p>
-                <p>{modalState.txHash}</p>
-                <p>TODO: 请加上复制按钮</p>
+                <p><span>{modalState.txHash}</span><div className="button button-blue" onClick={() => {
+                    copyInputValue(modalState.txHash); }}>Copy</div></p>
             </Modal>
         </div>
     )

@@ -2,8 +2,8 @@
 import React from 'react'
 
 export interface Iaction {
-    title: string
-    onPress?: () => any
+    title: any;
+    onPress?: () => any;
 }
 export interface ModalProps {
     visible: boolean;

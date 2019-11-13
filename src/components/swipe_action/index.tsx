@@ -30,20 +30,18 @@ class SwipeAction extends Component {
                   onTouchMove={(e) => {
                       const nowX = e.touches[0].clientX;
                       const diff = nowX - this.startX;
-                      let res = this.state.left + diff;
-                      if (res > 0) {
-                          res = 0;
-                      } else if (res < -100) {
-                          res = -100;
-                      }
-                      this.setState({left: res, transition: ""});
                       this.startX = nowX;
+                      if (diff < 0) {
+                          this.setState({left: -100});
+                      }else if(diff > 0){
+                          this.setState({left: 0});
+                      }
                       if (diff) {
                           if (this.timer){
                               clearInterval(this.timer);
                           }
                           this.timer = setTimeout(() => {
-                              this.setState({left: 0, transition: "left 170ms linear"});
+                              this.setState({left: 0});
                           }, 3000);
                       }
                       this.stopDefaultEvent(e);

@@ -60,14 +60,14 @@ const lists = (info, src, extra) => {
                     if (render) {
                         return (
                             <div key={title} className='pool-info-label-list'>
-                                <span>{title} :</span>
+                                <span>{title}: </span>
                                 <span>{render(val, extra)}</span>
                             </div>
                         )
                     }
                     return (
                         <div key={title} className='pool-info-label-list'>
-                            <span>{title} :</span>
+                            <span>{title}: </span>
                             <span>{val.toString()}</span>
                         </div>
                     )
@@ -80,6 +80,7 @@ const lists = (info, src, extra) => {
 export const PoolItem: React.FC<IPoolItem> = props => {
     const { pool, toPool } = props;
     const { meta, active } = pool;
+    const defaultLogo = require("@/img/default.png");
     return (
         <SwipeAction>
         <div className='pool-item-thrid' onClick={e => {
@@ -99,7 +100,7 @@ export const PoolItem: React.FC<IPoolItem> = props => {
                 {lists(INFOS, pool, {})}
             </div>
             <IconRight className='pool-detail-img'/> */}
-            <div className="left-logo" style={{background: meta.logo ? `url(${meta.logo})` : `#e8eaed`}}>
+            <div className="left-logo" style={{background: meta.logo ? `url(${meta.logo})` : `url(${defaultLogo})`, border: meta.logo ? "" : "1px solid #c1c1c1"}}>
                 {/*<div style={{borderColor: active === "0x01" ? "#08de00" : "#e84f4f"}}></div>*/}
             </div>
             <div style={{backgroundColor: active === "0x01" ? "#08de00" : "#e84f4f"}}></div>

@@ -83,30 +83,30 @@ const mapToState = ({ account }) => {
         operation: account.operation,
     }
 }
-
+const logo = require("@/img/meta-logo2.png")
 const accountInfo = [
     {
         title: 'Liquid balance',
         dataIndex: 'liquidBalance',
-        render: val => val.gte(0) ? <span>{`${val.toFixed(5)} AION`}</span> :
+        render: val => val.gte(0) ? <><span>{`${val.toFixed(5)} `}</span> <img src={logo} height="16" width="16"/></>:
             <Spin size='30px' width='2px' />
     },
     {
         title: 'Staked Amount',
         dataIndex: 'stakedAmount',
-        render: val => val.gte(0) ? <span>{`${val.toFixed(5)} AION`}</span> :
+        render: val => val.gte(0) ? <><span>{`${val.toFixed(5)} `}</span><img src={logo} height="16" width="16"/></> :
             <Spin size='30px' width='2px' />
     },
     {
         title: 'Currently Undelegating',
         dataIndex: 'undelegationAmount',
-        render: val => val.gte(0) ? <span>{`${val.toFixed(5)} AION`}</span> :
+        render: val => val.gte(0) ? <><span>{`${val.toFixed(5)} `}</span> <img src={logo} height="16" width="16"/></>:
             <Spin size='30px' width='2px' />
     },
     {
         title: 'Total Rewards',
         dataIndex: 'rewards',
-        render: val => val.gte(0) ? <span>{`${val.toFixed(5)} AION`}</span> :
+        render: val => val.gte(0) ? <><span>{`${val.toFixed(5)} `}</span><img src={logo} height="16" width="16"/></> :
             <Spin size='30px' width='2px' />
     }
 ]
@@ -297,7 +297,7 @@ const home = (props: Ihome) => {
                 <div className='header-account'>
                     <span style={{ fontSize: '16px' }}>My Account:</span>
                     <span style={{ fontSize: '12px' }}>{`${formatAddress(address)}`}</span>
-                    <CommonButton className='switch-account-button button-orange' title="switch" onClick={handleSwitchAccount} />
+                    <CommonButton className='switch-account-button button-orange' title="Switch Account" onClick={handleSwitchAccount} />
                 </div>
                 {renderAccountInfo(accountInfo, account)}
             </div>
@@ -316,7 +316,7 @@ const home = (props: Ihome) => {
                 >
                     {hasPools && hasDelegations && renderPoolsMore('My Delegations', process_delegations(delegations).slice(0, 3), delegationInfo, toDelegations)}
                     {hasPools && hasUndelegations && renderPoolsMore('Pending Undelegations', process_undelegations(undelegations).slice(0, 3), unDelegationInfo, toPendingUndlegation)}
-                    {hasPools && renderPools('Top pools', pools)}
+                    {hasPools && renderPools('Top Pools', pools)}
                     {hasPools && hasHistory && renderTransaction('Stake History', process_transctions(transactions).slice(0, 3), toHistoryList)}
                 </ReactPullLoad> :
 

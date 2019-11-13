@@ -8,7 +8,9 @@
 }
 
 .home-header {
-    background: #000;
+    background:url(~@/img/background.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
     *{
         color: #fff;
     }
@@ -29,9 +31,10 @@
     .switch-account-button {
         display: inline-block;
         margin-left: 20px;
-        border-radius: 10%;
+        border-radius: 6px;
         padding: 2px;
         width: 50px;
+        font-size: 12px;
     }
 }
 
@@ -44,8 +47,14 @@
     margin: 10px auto;
     .header-info-item-value {
         margin: 5px auto;
-        font-size: 20px;
         text-align: center;
+        >span{
+            font-size: 16px;
+            line-height: 16px;
+        }
+        >span >img{
+            line-height: 16px;
+        }
     }
 
     .header-info-item-title {

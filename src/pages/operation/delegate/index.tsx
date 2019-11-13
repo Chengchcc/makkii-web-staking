@@ -11,6 +11,7 @@ import Modal, { alert } from '@components/modal';
 import Image from '@components/default-img'
 import FormItem from '../operation_form_item';
 import { commonGoback } from '../util';
+import { copyInputValue } from "@utils/util";
 
 const fee_delegate = new BigNumber(gas_delegate).times(gasPrice).shiftedBy(AIONDECIMAL);
 
@@ -84,13 +85,17 @@ const delegate = props => {
         });
     }
     return (
-        <div className='operation-container'>
+        <div className='operation-container delegate-form'>
             <FormItem label='From'>{formatAddress(address)}</FormItem>
             <FormItem label='To' className='operation-form-pool'>
                 <Image src={meta.logo} className='pool-logo' alt="" />
-                <span style={{ marginLeft: '10px' }}>{meta.name}</span>
+                <span style={{ marginLeft: '10px' }}>{meta.name || address}</span>
             </FormItem>
-            <FormItem label='Delegate Amount'>
+            <FormItem label='Transaction Fee'>
+                ≈ {fee_delegate.toFixed(5)}&nbsp; <img src={require("@/img/meta-logo2.png")} width="14" height="14"/>
+            </FormItem>
+            <FormItem label='Balance'>{balance.toFixed(5)} AION</FormItem>
+            <FormItem label='Delegate Amount' className="delegate-input">
                 <input ref={inputRef} type='number' /> &nbsp; AION  &nbsp;
                 <a onClick={e => {
                     e.preventDefault();
@@ -98,26 +103,20 @@ const delegate = props => {
                     inputRef.current.value = amount.gte(0) ? balance.minus(fee_delegate).toString() : '0'
                 }}>All</a>
             </FormItem>
-            <FormItem label='Transaction Fee'>
-                Approx. {fee_delegate.toFixed(5)} AION
-            </FormItem>
-            <div style={{ padding: '20px 10px' }}>
-                Your liquid amount is {balance.toFixed(5)} AION.
-            </div>
             <CommonButton title='Delegate' className="button-orange" onClick={handle_delegate} />
             <Modal
                 visible={modalState.visible}
-                title={''}
+                title=""
                 hide={hideModal}
-                actions={[{title:'Ok', onPress:()=>{
-                    history.replace('/home');
+                actions={[{title: <div className="button button-orange">OK</div>, onPress:()=>{
+                    history.replace("/home");
                 }}]}
-                className='tx_result_modal'
-            >
+                className='tx_result_modal'>
                 <p>Transaction sent, waiting for block finalization.</p>
-                <p>Transaction will be displayed only after finalization</p>
-                <p>{modalState.txHash}</p>
-                <p>TODO: 请加上复制按钮</p>
+                <p><span>{modalState.txHash}</span><div className="button button-blue"
+                onClick={() => {
+                    copyInputValue(modalState.txHash);
+                }}>Copy</div></p>
             </Modal>
         </div>
 

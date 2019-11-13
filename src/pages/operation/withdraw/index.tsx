@@ -11,6 +11,7 @@ import Modal, {alert} from '@components/modal'
 import Image from '@components/default-img'
 import FormItem from '../operation_form_item';
 import { commonGoback } from '../util';
+import {copyInputValue} from "@utils/util";
 
 const fee_withdraw = new BigNumber(gas_withdraw).times(gasPrice).shiftedBy(AIONDECIMAL);
 
@@ -82,32 +83,32 @@ const withdraw = props => {
         });
     }
     return (
-        <div className='operation-container'>
+        <div className='operation-container withdraw-form'>
             <FormItem label='From' className='operation-form-pool'>
                 <Image src={meta.logo} className='pool-logo' alt="" />
-                <span style={{marginLeft:'10px'}}>{meta.name}</span>
+                <span style={{marginLeft:'10px'}}>{meta.name || address}</span>
             </FormItem>
-            <FormItem label='To'>{formatAddress(address)}</FormItem>
-            <FormItem label='Withdraw'>
-                <span>{rewards.toFixed(5)}&nbsp; AION &nbsp;</span>
-            </FormItem>
+            <FormItem label="To">{formatAddress(address)}</FormItem>
             <FormItem label='Transaction Fee'>
-                Approx. {fee_withdraw.toFixed(5)} AION
+                ≈ {fee_withdraw.toFixed(5)} AION
+            </FormItem>
+            <FormItem label="Withdraw Amount">
+                <span>{rewards.toFixed(5)}&nbsp; AION</span>
             </FormItem>
             <CommonButton title='Withdraw' className="button-orange" onClick={handle_withdraw}/>
             <Modal
                 visible={modalState.visible}
                 title=""
                 hide={hideModal}
-                actions={[{title:'Ok', onPress:()=>{
+                actions={[{title:<div className="button button-orange">OK</div>, onPress:()=>{
                     history.replace('/home');
                 }}]}
                 className='tx_result_modal'
             >
                 <p>Transaction sent, waiting for block finalization.</p>
                 <p>Transaction will be displayed only after finalization</p>
-                <p>{modalState.txHash}</p>
-                <p>TODO: 请加上复制按钮</p>
+                <p><span>{modalState.txHash}</span><div className="button button-blue" onClick={() => {
+                    copyInputValue(modalState.txHash); }}>Copy</div></p>
             </Modal>
         </div>
     )

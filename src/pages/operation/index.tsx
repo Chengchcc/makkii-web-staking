@@ -71,17 +71,17 @@ const poolDetailInfo = [
         }
     }
 ]
-
+const aionLogo = require("@/img/meta-logo2.png");
 const accountDetailInfo = [
     {
         title: 'Amount delegated to this pool',
         dataIndex: 'stake',
-        render: val => <span>{`${val.toFixed(5)} AION`}</span>
+        render: val => <><span>{`${val.toFixed(5)} `}</span><img src={aionLogo} width="16" height="16"/></>
     },
     {
         title: 'Rewards earned in this pool',
         dataIndex: 'rewards',
-        render: val => <span>{`${val.toFixed(5)} AION`}</span>
+        render: val => <><span>{`${val.toFixed(5)} `}</span><img src={aionLogo} width="16" height="16"/></>
     }
 ]
 
