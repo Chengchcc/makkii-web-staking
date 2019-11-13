@@ -28,7 +28,6 @@ const process_pools = async (pools: { [address: string]: any }, callback) => {
         const meta_data_url = hexCharCodeToStr(el.meta_data_url);
         total_pos_blk = total_pos_blk.plus(el.pos_blk_total)
         const stakeTotal = new BigNumber(el.stake_total).shiftedBy(AIONDECIMAL);
-        const stakeSelf = new BigNumber(el.stake_self).shiftedBy(AIONDECIMAL);
         map[el.address] = {
             address: el.address,
             stakeTotal: new BigNumber(el.stake_total).shiftedBy(AIONDECIMAL),

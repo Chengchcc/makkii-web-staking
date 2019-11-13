@@ -227,7 +227,7 @@ const Pageoperation = props => {
                     {url && <li><a href={url} target='_blank' rel="noopener noreferrer">{url}</a></li> }
                 </ul>
             </div>
-            <div className="delimiter"></div>
+            <div className="delimiter" />
             {accountLabel()}
             <div className='operation-pool-detail'>
                 {renderPoolDetail(poolDetailInfo, pool)}

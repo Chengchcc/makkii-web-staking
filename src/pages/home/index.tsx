@@ -10,6 +10,7 @@ import { PoolItem, PoolItemMore, Iinfo } from '@components/pool_item';
 import TransactionItem from '@components/transaction_item';
 import { createAction } from '@reducers/store';
 import operation from '@pages/operation';
+import ReactPullLoad, { STATS } from '@components/pullLoad';
 import { CommonButton } from '@components/button';
 import Card from './card';
 import './style.less';
@@ -134,10 +135,11 @@ const renderAccountInfo = (info, src) => {
 const home = (props: Ihome) => {
     const { history } = props;
     const account = useSelector(mapToState);
-    const [poolLoading, setPoolLoading] = React.useState(false);
-    const [myDelegationsLoading, setMyDelegationsLoading] = React.useState(false);
-    const [undelegationsLoading, setUndelegationsLoading] = React.useState(false);
-    const [transactionsLoading, setTransactionsLoading] = React.useState(false);
+    const accountRef = React.useRef(account);
+    const [state, setState] = React.useState({
+        action: STATS.init,
+        isLoading: false,
+    })
     const dispath = useDispatch();
     const { address, pools, delegations, undelegations, history: transactions } = account;
     const toDelegate = e => {
@@ -188,41 +190,62 @@ const home = (props: Ihome) => {
         }))
         history.push('/operation');
     }
-    React.useEffect(() => {
-        if (address !== '') {
-            setPoolLoading(true)
-            setMyDelegationsLoading(true)
-            setUndelegationsLoading(true)
-            setTransactionsLoading(true)
+
+
+    const handleAction = action => {
+        if (action === state.action ||
+            action === STATS.refreshing && state.action === STATS.loading ||
+            action === STATS.loading && state.action === STATS.refreshing) {
+            // console.info("It's same action or on loading or on refreshing ",action, state.action,action === state.action);
+            return
+        }
+        if (action === STATS.refreshing) {// refreshing
+            // onRefresh();
             wsSend({ method: 'eth_getBalance', params: [address] })
             wsSend({ method: 'delegations', params: [address, 0, 10] })
             wsSend({ method: 'transactions', params: [address, 0, 10] })
             wsSend({ method: 'pools', params: [] })
             wsSend({ method: 'undelegations', params: [address, 0, 10] })
+        } else if (action === STATS.loading) {// loading more
+            // nothiing
         }
-    }, [address])
+        // DO NOT modify below code
+        setState({
+            ...state,
+            action
+        })
+    }
     React.useEffect(() => {
-        if (transactionsLoading) {
-            setTransactionsLoading(false)
+        if (!Object.keys(pools).length) {
+            setState({
+                ...state,
+                isLoading: true,
+            })
         }
-    }, [transactions]);
-    React.useEffect(() => {
-        if (poolLoading) {
-            setPoolLoading(false)
+    }, []);
+    React.useEffect(()=>{
+        const {  pools: pools_, delegations: delegations_, undelegations: undelegations_, history: transactions_ } = accountRef.current;
+        if(pools_!==pools && delegations_!==delegations && undelegations_!==undelegations && transactions_!==transactions){
+            console.log('difference');
+            const newState = {...state};
+            let update = false;
+            if (state.isLoading) {
+                newState.isLoading = false
+                update = true;
+            }
+            if (state.action === STATS.refreshing) {
+                newState.action = STATS.refreshed
+                update = true;
+            } else if (state.action === STATS.loading) {
+                newState.action = STATS.reset
+                update = true;
+            }
+            if(update){
+                setState(newState)
+            }
+            accountRef.current = account;
         }
-    }, [pools]);
-    React.useEffect(() => {
-        if (undelegationsLoading) {
-            setUndelegationsLoading(false)
-        }
-    }, [undelegations]);
-    React.useEffect(() => {
-        if (myDelegationsLoading) {
-            setMyDelegationsLoading(false)
-        }
-    }, [delegations]);
-
-
+    }, [pools, delegations, undelegations, transactions]);
     const renderPools = (title, lists_) => {
         const lists = Object.values(lists_).slice(0, 3);
         return (
@@ -243,7 +266,7 @@ const home = (props: Ihome) => {
                 title={title}
                 lists={lists}
                 renderItem={(el, key) => {
-                    return <PoolItemMore key={key} pool={pools[el.poolAddress]} value={el} info={info} toPool={toPool}/>
+                    return <PoolItemMore key={key} pool={pools[el.poolAddress]} value={el} info={info} toPool={toPool} />
                 }}
                 handleMore={handleMore}
             />
@@ -262,12 +285,12 @@ const home = (props: Ihome) => {
         )
     }
 
+
+
     const hasPools = Object.keys(pools).length > 0;
     const hasDelegations = Object.keys(delegations).length > 0;
     const hasUndelegations = Object.keys(undelegations).length > 0;
     const hasHistory = Object.keys(transactions).length > 0;
-    const loading = poolLoading || myDelegationsLoading || undelegationsLoading || transactionsLoading;
-    console.log(poolLoading, myDelegationsLoading,undelegationsLoading,transactionsLoading);
     return (
         <div className='flex-container'>
             <div className='home-header'>
@@ -280,16 +303,24 @@ const home = (props: Ihome) => {
             </div>
             <div className='home-button-container'>
                 <CommonButton className='home-button button-orange' title='Delegate' onClick={toDelegate} />
-                <CommonButton className='home-button button-orange' title='Withdraw' onClick={toWithDraw} disabled={account.rewards.isEqualTo(0)}/>
+                <CommonButton className='home-button button-orange' title='Withdraw' onClick={toWithDraw} disabled={account.rewards.isEqualTo(0)} />
             </div>
+            {!state.isLoading ?
+                <ReactPullLoad
+                    downEnough={100}
+                    isBlockContainer
+                    handleAction={handleAction}
+                    action={state.action}
+                    hasMore={false}
+                    FooterNode={()=><div/>}
+                >
+                    {hasPools && hasDelegations && renderPoolsMore('My Delegations', process_delegations(delegations).slice(0, 3), delegationInfo, toDelegations)}
+                    {hasPools && hasUndelegations && renderPoolsMore('Pending Undelegations', process_undelegations(undelegations).slice(0, 3), unDelegationInfo, toPendingUndlegation)}
+                    {hasPools && renderPools('Top pools', pools)}
+                    {hasPools && hasHistory && renderTransaction('Stake History', process_transctions(transactions).slice(0, 3), toHistoryList)}
+                </ReactPullLoad> :
 
-            {!loading && hasPools && hasDelegations && renderPoolsMore('My Delegations', process_delegations(delegations).slice(0, 3), delegationInfo, toDelegations)}
-            {!loading && hasPools && hasUndelegations && renderPoolsMore('Pending Undelegations', process_undelegations(undelegations).slice(0, 3), unDelegationInfo, toPendingUndlegation)}
-            {!loading && hasPools && renderPools('Top pools', pools)}
-            {!loading && hasPools && hasHistory && renderTransaction('Stake History', process_transctions(transactions).slice(0, 3), toHistoryList)}
-
-            {loading &&
-                <div style={{display:'flex', flex:1,alignItems:'center', justifyContent:'center'}}>
+                <div style={{ display: 'flex', flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                     <Spin />
                 </div>
             }
