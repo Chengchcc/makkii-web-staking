@@ -19,7 +19,7 @@ const mapToState = ({ account }) => {
 
 const Delegations = (props) => {
     const {history} = props;
-    const { delegations,pools,stakedAmount,address,pagination } = useSelector(mapToState);
+    const { delegations,pools,address,pagination } = useSelector(mapToState);
     const onRefresh = () => {
         wsSend({ method: 'delegations', params: [address, 0, 10] })
     }
@@ -40,7 +40,6 @@ const Delegations = (props) => {
     const hasMore = pagination.current + 1 <pagination.total;
     return (
         <MoreList
-            title={`My Delegations: ${stakedAmount} AION`}
             onReachEnd={onReachEnd}
             onRefresh={onRefresh}
             hasMore={hasMore}

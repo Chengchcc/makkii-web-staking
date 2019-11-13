@@ -5,7 +5,7 @@ import SwipeAction from "@components/swipe_action";
 import './style.less';
 
 interface Ilist<T> {
-    title: string
+    title?: string
     data: Array<T>
     renderItem: (item: T, index?: number) => React.ReactElement<any>
     onRefresh: () => any

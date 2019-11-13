@@ -12,6 +12,7 @@ import Image from '@components/default-img'
 import FormItem from '../operation_form_item';
 import { commonGoback } from '../util';
 import {copyInputValue} from "@utils/util";
+import CheckMark from "@/img/checkMark.svg";
 
 const fee_withdraw = new BigNumber(gas_withdraw).times(gasPrice).shiftedBy(AIONDECIMAL);
 
@@ -50,7 +51,7 @@ const withdraw = props => {
         const insufficientBalance = new BigNumber(amount).gt(rewards);
         if(!valid  || parseFloat(amount) === 0 || insufficientBalance) {
             alert({
-                title: 'error', message: 'Invalid amount', actions: [
+                title: 'Error', message: 'Invalid amount', actions: [
                     {
                         title: 'Ok',
                     },
@@ -68,7 +69,7 @@ const withdraw = props => {
         }else {
             // send fail
             alert({
-                title: 'error', message: 'Sent fail', actions: [
+                title: 'Error', message: 'Sent fail', actions: [
                     {
                         title: 'Ok',
                     },
@@ -105,10 +106,14 @@ const withdraw = props => {
                 }}]}
                 className='tx_result_modal'
             >
-                <p>Transaction sent, waiting for block finalization.</p>
+                <CheckMark width={40} height={40}/>
+                <p>Transaction sent<br/> Waiting for block finalization</p>
                 <p>Transaction will be displayed only after finalization</p>
-                <p><span>{modalState.txHash}</span><div className="button button-blue" onClick={() => {
-                    copyInputValue(modalState.txHash); }}>Copy</div></p>
+                <p>
+                    {formatAddress(modalState.txHash)}
+                    <img src={require("@/img/copy2.png")} onClick={() => {
+                        copyInputValue(modalState.txHash);
+                    }}/></p>
             </Modal>
         </div>
     )

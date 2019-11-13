@@ -54,7 +54,6 @@ const poolList = props => {
     },[pools])
     return (
         <MoreList
-            title='Pool List'
             onReachEnd={onReachEnd}
             onRefresh={onRefresh}
             hasMore={false}

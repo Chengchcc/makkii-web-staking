@@ -19,7 +19,7 @@ const mapToState = ({ account }) => {
 
 const Undelegations = (props) => {
     const {history} = props;
-    const { undelegations,pools,undelegationAmount,address,pagination } = useSelector(mapToState);
+    const { undelegations,pools,address,pagination } = useSelector(mapToState);
     const onRefresh = () => {
         wsSend({ method: 'undelegations', params: [address, 0, 10] })
     }
@@ -39,7 +39,6 @@ const Undelegations = (props) => {
     const hasMore = pagination.current + 1 <pagination.total;
     return (
         <MoreList
-            title={`Pending Undelegation: ${undelegationAmount}AION`}
             onReachEnd={onReachEnd}
             onRefresh={onRefresh}
             hasMore={hasMore}

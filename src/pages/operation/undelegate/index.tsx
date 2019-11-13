@@ -13,6 +13,7 @@ import FormItem from '../operation_form_item';
 import { commonGoback } from '../util';
 import Modal from '@components/modal';
 import {copyInputValue} from "@utils/util";
+import CheckMark from "@/img/checkMark.svg";
 
 const fee_undelegate = new BigNumber(gas_undelegate).times(gasPrice).shiftedBy(AIONDECIMAL);
 
@@ -53,7 +54,7 @@ const undelegate = props => {
         const insufficientBalance = new BigNumber(amount).gt(staked);
         if(!valid  || parseFloat(amount) === 0 || insufficientBalance) {
             alert({
-                title: 'error', message: 'Invalid amount', actions: [
+                title: 'Error', message: 'Invalid amount', actions: [
                     {
                         title: 'Ok',
                     },
@@ -71,7 +72,7 @@ const undelegate = props => {
         }else {
             // send fail
             alert({
-                title: 'error', message: 'Sent fail', actions: [
+                title: 'Error', message: 'Sent fail', actions: [
                     {
                         title: 'Ok',
                     },
@@ -101,10 +102,10 @@ const undelegate = props => {
             </FormItem>
             <FormItem label='Undelegate Amount' className="undelegate-input">
                 <input type='number' ref={inputRef} /> &nbsp; AION  &nbsp;
-                <a onClick={e=>{
+                <a className="button button-orange" onClick={e=>{
                     e.preventDefault();
                     const amount = staked.minus(fee_undelegate);
-                    inputRef.current.value = amount.gte(0)?staked.minus(fee_undelegate).toString():'0'
+                    inputRef.current.value = amount.gte(0)?staked.toString():'0'
                 }}>All</a>
             </FormItem>
             <CommonButton title='Undelegate' className='button-orange' onClick={handle_undelegate} />
@@ -117,9 +118,14 @@ const undelegate = props => {
                 }}]}
                 className='tx_result_modal'
             >
-                <p>Transaction sent, waiting for block finalization.</p>
-                <p><span>{modalState.txHash}</span><div className="button button-blue" onClick={() => {
-                    copyInputValue(modalState.txHash); }}>Copy</div></p>
+                <CheckMark width={40} height={40}/>
+                <p>Transaction sent<br/> Waiting for block finalization</p>
+                <p>Transaction will be displayed only after finalization</p>
+                <p>
+                    {formatAddress(modalState.txHash)}
+                    <img src={require("@/img/copy2.png")} onClick={() => {
+                        copyInputValue(modalState.txHash);
+                    }}/></p>
             </Modal>
         </div>
     )

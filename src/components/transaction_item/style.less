@@ -8,8 +8,8 @@
 }
 .transaction-info {
     display: grid;
-    grid-template-columns: 40% auto;
-    padding: 5px 0 5px 10px;
+    grid-template-columns: 50% auto;
+    padding: 5px 30px 5px 10px;
 }
 .transaction-pool {
     display: flex;
@@ -17,6 +17,14 @@
     align-items: center;
     justify-content: flex-start;
     font-size: 10px;
+    >span{
+        width: calc(100% - 60px);
+        font-size: 16px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        margin-left: 5px;
+        text-transform: capitalize;
+    }
 }
 .transaction-pool-meta {
     margin-top: 10px;
@@ -25,4 +33,7 @@
 .transaction-pool-label {
     margin: 10px 0 10px 5px;
     font-size: 10px;
+    text-overflow: ellipsis;
+    overflow: hidden!important;
+    width: 100%;
 }

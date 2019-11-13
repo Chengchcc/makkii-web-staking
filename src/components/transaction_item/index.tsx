@@ -31,16 +31,16 @@ const TransactionItem: React.FC<ItransactionItem> = props => {
     const date = new Date(parseInt(timestamp, 16)*1000).Format('yyyy-MM-dd hh:mm', 24)
     return (
         <div className='transaction-item'>
-            <div className='transcation-item-header'>
+           {/* <div className='transcation-item-header'>
                 {formatTxHash(hash)}
-            </div>
+            </div>*/}
             <div className='transaction-info'>
                 <div className='transaction-pool'>
                     <Image src={meta.logo} className='pool-logo' alt="" /> &nbsp;
-                    {meta.name}
+                    <span>{meta.name || pool.address}</span>
                 </div>
                 <div>
-                    <div className='transaction-pool-label'>{date}</div>
+                    <div className='transaction-pool-label'>{/*date*/} Tx Hash: { hash.substring(0, 8) + "..." + (hash.substring(60)) }</div>
                     <div className='transaction-pool-label'>
                         <span>{tansferType(type)} </span>
                         <span>{`${amount.toFixed(5)} AION`}</span>

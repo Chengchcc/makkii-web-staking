@@ -35,14 +35,14 @@ const router = ({ history }) => {
             <Router history={history}>
                 <Switch>
                     <Redirect exact from='/' to='home' />
-                    <Route path='/home' component={withLockByAccount(PageHome)} />
+                    <Route path='/home' component={withLockByAccount(PageHome)}/>
                     <Route path='/delegate' component={withLockByAccount(withNavBar(PageDelegate))} />
-                    <Route path='/delegations' component={withLockByAccount(withNavBar(PageDelegations))} />
-                    <Route path='/pendingundelegation' component={withLockByAccount(withNavBar(PagePendingUndelegation))} />
-                    <Route path='/poollist' component={withNavBar(PagePoolList)} />
-                    <Route path='/undelegate' component={withLockByAccount(withNavBar(PageUndelegate))} />
-                    <Route path='/withdraw' component={withLockByAccount(withNavBar(PageWithdraw))} />
-                    <Route path='/history' component={withLockByAccount(withNavBar(PageHistoryList))} />
+                    <Route path='/delegations' component={withLockByAccount(withNavBar(PageDelegations, "My Delegations"))} />
+                    <Route path='/pendingundelegation' component={withLockByAccount(withNavBar(PagePendingUndelegation, "Pending Undelegations"))} />
+                    <Route path='/poollist' component={withNavBar(PagePoolList, "Pool List")} />
+                    <Route path='/undelegate' component={withLockByAccount(withNavBar(PageUndelegate, ""))} />
+                    <Route path='/withdraw' component={withLockByAccount(withNavBar(PageWithdraw, ""))} />
+                    <Route path='/history' component={withLockByAccount(withNavBar(PageHistoryList, " Stake History"))} />
                     <Route path='/operation' component={withNavBar(PageOperation)} />
                 </Switch>
             </Router>

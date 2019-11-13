@@ -7,12 +7,13 @@ interface InavBar {
 }
 
 const navBar: React.FC<InavBar> = props => {
-    const {onLeftClick} = props;
+    const {onLeftClick, title} = props;
     return (
         <div className='navBar'>
             <div className='navButton' onClick={onLeftClick}>
-                <IconLeft height={20} width={20} />           
+                <IconLeft height={20} width={20} />
             </div>
+            {title}
         </div>
     )
 }

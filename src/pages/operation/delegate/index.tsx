@@ -12,6 +12,7 @@ import Image from '@components/default-img'
 import FormItem from '../operation_form_item';
 import { commonGoback } from '../util';
 import { copyInputValue } from "@utils/util";
+import CheckMark from "@/img/checkMark.svg";
 
 const fee_delegate = new BigNumber(gas_delegate).times(gasPrice).shiftedBy(AIONDECIMAL);
 
@@ -51,7 +52,7 @@ const delegate = props => {
         const insufficientBalance = new BigNumber(amount).plus(fee_delegate).gt(balance);
         if (!valid || parseFloat(amount) === 0 || insufficientBalance) {
             alert({
-                title: 'error', message: 'Invalid amount', actions: [
+                title: 'Error', message: 'Invalid amount', actions: [
                     {
                         title: 'Ok',
                     },
@@ -70,7 +71,7 @@ const delegate = props => {
         } else {
             // send fail
             alert({
-                title: 'error', message: 'Sent fail', actions: [
+                title: 'Error', message: 'Sent fail', actions: [
                     {
                         title: 'Ok',
                     },
@@ -92,12 +93,12 @@ const delegate = props => {
                 <span style={{ marginLeft: '10px' }}>{meta.name || address}</span>
             </FormItem>
             <FormItem label='Transaction Fee'>
-                ≈ {fee_delegate.toFixed(5)}&nbsp; <img src={require("@/img/meta-logo2.png")} width="14" height="14"/>
+                ≈ {fee_delegate.toFixed(5)}&nbsp; <img src={require("@/img/metaLogo2.png")} width="14" height="14"/>
             </FormItem>
             <FormItem label='Balance'>{balance.toFixed(5)} AION</FormItem>
             <FormItem label='Delegate Amount' className="delegate-input">
                 <input ref={inputRef} type='number' /> &nbsp; AION  &nbsp;
-                <a onClick={e => {
+                <a className="button button-orange" onClick={e => {
                     e.preventDefault();
                     const amount = balance.minus(fee_delegate);
                     inputRef.current.value = amount.gte(0) ? balance.minus(fee_delegate).toString() : '0'
@@ -112,11 +113,14 @@ const delegate = props => {
                     history.replace("/home");
                 }}]}
                 className='tx_result_modal'>
-                <p>Transaction sent, waiting for block finalization.</p>
-                <p><span>{modalState.txHash}</span><div className="button button-blue"
-                onClick={() => {
-                    copyInputValue(modalState.txHash);
-                }}>Copy</div></p>
+                <CheckMark width={40} height={40}/>
+                <p>Transaction sent<br/> Waiting for block finalization</p>
+                <p>Transaction will be displayed only after finalization</p>
+                <p>
+                    {formatAddress(modalState.txHash)}
+                    <img src={require("@/img/copy2.png")} onClick={() => {
+                        copyInputValue(modalState.txHash);
+                    }}/></p>
             </Modal>
         </div>
 

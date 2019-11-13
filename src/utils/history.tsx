@@ -20,7 +20,7 @@ history.listen((location, action)=>{
 });
 
 export default history;
-export const withNavBar = (WrappedCompnented) => (props) => {
+export const withNavBar = (WrappedCompnented, title) => (props) => {
     const {goBack,canGoBack} = WrappedCompnented;
     let hasNavbar = history.length >1;
     if(canGoBack&&(typeof canGoBack ==='function')){
@@ -32,7 +32,7 @@ export const withNavBar = (WrappedCompnented) => (props) => {
              <WrappedCompnented {...props} />
             </div>
             {
-                hasNavbar ? <NavBar onLeftClick={() => {
+                hasNavbar ? <NavBar title={title} onLeftClick={() => {
                     if(goBack){
                         goBack();
                     }else {

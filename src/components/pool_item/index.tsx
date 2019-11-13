@@ -100,7 +100,7 @@ export const PoolItem: React.FC<IPoolItem> = props => {
                 {lists(INFOS, pool, {})}
             </div>
             <IconRight className='pool-detail-img'/> */}
-            <div className="left-logo" style={{background: meta.logo ? `url(${meta.logo})` : `url(${defaultLogo})`, border: meta.logo ? "" : "1px solid #c1c1c1"}}>
+            <div className="left-logo" style={{background: meta.logo ? `url(${meta.logo})` : `url(${defaultLogo})`, border: meta.logo ? "" : "1px solid #ddd"}}>
                 {/*<div style={{borderColor: active === "0x01" ? "#08de00" : "#e84f4f"}}></div>*/}
             </div>
             <div style={{backgroundColor: active === "0x01" ? "#08de00" : "#e84f4f"}}></div>

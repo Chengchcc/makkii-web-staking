@@ -71,7 +71,7 @@ const poolDetailInfo = [
         }
     }
 ]
-const aionLogo = require("@/img/meta-logo2.png");
+const aionLogo = require("@/img/metaLogo2.png");
 const accountDetailInfo = [
     {
         title: 'Amount delegated to this pool',
@@ -139,7 +139,7 @@ const Pageoperation = props => {
         if(makkii.isconnect()){
             if(!account) {
                 alert({
-                    title:'error',
+                    title:'Error',
                     message: 'Please import an account first',
                     actions: [{
                         title: 'Ok',
@@ -159,7 +159,7 @@ const Pageoperation = props => {
         }else{
             // TODO no makkii
             alert({
-                title:'error',
+                title:'Error',
                 message: 'Please open by Makkii',
                 actions: [{
                     title: 'Ok'

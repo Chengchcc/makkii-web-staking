@@ -27,7 +27,6 @@ const HistoryLists = () => {
 
     return (
         <MoreList
-            title="Stake History"
             onReachEnd={onReachEnd}
             onRefresh={onRefresh}
             hasMore={hasMore}

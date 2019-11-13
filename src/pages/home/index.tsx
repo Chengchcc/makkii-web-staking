@@ -83,7 +83,7 @@ const mapToState = ({ account }) => {
         operation: account.operation,
     }
 }
-const logo = require("@/img/meta-logo2.png")
+const logo = require("@/img/metaLogo2.png")
 const accountInfo = [
     {
         title: 'Liquid balance',

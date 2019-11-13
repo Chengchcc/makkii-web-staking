@@ -29,6 +29,7 @@ export const alert = (props: {
         title={title}
         hide={hide}
         actions={actions}
+        className="modal-alert"
     >
         {message}
     </Modal>, div)
