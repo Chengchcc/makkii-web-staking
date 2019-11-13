@@ -1,8 +1,8 @@
 /* eslint-disable no-param-reassign */
 import React from 'react';
 import { STATS } from './constants';
-import HeadNode from './HeadNode';
-import FooterNode from './FooterNode';
+import HeadNode_ from './HeadNode';
+import FooterNode_ from './FooterNode';
 import './style.less';
 
 export {
@@ -30,8 +30,8 @@ const defaultProps = {
     distanceBottom: 100,
     isBlockContainer: false,
     className: "",
-    HeadNode,     // refresh message react dom
-    FooterNode, // refresh loading react dom
+    HeadNode:HeadNode_,     // refresh message react dom
+    FooterNode: FooterNode_, // refresh loading react dom
 }
 
 
@@ -49,7 +49,7 @@ let startY = 0;
 let Tcontainer = document.body;
 const pullLoad: React.FC<Iprops> = props => {
 
-    const {offsetScrollTop, downEnough, distanceBottom, handleAction, style={}, hasMore} = props;
+    const {offsetScrollTop, downEnough, distanceBottom, handleAction, style={}, hasMore, HeadNode, FooterNode} = props;
 
     const [state, setState] = React.useState({
         pullHeight: 0

@@ -1,11 +1,12 @@
 /* eslint-disable camelcase */
 import store, { createAction } from '@reducers/store';
 import {alert} from '@components/modal';
+import { wsSend } from './websocket';
 
 export const formatPoolName = poolName => {
     let newPoolName = poolName[0].toUpperCase() + poolName.substr(1);
     if (newPoolName.length > 20) {
-        newPoolName = newPoolName.substr(0, 17) + '...';
+        newPoolName = `${newPoolName.substr(0, 17)  }...`;
     }
     return newPoolName;
 }
@@ -61,6 +62,11 @@ export const handleSwitchAccount = () => {
         makkii.switchAccount().then(r => {
             console.log('handleSwitchAccount', r);
             store.dispatch(createAction('account/update')({ address: r }))
+            wsSend({ method: 'eth_getBalance', params: [r] })
+            wsSend({ method: 'delegations', params: [r, 0, 10] })
+            wsSend({ method: 'transactions', params: [r, 0, 10] })
+            wsSend({ method: 'pools', params: [] })
+            wsSend({ method: 'undelegations', params: [r, 0, 10] })
         }).catch(err => {
             console.log('switch account error=>', err);
         })

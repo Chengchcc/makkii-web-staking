@@ -97,7 +97,7 @@ const withdraw = props => {
             <CommonButton title='Withdraw' onClick={handle_withdraw}/>
             <Modal
                 visible={modalState.visible}
-                title={''}
+                title=""
                 hide={hideModal}
                 actions={[{title:'Ok', onPress:()=>{
                     history.replace('/home');

@@ -5,6 +5,7 @@ import 'makkii-webview-bridge';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import store, { createAction } from '@reducers/store';
+import { wsSend } from '@utils/websocket';
 import history from '@utils/history';
 import App from './app';
 import './global.less'
@@ -43,8 +44,23 @@ if(makkii.isconnect()){
         store.dispatch(createAction('account/update')({
             address:r
         }))
+        wsSend({ method: 'eth_getBalance', params: [r] })
+        wsSend({ method: 'delegations', params: [r, 0, 10] })
+        wsSend({ method: 'transactions', params: [r, 0, 10] })
+        wsSend({ method: 'pools', params: [] })
+        wsSend({ method: 'undelegations', params: [r, 0, 10] })
         history.push('/home')
     })
+}else {
+    const {address: r} = store.getState().account;
+    if(r){
+        wsSend({ method: 'eth_getBalance', params: [r] })
+        wsSend({ method: 'delegations', params: [r, 0, 10] })
+        wsSend({ method: 'transactions', params: [r, 0, 10] })
+        wsSend({ method: 'pools', params: [] })
+        wsSend({ method: 'undelegations', params: [r, 0, 10] })
+        history.push('/home')
+    }
 }
 
 
