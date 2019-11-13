@@ -46,9 +46,16 @@
 
 .pool-item-two {
     display: grid;
-    grid-template-columns: 40% auto;
-    padding: 5px 0px 5px 10px;
+    grid-template-columns: 50% auto;
+    padding: 5px 0 5px 10px;
     align-items: center;
+    >.pool-meta{
+        .pool-meta-name{
+            width: calc(100% - 60px);
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
 }
 
 .pool-base {

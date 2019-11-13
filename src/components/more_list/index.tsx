@@ -77,7 +77,7 @@ const List: React.FC<Ilist<any>> = props => {
                             {
                                 data.map((item, index) => {
                                     // eslint-disable-next-line react/no-array-index-key
-                                    return <li key={index}><SwipeAction>{renderItem(item, index)}</SwipeAction></li>
+                                    return <li key={index}>{renderItem(item, index)}</li>
                                 })
                             }
                         </ul>

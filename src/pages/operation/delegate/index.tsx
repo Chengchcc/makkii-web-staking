@@ -102,9 +102,9 @@ const delegate = props => {
                 Approx. {fee_delegate.toFixed(5)} AION
             </FormItem>
             <div style={{ padding: '20px 10px' }}>
-                Your liquid amount is {balance.toString()} AION.
+                Your liquid amount is {balance.toFixed(5)} AION.
             </div>
-            <CommonButton title='Delegate' onClick={handle_delegate} />
+            <CommonButton title='Delegate' className="button-orange" onClick={handle_delegate} />
             <Modal
                 visible={modalState.visible}
                 title={''}

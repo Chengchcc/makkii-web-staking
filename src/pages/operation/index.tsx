@@ -29,7 +29,7 @@ const poolDetailInfo = [
         title: 'Fees',
         dataIndex: 'fee',
         render: val => {
-            return <span>{val.times(100).toFixed(4)} %</span>
+            return <span>{val.times(100).toFixed(4)}</span>
         }
     },
     {
@@ -47,7 +47,7 @@ const poolDetailInfo = [
         title: 'Stake Weight',
         dataIndex: 'stakeWeight',
         render: val => {
-            return <span>{val.times(100).toFixed(4)} %</span>
+            return <span>{val.times(100).toFixed(4)}</span>
         }
     },
     {
@@ -202,8 +202,8 @@ const Pageoperation = props => {
         return (
             <div className='operation-account' >
                 {renderAccountDetail(accountDetailInfo, account)}
-                <CommonButton className='operation-button' title='Un-delegate' onClick={toUndelegate} disabled={account.stake.toNumber() === 0}/>
-                <CommonButton className='operation-button' title='Withdraw' onClick={toWithdraw} disabled={account.rewards.toNumber() === 0}/>
+                <CommonButton className='operation-button button-orange' title='Un-delegate' onClick={toUndelegate} disabled={account.stake.toNumber() === 0}/>
+                <CommonButton className='operation-button button-orange' title='Withdraw' onClick={toWithdraw} disabled={account.rewards.toNumber() === 0}/>
             </div>
         )
     }
@@ -232,7 +232,7 @@ const Pageoperation = props => {
             <div className='operation-pool-detail'>
                 {renderPoolDetail(poolDetailInfo, pool)}
             </div>
-            <CommonButton title='Delegate' onClick={toDelegate} />
+            <CommonButton title='Delegate' onClick={toDelegate} className='button-orange'/>
         </div>
     )
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import SwipeAction from "@components/swipe_action";
+
 import './style.less';
 
 interface Icard {
@@ -23,7 +23,7 @@ const card: React.FC<Icard> = (props) => {
                     {
                         lists.map((el, index) =>
                             // eslint-disable-next-line react/no-array-index-key
-                            <li key={`${index}`}><SwipeAction>{renderItem(el)}</SwipeAction></li>
+                            <li key={`${index}`}>{renderItem(el)}</li>
                         )
                     }
                 </ul>

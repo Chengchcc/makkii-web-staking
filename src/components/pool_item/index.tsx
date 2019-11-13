@@ -3,6 +3,7 @@ import React from 'react';
 import { Ipool } from '@interfaces/types';
 import IconRight from '@img/arrow_right.svg';
 import Image from '@components/default-img';
+import SwipeAction from "@components/swipe_action";
 import { formatPoolName} from '@utils/index';
 import './style.less';
 
@@ -80,6 +81,7 @@ export const PoolItem: React.FC<IPoolItem> = props => {
     const { pool, toPool } = props;
     const { meta, active } = pool;
     return (
+        <SwipeAction>
         <div className='pool-item-thrid' onClick={e => {
             e.preventDefault();
             toPool(pool.address)
@@ -107,6 +109,7 @@ export const PoolItem: React.FC<IPoolItem> = props => {
                {pool.performance.multipliedBy(100, 10).toFixed(5)}%
             </div>
         </div>
+        </SwipeAction>
     )
 }
 

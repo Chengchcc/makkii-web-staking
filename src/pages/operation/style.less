@@ -1,7 +1,9 @@
 .operation-container {
-    height: 100%;
     width: 100%;
-    background-color: #e1dccd;
+    background-color: #0c0c0c;
+    *{
+        color: #fff;
+    }
     >.delimiter{
         background-image: url(~@/img/delimeter.png);
         height: 6px;
@@ -12,7 +14,6 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-
     img {
         height: 80px;
         width: 80px;
@@ -49,12 +50,16 @@
     display: grid;
     padding: 0 5%;
     grid-template-columns: repeat(3, 33.3%);
-
     .operation-pool-detail-item {
         .operation-pool-detail-item-value {
             margin: 5px auto;
             font-size: 20px;
             text-align: center;
+            overflow: hidden;
+            padding: 0 5px;
+            >span{
+                word-break: break-all;
+            }
         }
 
         .operation-pool-detail-item-title {
@@ -68,7 +73,6 @@
 .operation-account {
     display: grid;
     grid-template-columns: repeat(2, 50%);
-
     .operation-account-info {
         &:first-child {
             border-right: 1px solid #ddd;
@@ -93,9 +97,10 @@
     .operation-button {
         padding: 10px;
 
-        &:last-child {
-            border-left: 1px solid #ddd;
+        &:nth-child(3){
+            border-right: 1px solid #fff;
         }
+
     }
 
 }

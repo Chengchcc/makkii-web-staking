@@ -104,9 +104,9 @@ const undelegate = props => {
                 Approx. {fee_undelegate.toFixed(5)} AION
             </FormItem>
             <div style={{padding:'20px 10px'}}>
-                You have delegated {staked.toString()} AION to this pool
+                You have delegated {staked.toFixed(5)} AION to this pool
             </div>
-            <CommonButton title='Undelegate' onClick={handle_undelegate} />
+            <CommonButton title='Undelegate' className='button-orange' onClick={handle_undelegate} />
             <Modal
                 visible={modalState.visible}
                 title={''}

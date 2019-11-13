@@ -16,7 +16,7 @@ class SwipeAction extends Component {
     }
     stopDefaultEvent(e) {
         e.preventDefault;
-        e.returnValue=false;
+        e.returnValue = false;
         e.stopPropagation;
         return false;
     }
@@ -26,13 +26,11 @@ class SwipeAction extends Component {
              <div className="wsiper-action-content" onTouchStart={(e) => {
                  this.startX = e.touches[0].clientX;
                  this.stopDefaultEvent(e);
-                 // console.log("start touch:", e.target, this.startX);
              }}
                   onTouchMove={(e) => {
                       const nowX = e.touches[0].clientX;
                       const diff = nowX - this.startX;
                       let res = this.state.left + diff;
-                      // console.log('calcute:', e.touches[0].clientX, nowX, this.startX, diff, res);
                       if (res > 0) {
                           res = 0;
                       } else if (res < -100) {
@@ -49,7 +47,6 @@ class SwipeAction extends Component {
                           }, 3000);
                       }
                       this.stopDefaultEvent(e);
-                      // console.log("start move:", e.target, touch.clientX, touch.clientY);
                   }} style={{left: this.state.left, transition: this.state.transition}}>
                  {this.props.children}
              </div>

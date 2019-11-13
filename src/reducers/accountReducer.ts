@@ -44,7 +44,7 @@ const defaultState2: IAccountState={
     }
 }
 const defaultState: IAccountState = {
-    address: '0xa0abf11a86e717aa751b0cc2559910317ebf89fc9f8ac3109e54d2d509d0ce78',
+    address: '0xa095541186b2e53698244e231274a0754678664d2655d0e233aa3b9a03d21ef4',
     liquidBalance: new BigNumber(100),
     stakedAmount: new BigNumber(200),
     undelegationAmount: new BigNumber(300),

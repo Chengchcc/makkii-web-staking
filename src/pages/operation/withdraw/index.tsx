@@ -89,12 +89,12 @@ const withdraw = props => {
             </FormItem>
             <FormItem label='To'>{formatAddress(address)}</FormItem>
             <FormItem label='Withdraw'>
-                <span>{rewards.toString()}&nbsp; AION &nbsp;</span>
+                <span>{rewards.toFixed(5)}&nbsp; AION &nbsp;</span>
             </FormItem>
             <FormItem label='Transaction Fee'>
                 Approx. {fee_withdraw.toFixed(5)} AION
             </FormItem>
-            <CommonButton title='Withdraw' onClick={handle_withdraw}/>
+            <CommonButton title='Withdraw' className="button-orange" onClick={handle_withdraw}/>
             <Modal
                 visible={modalState.visible}
                 title={''}
