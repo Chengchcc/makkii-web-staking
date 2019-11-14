@@ -4,6 +4,7 @@ import './style.less';
 
 interface InavBar {
     onLeftClick: ()=>void
+    title: String
 }
 
 const navBar: React.FC<InavBar> = props => {

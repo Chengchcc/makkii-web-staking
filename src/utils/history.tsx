@@ -20,7 +20,7 @@ history.listen((location, action)=>{
 });
 
 export default history;
-export const withNavBar = (WrappedCompnented, title) => (props) => {
+export const withNavBar = (WrappedCompnented, title?:string) => (props) => {
     const {goBack,canGoBack} = WrappedCompnented;
     let hasNavbar = history.length >1;
     if(canGoBack&&(typeof canGoBack ==='function')){

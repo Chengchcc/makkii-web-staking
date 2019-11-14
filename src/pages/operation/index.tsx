@@ -9,6 +9,9 @@ import { createAction } from '@reducers/store';
 import {alert} from '@components/modal';
 import Image from '@components/default-img'
 
+const aionLogo = require("@/img/metaLogo2.png");
+
+
 const mapToState = ({ account }) => {
     const poolAddress = account.operation.pool || "";
     const delegation = account.delegations[poolAddress] || {};
@@ -38,7 +41,7 @@ const poolDetailInfo = [
         render: val => {
             const n = val.times(100).toFixed(2);
             // eslint-disable-next-line no-nested-ternary
-            const [color, text] = n < 90 ? ['red', 'Poor'] : n > 95 ? ['green', 'Excellent'] : ['#ff9910', 'Moderate'];
+            const text = n < 90 ? 'Poor' : n > 95 ? 'Excellent' : 'Moderate';
 
             return <span>{text}</span>
         }
@@ -71,17 +74,16 @@ const poolDetailInfo = [
         }
     }
 ]
-const aionLogo = require("@/img/metaLogo2.png");
 const accountDetailInfo = [
     {
         title: 'Amount delegated to this pool',
         dataIndex: 'stake',
-        render: val => <><span>{`${val.toFixed(5)} `}</span><img src={aionLogo} width="16" height="16"/></>
+        render: val => <><span>{`${val.toFixed(5)} `}</span><img src={aionLogo} width="16" height="16" alt=""/></>
     },
     {
         title: 'Rewards earned in this pool',
         dataIndex: 'rewards',
-        render: val => <><span>{`${val.toFixed(5)} `}</span><img src={aionLogo} width="16" height="16"/></>
+        render: val => <><span>{`${val.toFixed(5)} `}</span><img src={aionLogo} width="16" height="16" alt=""/></>
     }
 ]
 
