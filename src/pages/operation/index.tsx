@@ -226,7 +226,7 @@ const Pageoperation = props => {
                         active === '0x01' ? 'Active' : 'Inactive'
                     }</li>
                     <li>{formatAddress(poolAddress)}</li>
-                    {url && <li><a href={url} target='_blank' rel="noopener noreferrer">{url}</a></li> }
+                    {url && <li><a href={url} rel="noopener noreferrer">{url}</a></li> }
                 </ul>
             </div>
             <div className="delimiter" />
