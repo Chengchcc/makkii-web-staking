@@ -50,7 +50,7 @@ module.exports = {
     ...analyzerPlugin,
     ...cssplugin,
     new HtmlPlugin({
-      title: 'Aion staking',
+      title: 'Aion Staking',
       filename: 'index.html',
       template,
     }),
