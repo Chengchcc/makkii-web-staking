@@ -184,9 +184,7 @@ const home = (props: Ihome) => {
     const toPool = (pool) => {
         dispath(createAction('account/update')({
             operation: {
-                ...operation,
                 pool,
-                type: operationType.default
             }
         }))
         history.push('/operation');

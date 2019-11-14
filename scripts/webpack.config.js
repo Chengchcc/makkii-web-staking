@@ -9,6 +9,7 @@ const path = require('path');
 const mode = process.env.NODE_ENV;
 const baseapi = process.env.BASE_API;
 const isAnaylize = process.env.ANALYZE;
+const network = process.env.NETWORK;
 const isDev = mode === 'development';
 const template = path.resolve(__dirname, '../public/index.html');
 const { RELEVANT_PATH } = process.env;
@@ -56,6 +57,7 @@ module.exports = {
     new webpack.DefinePlugin({
       BASENAME: JSON.stringify(RELEVANT_PATH),
       BASEAPI: JSON.stringify(baseapi),
+      NETWORK: JSON.stringify(network)
     }),
   ],
   module: {

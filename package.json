@@ -10,15 +10,14 @@
     "storybook": "start-storybook start -p 6006",
     "analyze": "cross-env ANALYZE=true npm run dist",
     "clean": "rimraf ./dist",
-    "build:dev": "npm run clean; cross-env NODE_ENV=development cross-env RELEVANT_PATH=staking  webpack --config ./scripts/webpack.config.js",
+    "build:dev": "npm run clean; cross-env NODE_ENV=development cross-env RELEVANT_PATH=staking  cross-env NETWORK=amity  webpack --config ./scripts/webpack.config.js",
     "prestart": "npm run build:dev",
-    "start": "cross-env NODE_ENV=development cross-env RELEVANT_PATH=staking  webpack-dev-server --config ./scripts/webpack.config.js  --hot ",
-    "build:dist": "npm run clean; cross-env NODE_ENV=production cross-env RELEVANT_PATH=staking  webpack --config ./scripts/webpack.config.js",
-    "package": "npm run build:dist",
-    "prepackage": "npm run clean",
+    "start": "cross-env NODE_ENV=development cross-env RELEVANT_PATH=staking  cross-env NETWORK=amity  webpack-dev-server --config ./scripts/webpack.config.js  --hot ",
+    "build:amity": "npm run clean; cross-env NODE_ENV=production cross-env RELEVANT_PATH=staking  cross-env NETWORK=amity webpack --config ./scripts/webpack.config.js",
+    "build:mainnet": "npm run clean; cross-env NODE_ENV=production cross-env RELEVANT_PATH=staking  cross-env NETWORK=mainnet webpack --config ./scripts/webpack.config.js",
     "lint": "eslint src --fix --ext tsx",
     "postinstall": "cd src/libs/web3-avm-abi; npm install; cd -",
-    "deploy":"cross-env RELEVANT_PATH=staking node ./scripts/deploy.js"
+    "deploy": "cross-env RELEVANT_PATH=staking node ./scripts/deploy.js"
   },
   "dependencies": {
     "@types/react": "^16.9.9",
@@ -51,6 +50,7 @@
     "@typescript-eslint/parser": "^2.4.0",
     "babel-loader": "^8.0.6",
     "babel-plugin-import": "^1.12.2",
+    "babel-plugin-transform-remove-console": "^6.9.4",
     "concurrently": "^5.0.0",
     "cross-env": "^6.0.3",
     "css-loader": "^3.2.0",

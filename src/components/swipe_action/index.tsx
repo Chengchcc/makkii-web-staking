@@ -55,7 +55,7 @@ class SwipeAction extends Component<any, {
 
         this.startX = nowX;
         this.startY = nowY;
-        if (Math.abs(diffY) < 5 && Math.abs(diffY) < Math.abs(diffX)) {
+        if (Math.abs(diffY) < 5 && Math.abs(diffY) < Math.abs(diffX) && Math.abs(diffX)> 10) {
             if (diffX < 0) {
                 this.setState({ left: -100 });
             } else if (diffX > 0) {
