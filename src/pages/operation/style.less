@@ -57,8 +57,9 @@
     padding: 0 5%;
     grid-template-columns: repeat(3, 33.3%);
     .operation-pool-detail-item {
-        position: relative;
-        //padding-bottom: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
         .operation-pool-detail-item-value {
             margin: 5px auto;
             font-size: 20px;
@@ -74,9 +75,6 @@
             margin: 5px auto;
             font-size: 10px;
             text-align: center;
-            //position: absolute;
-            //bottom: 4px;
-            //left:50%;
         }
     }
 }
