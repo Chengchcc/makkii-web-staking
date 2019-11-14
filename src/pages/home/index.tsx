@@ -15,6 +15,8 @@ import { CommonButton } from '@components/button';
 import Card from './card';
 import './style.less';
 
+const logo = require("@/img/metaLogo2.png")
+
 
 export const delegationInfo: Array<Iinfo> = [
     {
@@ -83,30 +85,29 @@ const mapToState = ({ account }) => {
         operation: account.operation,
     }
 }
-const logo = require("@/img/metaLogo2.png")
 const accountInfo = [
     {
         title: 'Liquid balance',
         dataIndex: 'liquidBalance',
-        render: val => val.gte(0) ? <><span>{`${val.toFixed(5)} `}</span> <img src={logo} height="16" width="16"/></>:
+        render: val => val.gte(0) ? <><span>{`${val.toFixed(5)} `}</span> <img src={logo} height="16" width="16" alt=""/></>:
             <Spin size='30px' width='2px' />
     },
     {
         title: 'Staked Amount',
         dataIndex: 'stakedAmount',
-        render: val => val.gte(0) ? <><span>{`${val.toFixed(5)} `}</span><img src={logo} height="16" width="16"/></> :
+        render: val => val.gte(0) ? <><span>{`${val.toFixed(5)} `}</span><img src={logo} height="16" width="16" alt=""/></> :
             <Spin size='30px' width='2px' />
     },
     {
         title: 'Currently Undelegating',
         dataIndex: 'undelegationAmount',
-        render: val => val.gte(0) ? <><span>{`${val.toFixed(5)} `}</span> <img src={logo} height="16" width="16"/></>:
+        render: val => val.gte(0) ? <><span>{`${val.toFixed(5)} `}</span> <img src={logo} height="16" width="16" alt=""/></>:
             <Spin size='30px' width='2px' />
     },
     {
         title: 'Total Rewards',
         dataIndex: 'rewards',
-        render: val => val.gte(0) ? <><span>{`${val.toFixed(5)} `}</span><img src={logo} height="16" width="16"/></> :
+        render: val => val.gte(0) ? <><span>{`${val.toFixed(5)} `}</span><img src={logo} height="16" width="16" alt=""/></> :
             <Spin size='30px' width='2px' />
     }
 ]

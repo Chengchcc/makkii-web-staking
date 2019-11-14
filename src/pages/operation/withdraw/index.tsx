@@ -9,9 +9,9 @@ import { CommonButton } from '@components/button';
 import { call_withdraw } from '@utils/transaction';
 import Modal, {alert} from '@components/modal'
 import Image from '@components/default-img'
+import {copyInputValue} from "@utils/util";
 import FormItem from '../operation_form_item';
 import { commonGoback } from '../util';
-import {copyInputValue} from "@utils/util";
 import CheckMark from "@/img/checkMark.svg";
 
 const fee_withdraw = new BigNumber(gas_withdraw).times(gasPrice).shiftedBy(AIONDECIMAL);
@@ -113,7 +113,7 @@ const withdraw = props => {
                     {formatAddress(modalState.txHash)}
                     <img src={require("@/img/copy2.png")} onClick={() => {
                         copyInputValue(modalState.txHash);
-                    }}/></p>
+                    }} alt=""/></p>
             </Modal>
         </div>
     )

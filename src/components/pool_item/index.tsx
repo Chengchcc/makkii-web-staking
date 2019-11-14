@@ -25,29 +25,29 @@ export interface Iinfo {
     render?: (val: any, extra?: any) => React.ReactNode
 }
 
-const INFOS: Array<Iinfo> = [
-    {
-        title: 'Capacity',
-        render: (val) => <span>{val.stakeSelf.times(100).minus(val.stakeTotal).toFixed(0)} AION</span>
-    },
-    {
-        title: 'Total Staked',
-        dataIndex: 'stakeTotal',
-        render: (val) => <span>{`${val.toFixed(0)}`} AION</span>
-    },
-    {
-        title: 'Fees',
-        dataIndex: 'fee',
-        render: (val) => <span>{`${val.times(100).toFixed(4)}`}% AION</span>
-    },
-    {
-        title: 'Weight',
-        dataIndex: 'stakeWeight',
-        render: val => {
-            return <span>{val.times(100).toFixed(4)} %</span>
-        }
-    }
-]
+// const INFOS: Array<Iinfo> = [
+//     {
+//         title: 'Capacity',
+//         render: (val) => <span>{val.stakeSelf.times(100).minus(val.stakeTotal).toFixed(0)} AION</span>
+//     },
+//     {
+//         title: 'Total Staked',
+//         dataIndex: 'stakeTotal',
+//         render: (val) => <span>{`${val.toFixed(0)}`} AION</span>
+//     },
+//     {
+//         title: 'Fees',
+//         dataIndex: 'fee',
+//         render: (val) => <span>{`${val.times(100).toFixed(4)}`}% AION</span>
+//     },
+//     {
+//         title: 'Weight',
+//         dataIndex: 'stakeWeight',
+//         render: val => {
+//             return <span>{val.times(100).toFixed(4)} %</span>
+//         }
+//     }
+// ]
 
 
 const lists = (info, src, extra) => {
@@ -100,10 +100,8 @@ export const PoolItem: React.FC<IPoolItem> = props => {
                 {lists(INFOS, pool, {})}
             </div>
             <IconRight className='pool-detail-img'/> */}
-            <div className="left-logo" style={{background: meta.logo ? `url(${meta.logo})` : `url(${defaultLogo})`, border: meta.logo ? "" : "1px solid #ddd"}}>
-                {/*<div style={{borderColor: active === "0x01" ? "#08de00" : "#e84f4f"}}></div>*/}
-            </div>
-            <div style={{backgroundColor: active === "0x01" ? "#08de00" : "#e84f4f"}}></div>
+            <div className="left-logo" style={{background: meta.logo ? `url(${meta.logo})` : `url(${defaultLogo})`, border: meta.logo ? "" : "1px solid #ddd"}} />
+            <div style={{backgroundColor: active === "0x01" ? "#08de00" : "#e84f4f"}} />
             <span>{meta.name || pool.address}</span>
             <IconRight className='pool-detail-img'/>
             <div className="stake-weight">

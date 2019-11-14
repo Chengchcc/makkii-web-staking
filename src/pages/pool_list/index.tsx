@@ -5,8 +5,16 @@ import { useSelector, useDispatch } from 'react-redux';
 import { wsSend } from '@utils/websocket';
 import store, { createAction } from '@reducers/store';
 import { operationType } from '@reducers/accountReducer';
+import { Ipool, Idelegation } from '@interfaces/types';
 
-const mapToState = ({ account }) => {
+const mapToState = ({ account }):{
+    pools: {[address: string]: Ipool},
+    delegations: { [poolAddres: string]: Idelegation },
+    operation: {
+        pool: string,
+        type: operationType
+    }
+} => {
     return {
         pools: account.pools,
         operation: account.operation,
@@ -14,20 +22,22 @@ const mapToState = ({ account }) => {
     };
 }
 
+
+
 const poolList = props => {
     const {history} = props;
-    let { pools, operation, delegations } = useSelector(mapToState);
-    /*pools = Object.values(pools).filter((v) => {
-        console.log('pools is:', delegations[v]);
-    });*/
+    const { pools, operation, delegations } = useSelector(mapToState);
     const dispatch = useDispatch();
+
     const onRefresh = () => {
         wsSend({ method: 'pools', params: [] })
     }
+    
     const onReachEnd = () => {
         wsSend({ method: 'pools', params: [] })
 
     }
+    
     const toPool = (pool) => {
         dispatch(createAction('account/update')({
             operation: {
@@ -35,7 +45,6 @@ const poolList = props => {
                 pool,
             }
         }))
-        console.log('pools is:', pool)
         if(operationType.default === operation.type) {
             history.push('/operation');
         }else if (operationType.delegate === operation.type) {
@@ -46,18 +55,42 @@ const poolList = props => {
             history.push('/withdraw');
         }
     }
+    
     React.useEffect(()=>{
         if(Object.keys(pools).length===0){
-            console.log("send pools");
             wsSend({method:'pools', params:[]})
         }
     },[pools])
+
+    const [can_undelegate, can_withdraw] = Object.keys(delegations).reduce(([arr1, arr2], el)=>{
+        const {stake, rewards} = delegations[el];
+        if(stake.gt(0)){
+            arr1.push(el);
+        }
+        if(rewards.gt(0)){
+            arr2.push(el);
+        }
+        return [arr1, arr2];
+    },[[],[]]);
+    
+    let filters = [];
+    switch(operation.type){
+        case operationType.undelegate:
+            filters = can_undelegate;
+            break;
+        case operationType.withdraw:
+            filters= can_withdraw;
+            break;
+        default:
+            filters = Object.keys(pools);
+    }
+    
     return (
         <MoreList
             onReachEnd={onReachEnd}
             onRefresh={onRefresh}
             hasMore={false}
-            data={Object.values(pools)}
+            data={Object.values(pools).filter(el=>filters.includes(el.address))}
             renderItem={(pool) => {
                 return <PoolItem pool={pool} toPool={toPool}/>
             }}
