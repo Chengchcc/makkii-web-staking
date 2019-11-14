@@ -3,10 +3,10 @@
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import BigNumber from 'bignumber.js';
 import store, { createAction } from '../reducers/store';
-import { AIONDECIMAL, WS_URL } from './constants.json'
+import { AIONDECIMAL, WS_URL_AMITY, WS_URL_MAINNET } from './constants.json'
 import { hexCharCodeToStr } from '.';
 
-const url = WS_URL
+const url = NETWORK==='amity'? WS_URL_AMITY: WS_URL_MAINNET
 const ws = new ReconnectingWebSocket(url);
 /**
 name:

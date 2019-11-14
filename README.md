@@ -8,8 +8,11 @@ $ yarn
 $ yarn start
 ```
 
-#### for package
+#### for production
 ```bash
 $ yarn
-$ yarn package
+# amity
+$ yarn build:amity
+# mainnet
+$ yarn build:mainnet
 ```

@@ -1,7 +1,10 @@
 /* eslint-disable no-return-await */
 import BigNumber from 'bignumber.js'
-import {gasPrice, gas_delegate, gas_withdraw, gas_undelegate, POOL_REGISTRY, AIONDECIMAL} from '@utils/constants.json';
+import {gasPrice, gas_delegate, gas_withdraw, gas_undelegate, POOL_REGISTRY_AMITY, POOL_REGISTRY_MAINNET, AIONDECIMAL} from '@utils/constants.json';
 import ABICoder from '../libs/web3-avm-abi'
+
+
+const pool_address = NETWORK === 'amity'? POOL_REGISTRY_AMITY: POOL_REGISTRY_MAINNET;
 
 
 const abi = new ABICoder()
@@ -41,7 +44,7 @@ export const call_delegate = async (pool, amount) => {
 
     // build tx
     const tx = build_transaction(
-        POOL_REGISTRY,
+        pool_address,
         gasPrice.toFixed(),
         gas_delegate.toFixed(),
         data,
@@ -63,7 +66,7 @@ export const call_withdraw = async (pool) => {
 
     // build tx
     const tx = build_transaction(
-        POOL_REGISTRY,
+        pool_address,
         gasPrice.toFixed(),
         gas_withdraw.toFixed(),
         data,
@@ -91,7 +94,7 @@ export const call_undelegate = async (pool, amount, fee) => {
 
     // build tx
     const tx = build_transaction(
-        POOL_REGISTRY,
+        pool_address,
         gasPrice.toFixed(),
         gas_undelegate.toFixed(),
         data,
