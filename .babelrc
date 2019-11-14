@@ -15,5 +15,10 @@
                 "style": "css"
             }
         ]
-    ]
+    ],
+    "env": {
+        "production": {
+          "plugins": ["transform-remove-console"]
+        }
+      }
 }
