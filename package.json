@@ -10,14 +10,15 @@
     "storybook": "start-storybook start -p 6006",
     "analyze": "cross-env ANALYZE=true npm run dist",
     "clean": "rimraf ./dist",
-    "build:dev":"npm run clean; cross-env NODE_ENV=development cross-env RELEVANT_PATH=staking  webpack --config ./scripts/webpack.config.js",
-    "prestart":"npm run build:dev",
+    "build:dev": "npm run clean; cross-env NODE_ENV=development cross-env RELEVANT_PATH=staking  webpack --config ./scripts/webpack.config.js",
+    "prestart": "npm run build:dev",
     "start": "cross-env NODE_ENV=development cross-env RELEVANT_PATH=staking  webpack-dev-server --config ./scripts/webpack.config.js  --hot ",
     "build:dist": "npm run clean; cross-env NODE_ENV=production cross-env RELEVANT_PATH=staking  webpack --config ./scripts/webpack.config.js",
     "package": "npm run build:dist",
     "prepackage": "npm run clean",
     "lint": "eslint src --fix --ext tsx",
-    "postinstall": "cd src/libs/web3-avm-abi; npm install; cd -"
+    "postinstall": "cd src/libs/web3-avm-abi; npm install; cd -",
+    "deploy":"cross-env RELEVANT_PATH=staking node ./scripts/deploy.js"
   },
   "dependencies": {
     "@types/react": "^16.9.9",
@@ -67,6 +68,8 @@
     "less": "^3.10.3",
     "less-loader": "^5.0.0",
     "mini-css-extract-plugin": "^0.8.0",
+    "node-ssh": "^6.0.0",
+    "prompt": "^1.0.0",
     "redux-devtools-extension": "^2.13.8",
     "rimraf": "^3.0.0",
     "source-map-loader": "^0.2.4",

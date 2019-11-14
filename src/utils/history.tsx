@@ -32,13 +32,13 @@ export const withNavBar = (WrappedCompnented, title?:string) => (props) => {
              <WrappedCompnented {...props} />
             </div>
             {
-                hasNavbar ? <NavBar title={title} onLeftClick={() => {
+                <NavBar title={title} hide={!hasNavbar} onLeftClick={() => {
                     if(goBack){
                         goBack();
                     }else {
                         history.go(-1);
                     }
-                }} /> : null
+                }} />
             }
         </>
     )

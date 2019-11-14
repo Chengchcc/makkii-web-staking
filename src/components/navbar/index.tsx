@@ -4,14 +4,16 @@ import './style.less';
 
 interface InavBar {
     onLeftClick: ()=>void
-    title: String
+    title: String,
+    hide?: boolean
 }
 
 const navBar: React.FC<InavBar> = props => {
-    const {onLeftClick, title} = props;
+    const {onLeftClick, title, hide = false} = props;
+    const style = hide? {display: 'none'}:{display:'block'} 
     return (
         <div className='navBar'>
-            <div className='navButton' onClick={onLeftClick}>
+            <div className='navButton' style={style} onClick={onLeftClick}>
                 <IconLeft height={20} width={20} />
             </div>
             {title}
