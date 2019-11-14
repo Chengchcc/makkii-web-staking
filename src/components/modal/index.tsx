@@ -14,7 +14,6 @@ export const alert = (props: {
     const { title, message,actions } = props;
     const modalRoot = document.body;
     const div = document.createElement("div");
-    //div.style.cssText = "position:relative;zIndex: 5001";
     div.setAttribute('style', "position:relative;z-index: 5001");
     modalRoot.appendChild(div);
     const hide = ()=> {

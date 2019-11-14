@@ -7,12 +7,12 @@ import {gas_undelegate, gasPrice, AIONDECIMAL, period_block} from '@utils/consta
 import BigNumber from 'bignumber.js';
 import { CommonButton } from '@components/button';
 import { call_undelegate } from '@utils/transaction';
-import {alert} from '@components/modal'
+import Modal, {alert} from '@components/modal'
 import Image from '@components/default-img'
+import {copyInputValue} from "@utils/util";
 import FormItem from '../operation_form_item';
 import { commonGoback } from '../util';
-import Modal from '@components/modal';
-import {copyInputValue} from "@utils/util";
+
 import CheckMark from "@/img/checkMark.svg";
 
 const fee_undelegate = new BigNumber(gas_undelegate).times(gasPrice).shiftedBy(AIONDECIMAL);
@@ -110,7 +110,7 @@ const undelegate = props => {
             <CommonButton title='Undelegate' className='button-orange' onClick={handle_undelegate} />
             <Modal
                 visible={modalState.visible}
-                title={''}
+                title=""
                 hide={hideModal}
                 actions={[{title: <div className="button button-orange">OK</div>, onPress:()=>{
                     history.replace('/home');
@@ -124,7 +124,7 @@ const undelegate = props => {
                     {formatAddress(modalState.txHash)}
                     <img src={require("@/img/copy2.png")} onClick={() => {
                         copyInputValue(modalState.txHash);
-                    }}/></p>
+                    }} alt=""/></p>
             </Modal>
         </div>
     )

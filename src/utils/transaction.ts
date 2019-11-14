@@ -3,6 +3,7 @@ import BigNumber from 'bignumber.js'
 import {gasPrice, gas_delegate, gas_withdraw, gas_undelegate, POOL_REGISTRY_AMITY, POOL_REGISTRY_MAINNET, AIONDECIMAL} from '@utils/constants.json';
 import ABICoder from '../libs/web3-avm-abi'
 
+declare const NETWORK: string;
 
 const pool_address = NETWORK === 'amity'? POOL_REGISTRY_AMITY: POOL_REGISTRY_MAINNET;
 

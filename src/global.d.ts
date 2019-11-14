@@ -3,7 +3,6 @@ interface Date {
     Format: (fmt?:string ,radix?: number)=>string
 }
 
-declare const NETWORK: string;
 
 declare interface SvgrComponent extends React.StatelessComponent<React.SVGAttributes<SVGElement>> {}
 

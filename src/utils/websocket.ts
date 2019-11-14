@@ -6,6 +6,8 @@ import store, { createAction } from '../reducers/store';
 import { AIONDECIMAL, WS_URL_AMITY, WS_URL_MAINNET } from './constants.json'
 import { hexCharCodeToStr } from '.';
 
+declare const NETWORK: string;
+
 const url = NETWORK==='amity'? WS_URL_AMITY: WS_URL_MAINNET
 const ws = new ReconnectingWebSocket(url);
 /**

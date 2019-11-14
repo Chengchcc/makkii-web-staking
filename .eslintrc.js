@@ -41,7 +41,7 @@ module.exports = {
     "react/button-has-type":[0],
     'no-console':[0],
     "@typescript-eslint/no-unused-vars": "error",
-    "jsx-a11y/anchor-is-valid": 0
+    "jsx-a11y/anchor-is-valid": 0,
     "global-require": 0 
   },
   settings: {

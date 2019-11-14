@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import React from 'react';
 import MoreList from '@components/more_list';
 import { PoolItem } from '@components/pool_item';

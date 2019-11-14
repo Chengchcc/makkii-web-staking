@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import "./index.less";
-import { element } from "prop-types";
 
 
 let id = 0;
@@ -24,7 +23,8 @@ class SwipeAction extends Component<any, {
             left: 0,
             transition: ""
         };
-        this.classId = `swipe-${id++}`;
+        this.classId = `swipe-${id}`;
+        id+=1;
     }
 
     componentDidMount() {

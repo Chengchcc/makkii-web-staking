@@ -92,17 +92,3 @@ const List: React.FC<Ilist<any>> = props => {
 
 
 export default List;
-
-export const keepScollTop = (scrollTop)=>{
-    const element = document.getElementById('pullLoadContainer') || document.body;
-    const handleScollTop = e => {
-        scrollTop = e.target.scrollTop;
-    };
-    element.addEventListener('scroll', handleScollTop);
-    if (scrollTop) {
-        element.scrollTop = scrollTop;
-    }
-    return () => {
-        element.removeEventListener('scroll', handleScollTop);
-    }
-}
