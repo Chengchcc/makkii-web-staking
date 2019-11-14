@@ -38,6 +38,6 @@ export const copyInputValue = (targetValue) => {
     document.body.appendChild(input);
     input.select();
     document.execCommand('copy');
-    aionMessage('copied');
+    aionMessage('Copied');
     document.body.removeChild(input);
 }
