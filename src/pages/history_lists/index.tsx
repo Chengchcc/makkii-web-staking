@@ -13,7 +13,7 @@ const mapToState = ({ account }) => {
         pagination: account.historyPagination
     }
 }
-
+let scrollTop = 0;
 const HistoryLists = () => {
 
     const { transactions,pools,address, pagination } = useSelector(mapToState);
@@ -25,6 +25,19 @@ const HistoryLists = () => {
     }
     const hasMore = pagination.current + 1 <pagination.total;
 
+    React.useEffect(() => {
+        const element = document.getElementById('pullLoadContainer') || document.body;
+        const handleScollTop = e => {
+            scrollTop = e.target.scrollTop;
+        };
+        element.addEventListener('scroll', handleScollTop);
+        if (scrollTop) {
+            element.scrollTop = scrollTop;
+        }
+        return () => {
+            element.removeEventListener('scroll', handleScollTop);
+        }
+    });
     return (
         <MoreList
             onReachEnd={onReachEnd}

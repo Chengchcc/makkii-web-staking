@@ -46,7 +46,6 @@ const delegate = props => {
     const { address, balance } = account;
     const handle_delegate = async (e: MouseEvent) => {
         e.preventDefault();
-        // TODO handle delegate
         const amount = inputRef.current.value;
         const valid = validateAmount(amount);
         const insufficientBalance = new BigNumber(amount).plus(fee_delegate).gt(balance);

@@ -159,12 +159,14 @@ const Pageoperation = props => {
             }
 
         }else{
-            // TODO no makkii
             alert({
                 title:'Error',
                 message: 'Please open by Makkii',
                 actions: [{
-                    title: 'Ok'
+                    title: 'Ok',
+                    onPress: ()=>{
+                        window.location.href = 'https://www.chaion.net/download/makkii_latest.apk'
+                    }
                 }]
             })
         }

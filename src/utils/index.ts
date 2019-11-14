@@ -1,21 +1,20 @@
 /* eslint-disable camelcase */
 import store, { createAction } from '@reducers/store';
-import {alert} from '@components/modal';
+import { alert } from '@components/modal';
 import { wsSend } from './websocket';
-
 export const formatPoolName = poolName => {
     let newPoolName = poolName[0].toUpperCase() + poolName.substr(1);
     if (newPoolName.length > 20) {
-        newPoolName = `${newPoolName.substr(0, 17)  }...`;
+        newPoolName = `${newPoolName.substr(0, 17)}...`;
     }
     return newPoolName;
 }
 export const formatAddress = address => {
-    return `${address.slice(0, 10)  }...${  address.slice(-10)}`
+    return `${address.slice(0, 10)}...${address.slice(-10)}`
 }
 
 export const formatTxHash = txhash => {
-    return `${txhash.slice(0, 15)  }...${  txhash.slice(-15)}`
+    return `${txhash.slice(0, 15)}...${txhash.slice(-15)}`
 }
 
 
@@ -44,13 +43,12 @@ export const validateAmount = amount => {
 }
 
 
-// TODO mock
-
-export const genPoolName = ()=> {
+// mock
+export const genPoolName = () => {
     const Template = '0123456789abcdefghjklmnopqrstuvwxyz';
     let str = '';
-    for(let i =0;i<4;i+=1){
-        str += Template.charAt(parseInt(`${Math.random()*26}`,10))
+    for (let i = 0; i < 4; i += 1) {
+        str += Template.charAt(parseInt(`${Math.random() * 26}`, 10))
     }
     return str;
 }
@@ -73,18 +71,18 @@ export const handleSwitchAccount = () => {
     } else {
         console.log('not in makkii env')
         alert({
-            title:'error',
+            title: 'error',
             message: 'Please open by Makkii',
             actions: [{
                 title: 'Ok',
-                onPress: ()=>{
-                    
+                onPress: () => {
+
                 }
             },
             {
                 title: 'Cancel'
             }
-        ]
+            ]
         })
     }
 

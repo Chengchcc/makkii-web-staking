@@ -48,7 +48,6 @@ const undelegate = props => {
     const { address, staked } = account;
     const handle_undelegate = async (e: MouseEvent)=>{
         e.preventDefault();
-        // TODO handle undelegate
         const amount = inputRef.current.value;
         const valid = validateAmount(amount);
         const insufficientBalance = new BigNumber(amount).gt(staked);

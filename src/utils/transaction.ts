@@ -50,7 +50,6 @@ export const call_delegate = async (pool, amount) => {
         data,
         new BigNumber(amount).shiftedBy(AIONDECIMAL).toFixed()
     )
-    // TODO call makkii
     return await sendTx(tx);
 }
 
@@ -72,7 +71,6 @@ export const call_withdraw = async (pool) => {
         data,
         '0'
     )
-    // TODO call makkii
     return await sendTx(tx);
 }
 
@@ -100,6 +98,5 @@ export const call_undelegate = async (pool, amount, fee) => {
         data,
         '0'
     )
-    // TODO call makkii
     return await sendTx(tx);
 }

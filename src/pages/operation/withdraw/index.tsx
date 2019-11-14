@@ -45,7 +45,6 @@ const withdraw = props => {
     const { address, rewards } = account;
     const handle_withdraw = async (e: MouseEvent) => {
         e.preventDefault();
-        // TODO handle withdraw
         const amount = rewards;
         const valid = validateAmount(amount);
         const insufficientBalance = new BigNumber(amount).gt(rewards);

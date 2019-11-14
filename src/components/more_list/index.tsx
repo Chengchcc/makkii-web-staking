@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactPullLoad, { STATS } from '@components/pullLoad';
 import Spin from '@components/spin'
-import SwipeAction from "@components/swipe_action";
 import './style.less';
 
 interface Ilist<T> {
@@ -93,3 +92,17 @@ const List: React.FC<Ilist<any>> = props => {
 
 
 export default List;
+
+export const keepScollTop = (scrollTop)=>{
+    const element = document.getElementById('pullLoadContainer') || document.body;
+    const handleScollTop = e => {
+        scrollTop = e.target.scrollTop;
+    };
+    element.addEventListener('scroll', handleScollTop);
+    if (scrollTop) {
+        element.scrollTop = scrollTop;
+    }
+    return () => {
+        element.removeEventListener('scroll', handleScollTop);
+    }
+}

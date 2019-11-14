@@ -89,25 +89,25 @@ const accountInfo = [
     {
         title: 'Liquid balance',
         dataIndex: 'liquidBalance',
-        render: val => val.gte(0) ? <><span>{`${val.toFixed(5)} `}</span> <img src={logo} height="16" width="16" alt=""/></>:
+        render: val => val.gte(0) ? <><span>{`${val.toFixed(5)} `}</span> <img src={logo} height="16" width="16" alt="" /></> :
             <Spin size='30px' width='2px' />
     },
     {
         title: 'Staked Amount',
         dataIndex: 'stakedAmount',
-        render: val => val.gte(0) ? <><span>{`${val.toFixed(5)} `}</span><img src={logo} height="16" width="16" alt=""/></> :
+        render: val => val.gte(0) ? <><span>{`${val.toFixed(5)} `}</span><img src={logo} height="16" width="16" alt="" /></> :
             <Spin size='30px' width='2px' />
     },
     {
         title: 'Currently Undelegating',
         dataIndex: 'undelegationAmount',
-        render: val => val.gte(0) ? <><span>{`${val.toFixed(5)} `}</span> <img src={logo} height="16" width="16" alt=""/></>:
+        render: val => val.gte(0) ? <><span>{`${val.toFixed(5)} `}</span> <img src={logo} height="16" width="16" alt="" /></> :
             <Spin size='30px' width='2px' />
     },
     {
         title: 'Total Rewards',
         dataIndex: 'rewards',
-        render: val => val.gte(0) ? <><span>{`${val.toFixed(5)} `}</span><img src={logo} height="16" width="16" alt=""/></> :
+        render: val => val.gte(0) ? <><span>{`${val.toFixed(5)} `}</span><img src={logo} height="16" width="16" alt="" /></> :
             <Spin size='30px' width='2px' />
     }
 ]
@@ -133,6 +133,8 @@ const renderAccountInfo = (info, src) => {
     )
 }
 
+let scrollTop = 0;
+
 const home = (props: Ihome) => {
     const { history } = props;
     const account = useSelector(mapToState);
@@ -143,6 +145,9 @@ const home = (props: Ihome) => {
     })
     const dispath = useDispatch();
     const { address, pools, delegations, undelegations, history: transactions } = account;
+    
+   
+
     const toDelegate = e => {
         e.preventDefault();
         dispath(createAction('account/update')({
@@ -222,11 +227,13 @@ const home = (props: Ihome) => {
             })
         }
     }, []);
-    React.useEffect(()=>{
-        const {  pools: pools_, delegations: delegations_, undelegations: undelegations_, history: transactions_ } = accountRef.current;
-        if(pools_!==pools && delegations_!==delegations && undelegations_!==undelegations && transactions_!==transactions){
+
+
+    React.useEffect(() => {
+        const { pools: pools_, delegations: delegations_, undelegations: undelegations_, history: transactions_ } = accountRef.current;
+        if (pools_ !== pools && delegations_ !== delegations && undelegations_ !== undelegations && transactions_ !== transactions) {
             console.log('difference');
-            const newState = {...state};
+            const newState = { ...state };
             let update = false;
             if (state.isLoading) {
                 newState.isLoading = false
@@ -239,14 +246,33 @@ const home = (props: Ihome) => {
                 newState.action = STATS.reset
                 update = true;
             }
-            if(update){
+            if (update) {
                 setState(newState)
             }
             accountRef.current = account;
         }
     }, [pools, delegations, undelegations, transactions]);
+
+    React.useEffect(() => {
+        const element = document.getElementById('pullLoadContainer') || document.body;
+        const handleScollTop = e => {
+            scrollTop = e.target.scrollTop;
+        };
+        element.addEventListener('scroll', handleScollTop);
+        if (scrollTop) {
+            element.scrollTop = scrollTop;
+        }
+        return () => {
+            element.removeEventListener('scroll', handleScollTop);
+        }
+    });
+
     const renderPools = (title, lists_) => {
-        const lists = Object.values(lists_).slice(0, 3);
+        const sorter = (a: any, b: any) => {
+            return b.performance.toNumber() - a.performance.toNumber();
+        }
+
+        const lists = Object.values(lists_).sort(sorter).slice(0, 3);
         return (
             <Card
                 title={title}
@@ -292,37 +318,38 @@ const home = (props: Ihome) => {
     const hasHistory = Object.keys(transactions).length > 0;
     return (
         <div className='flex-container'>
-            <div className='home-header'>
-                <div className='header-account'>
-                    <span style={{ fontSize: '16px' }}>My Account:</span>
-                    <span style={{ fontSize: '12px' }}>{`${formatAddress(address)}`}</span>
-                    <CommonButton className='switch-account-button button-orange' title="Switch Account" onClick={handleSwitchAccount} />
+            <ReactPullLoad
+                downEnough={100}
+                isBlockContainer
+                handleAction={handleAction}
+                action={state.action}
+                hasMore={false}
+                FooterNode={() => <div />}
+            >
+                <div className='home-header'>
+                    <div className='header-account'>
+                        <span style={{ fontSize: '16px' }}>My Account:</span>
+                        <span style={{ fontSize: '12px' }}>{`${formatAddress(address)}`}</span>
+                        <CommonButton className='switch-account-button button-orange' title="Switch Account" onClick={handleSwitchAccount} />
+                    </div>
+                    {renderAccountInfo(accountInfo, account)}
                 </div>
-                {renderAccountInfo(accountInfo, account)}
-            </div>
-            <div className='home-button-container'>
-                <CommonButton className='home-button button-orange' title='Delegate' onClick={toDelegate} />
-                <CommonButton className='home-button button-orange' title='Withdraw' onClick={toWithDraw} disabled={account.rewards.isEqualTo(0)} />
-            </div>
-            {!state.isLoading ?
-                <ReactPullLoad
-                    downEnough={100}
-                    isBlockContainer
-                    handleAction={handleAction}
-                    action={state.action}
-                    hasMore={false}
-                    FooterNode={()=><div/>}
-                >
-                    {hasPools && hasDelegations && renderPoolsMore('My Delegations', process_delegations(delegations).slice(0, 3), delegationInfo, toDelegations)}
-                    {hasPools && hasUndelegations && renderPoolsMore('Pending Undelegations', process_undelegations(undelegations).slice(0, 3), unDelegationInfo, toPendingUndlegation)}
-                    {hasPools && renderPools('Top Pools', pools)}
-                    {hasPools && hasHistory && renderTransaction('Stake History', process_transctions(transactions).slice(0, 3), toHistoryList)}
-                </ReactPullLoad> :
-
-                <div style={{ display: 'flex', flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                    <Spin />
+                <div className='home-button-container'>
+                    <CommonButton className='home-button button-orange' title='Delegate' onClick={toDelegate} />
+                    <CommonButton className='home-button button-orange' title='Withdraw' onClick={toWithDraw} disabled={account.rewards.isEqualTo(0)} />
                 </div>
-            }
+                {!state.isLoading ?
+                    <>
+                        {hasPools && hasDelegations && renderPoolsMore('My Delegations', process_delegations(delegations).slice(0, 3), delegationInfo, toDelegations)}
+                        {hasPools && hasUndelegations && renderPoolsMore('Pending Undelegations', process_undelegations(undelegations).slice(0, 3), unDelegationInfo, toPendingUndlegation)}
+                        {hasPools && renderPools('Top Pools', pools)}
+                        {hasPools && hasHistory && renderTransaction('Stake History', process_transctions(transactions).slice(0, 3), toHistoryList)}
+                    </> :
+                    <div style={{ display: 'flex', flex: 1, alignItems: 'center', justifyContent: 'center', marginTop: '30' }}>
+                        <Spin />
+                    </div>
+                }
+            </ReactPullLoad>
 
         </div>
     )
