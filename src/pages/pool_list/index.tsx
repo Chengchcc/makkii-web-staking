@@ -69,7 +69,7 @@ const poolList = props => {
             scrollTop = e.target.scrollTop;
         };
         element.addEventListener('scroll', handleScollTop);
-        if (scrollTop) {
+        if (scrollTop&&navigator.userAgent.match('Android')) {
             element.scrollTop = scrollTop;
         }
         return () => {
