@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Message from './index'
+
 let container = null
 export function message(config) {
     // most outer container,

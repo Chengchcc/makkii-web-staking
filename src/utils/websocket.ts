@@ -9,6 +9,7 @@ import { hexCharCodeToStr } from '.';
 declare const NETWORK: string;
 
 const url = NETWORK==='amity'? WS_URL_AMITY: WS_URL_MAINNET
+// const url =  WS_URL_MAINNET
 const ws = new ReconnectingWebSocket(url);
 /**
 name:
@@ -60,12 +61,14 @@ ws.onmessage = e => {
     switch (method) {
         case 'pools':
             console.log('ws recv [pools] res=>', result);
+            if(!result) break;
             process_pools(result, (payload) => {
                 store.dispatch(createAction('account/update')(payload))
             })
             break;
         case 'delegations': {
             console.log('ws recv [delgations] res=>', result);
+            if(!result) break;
             const { total_pages, current_page, data } = result;
             let stake = new BigNumber(0)
             let rewards = new BigNumber(0)
@@ -85,6 +88,7 @@ ws.onmessage = e => {
             break;
         case 'undelegations': {
             console.log('ws recv [undelegations] res=>', result);
+            if(!result) break;
             const { total_pages, current_page, data } = result;
 
             let unDelegated = new BigNumber(0);
@@ -102,6 +106,7 @@ ws.onmessage = e => {
             break;
         case 'transactions': {
             console.log('ws recv [transactions] res=>', result);
+            if(!result) break;
             const { total_pages, current_page, data } = result;
             const history_ = [...data];
             const history = history_.reduce((map,v)=> {
@@ -118,7 +123,7 @@ ws.onmessage = e => {
             break;
         case 'eth_getBalance':
             console.log('ws recv [eth_getBalance] res=>', result);
-
+            if(!result) break;
             store.dispatch(createAction('account/update')({ liquidBalance: new BigNumber(result||0).shiftedBy(AIONDECIMAL) }))
             break;
         default:

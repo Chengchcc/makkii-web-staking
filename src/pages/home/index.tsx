@@ -143,6 +143,8 @@ const home = (props: Ihome) => {
         action: STATS.init,
         isLoading: false,
     })
+    const actionRef = React.useRef(state.action);
+    const timerRef = React.useRef(null);
     const dispath = useDispatch();
     const { address, pools, delegations, undelegations, history: transactions } = account;
     
@@ -195,8 +197,27 @@ const home = (props: Ihome) => {
         history.push('/operation');
     }
 
+    const actionTimeOut = ()=>{
+        if(actionRef.current === STATS.refreshing){
+            console.log('action timeout',  Date.now())
+            setState({
+               action: STATS.refreshed,
+               isLoading: false
+            })
+            actionRef.current = STATS.refreshed
+        }
+        if(actionRef.current === STATS.loading){
+            console.log('action timeout')
+            setState({
+               action: STATS.reset,
+               isLoading: false
+            })
+            actionRef.current = STATS.reset
+        }
+    }
 
     const handleAction = action => {
+        actionRef.current = action;
         if (action === state.action ||
             action === STATS.refreshing && state.action === STATS.loading ||
             action === STATS.loading && state.action === STATS.refreshing) {
@@ -210,6 +231,8 @@ const home = (props: Ihome) => {
             wsSend({ method: 'transactions', params: [address, 0, 10] })
             wsSend({ method: 'pools', params: [] })
             wsSend({ method: 'undelegations', params: [address, 0, 10] })
+            timerRef.current = setTimeout(actionTimeOut, 10*1000);
+            console.log('start=>', Date.now())
         } else if (action === STATS.loading) {// loading more
             // nothiing
         }
@@ -232,7 +255,6 @@ const home = (props: Ihome) => {
     React.useEffect(() => {
         const { pools: pools_, delegations: delegations_, undelegations: undelegations_, history: transactions_ } = accountRef.current;
         if (pools_ !== pools && delegations_ !== delegations && undelegations_ !== undelegations && transactions_ !== transactions) {
-            console.log('difference');
             const newState = { ...state };
             let update = false;
             if (state.isLoading) {
@@ -247,6 +269,11 @@ const home = (props: Ihome) => {
                 update = true;
             }
             if (update) {
+                if(timerRef.current){
+                    clearTimeout(timerRef.current)
+                    timerRef.current = null;
+                }
+                actionRef.current = newState.action;
                 setState(newState)
             }
             accountRef.current = account;

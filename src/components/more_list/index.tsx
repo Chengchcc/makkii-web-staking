@@ -19,7 +19,29 @@ const List: React.FC<Ilist<any>> = props => {
         action: STATS.init,
         isLoading: true
     })
+    const actionRef = React.useRef(state.action);
+    const timerRef = React.useRef(null);
+    const actionTimeOut = ()=>{
+        if(actionRef.current === STATS.refreshing){
+            console.log('action timeout')
+            setState({
+               action: STATS.refreshed,
+               isLoading: false
+            })
+            actionRef.current = STATS.refreshed
+        }
+        if(actionRef.current === STATS.loading){
+            console.log('action timeout')
+            setState({
+               action: STATS.reset,
+               isLoading: false
+            })
+            actionRef.current = STATS.reset
+        }
+    }
+
     const handleAction = (action) => {
+        actionRef.current = action;
         if (action === state.action ||
             action === STATS.refreshing && state.action === STATS.loading ||
             action === STATS.loading && state.action === STATS.refreshing) {
@@ -28,8 +50,10 @@ const List: React.FC<Ilist<any>> = props => {
         }
         if (action === STATS.refreshing) {// refreshing
             onRefresh();
+            timerRef.current = setTimeout(actionTimeOut, 10*1000);
         } else if (action === STATS.loading) {// loading more
             onReachEnd();
+            timerRef.current = setTimeout(actionTimeOut, 10*1000);
         }
         // DO NOT modify below code
         setState({
@@ -53,6 +77,11 @@ const List: React.FC<Ilist<any>> = props => {
             update = true;
         }
         if(update){
+            actionRef.current = newState.action;
+            if(timerRef.current){
+                clearTimeout(timerRef.current)
+                timerRef.current = null;
+            }
             setState(newState)
         }
 
