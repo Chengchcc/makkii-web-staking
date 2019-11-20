@@ -2,6 +2,8 @@
 import store, { createAction } from '@reducers/store';
 import { alert } from '@components/modal';
 import { wsSend } from './websocket';
+import i18n from './i18n';
+
 export const formatPoolName = poolName => {
     let newPoolName = poolName[0].toUpperCase() + poolName.substr(1);
     if (newPoolName.length > 20) {
@@ -71,16 +73,16 @@ export const handleSwitchAccount = () => {
     } else {
         console.log('not in makkii env')
         alert({
-            title: 'error',
-            message: 'Please open by Makkii',
+            title: i18n.t('error_title'),
+            message: i18n.t('error_no_makkii'),
             actions: [{
-                title: 'Ok',
+                title: i18n.t('button_ok'),
                 onPress: () => {
 
                 }
             },
             {
-                title: 'Cancel'
+                title: i18n.t('button_cancel')
             }
             ]
         })

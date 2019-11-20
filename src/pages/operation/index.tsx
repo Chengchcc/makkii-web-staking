@@ -2,12 +2,13 @@ import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { operationType } from '@reducers/accountReducer';
 import Bignumber from 'bignumber.js';
-import './style.less';
 import { formatAddress, handleSwitchAccount } from '@utils/index';
 import { CommonButton } from '@components/button';
 import { createAction } from '@reducers/store';
 import {alert} from '@components/modal';
 import Image from '@components/default-img'
+import i18n from '@utils/i18n';
+import './style.less';
 
 const aionLogo = require("@/img/metaLogo2.png");
 
@@ -29,14 +30,14 @@ const mapToState = ({ account }) => {
 
 const poolDetailInfo = [
     {
-        title: 'Fees',
+        title: i18n.t('operation.label_fees'),
         dataIndex: 'fee',
         render: val => {
             return <span>{val.times(100).toFixed(4)}</span>
         }
     },
     {
-        title: 'Performance',
+        title: i18n.t('operation.label_performance'),
         dataIndex: 'performance',
         render: val => {
             const n = val.times(100).toFixed(2);
@@ -47,27 +48,27 @@ const poolDetailInfo = [
         }
     },
     {
-        title: 'Stake Weight',
+        title: i18n.t('operation.label_stake_weight'),
         dataIndex: 'stakeWeight',
         render: val => {
             return <span>{val.times(100).toFixed(4)}</span>
         }
     },
     {
-        title: 'Capacity',
+        title: i18n.t('operation.label_capacity'),
         render: val => {
             return <span>{val.stakeSelf.times(100).minus(val.stakeTotal).toFixed(4)}</span>
         }
     },
     {
-        title: 'Self Bond',
+        title: i18n.t('operation.label_self_bond'),
         dataIndex: 'stakeSelf',
         render: val => {
             return <span>{val.toNumber().toFixed(4)}</span>
         }
     },
     {
-        title: 'Total Staked',
+        title: i18n.t('operation.label_total_staked'),
         dataIndex: 'stakeTotal',
         render: val => {
             return <span>{val.toNumber().toFixed(4)}</span>
@@ -76,12 +77,12 @@ const poolDetailInfo = [
 ]
 const accountDetailInfo = [
     {
-        title: 'Amount delegated to this pool',
+        title: i18n.t('operation.label_account_stake'),
         dataIndex: 'stake',
         render: val => <><span>{`${val.toFixed(5)} `}</span><img src={aionLogo} width="16" height="16" alt=""/></>
     },
     {
-        title: 'Rewards earned in this pool',
+        title: i18n.t('operation.label_account_rewards'),
         dataIndex: 'rewards',
         render: val => <><span>{`${val.toFixed(5)} `}</span><img src={aionLogo} width="16" height="16" alt=""/></>
     }
@@ -141,10 +142,10 @@ const Pageoperation = props => {
         if(makkii.isconnect()){
             if(!account) {
                 alert({
-                    title:'Error',
-                    message: 'Please import an account first',
+                    title:i18n.t('error_title'),
+                    message: i18n.t('error_no_account'),
                     actions: [{
-                        title: 'Ok',
+                        title: i18n.t('button_ok'),
                         onPress: handleSwitchAccount
                     }]
                 })
@@ -160,10 +161,10 @@ const Pageoperation = props => {
 
         }else{
             alert({
-                title:'Error',
-                message: 'Please open by Makkii',
+                title:i18n.t('error_title'),
+                message: i18n.t('error_no_makkii'),
                 actions: [{
-                    title: 'Ok',
+                    title: i18n.t('button_ok'),
                     onPress: ()=>{
                         window.location.href = 'https://www.chaion.net/download/makkii_latest.apk'
                     }
@@ -202,12 +203,11 @@ const Pageoperation = props => {
 
     const accountLabel = () => {
         if (!account) return null;
-        console.log("aaa", account);
         return (
             <div className='operation-account' >
                 {renderAccountDetail(accountDetailInfo, account)}
-                <CommonButton className='operation-button button-orange' title='Un-delegate' onClick={toUndelegate} disabled={account.stake.toNumber() === 0}/>
-                <CommonButton className='operation-button button-orange' title='Withdraw' onClick={toWithdraw} disabled={account.rewards.toNumber() === 0}/>
+                <CommonButton className='operation-button button-orange' title={i18n.t('operation.button_unDelegate')} onClick={toUndelegate} disabled={account.stake.toNumber() === 0}/>
+                <CommonButton className='operation-button button-orange' title={i18n.t('operation.button_withdraw')} onClick={toWithdraw} disabled={account.rewards.toNumber() === 0}/>
             </div>
         )
     }
@@ -225,7 +225,7 @@ const Pageoperation = props => {
                 <ul>
                     {name&& <li>{name}</li>}
                     <li><span className={active === '0x01' ? 'poolActive' : 'poolInActive'} /> {
-                        active === '0x01' ? 'Active' : 'Inactive'
+                        active === '0x01' ? i18n.t('pool.label_active') : i18n.t('pool.label_inActive')
                     }</li>
                     <li>{formatAddress(poolAddress)}</li>
                     {url && <li><a href={url} rel="noopener noreferrer">{url}</a></li> }
@@ -236,7 +236,7 @@ const Pageoperation = props => {
             <div className='operation-pool-detail'>
                 {renderPoolDetail(poolDetailInfo, pool)}
             </div>
-            <CommonButton title='Delegate' onClick={toDelegate} className='button-orange'/>
+            <CommonButton title={i18n.t('operation.button_delegate')} onClick={toDelegate} className='button-orange'/>
         </div>
     )
 }

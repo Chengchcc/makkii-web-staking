@@ -7,6 +7,8 @@ import * as ReactDOM from 'react-dom';
 import store, { createAction } from '@reducers/store';
 import { wsSend } from '@utils/websocket';
 import history from '@utils/history';
+import { I18nextProvider } from "react-i18next";
+import i18n from "@utils/i18n";
 import App from './app';
 import './global.less'
 
@@ -66,6 +68,8 @@ if(makkii.isconnect()){
 
 
 ReactDOM.render(
-  <App />,
+    <I18nextProvider i18n={i18n}>
+        <App />
+    </I18nextProvider>,
   document.getElementById('root'),
 );

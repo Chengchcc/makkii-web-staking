@@ -10,6 +10,7 @@ import { call_withdraw } from '@utils/transaction';
 import Modal, {alert} from '@components/modal'
 import Image from '@components/default-img'
 import {copyInputValue} from "@utils/util";
+import i18n from '@utils/i18n';
 import FormItem from '../operation_form_item';
 import { commonGoback } from '../util';
 import CheckMark from "@/img/checkMark.svg";
@@ -50,9 +51,9 @@ const withdraw = props => {
         const insufficientBalance = new BigNumber(amount).gt(rewards);
         if(!valid  || parseFloat(amount) === 0 || insufficientBalance) {
             alert({
-                title: 'Error', message: 'Invalid amount', actions: [
+                title: i18n.t('error_title'), message: 'Invalid amount', actions: [
                     {
-                        title: 'Ok',
+                        title: i18n.t('button_ok'),
                     },
                 ]
             })
@@ -68,9 +69,9 @@ const withdraw = props => {
         }else {
             // send fail
             alert({
-                title: 'Error', message: 'Sent fail', actions: [
+                title: i18n.t('error_title'), message: i18n.t('error_sent_fail'), actions: [
                     {
-                        title: 'Ok',
+                        title: i18n.t('button_ok'),
                     },
                 ]
             })
@@ -84,18 +85,18 @@ const withdraw = props => {
     }
     return (
         <div className='operation-container withdraw-form'>
-            <FormItem label='From' className='operation-form-pool'>
+            <FormItem label={i18n.t('operation_form.label_from')} className='operation-form-pool'>
                 <Image src={meta.logo} className='pool-logo' alt="" />
                 <span style={{marginLeft:'10px'}}>{meta.name || address}</span>
             </FormItem>
-            <FormItem label="To">{formatAddress(address)}</FormItem>
-            <FormItem label='Transaction Fee'>
+            <FormItem label={i18n.t('operation_form.label_to')}>{formatAddress(address)}</FormItem>
+            <FormItem label={i18n.t('operation_form.label_tx_fee')}>
                 ≈ {fee_withdraw.toFixed(5)} AION
             </FormItem>
-            <FormItem label="Withdraw Amount">
+            <FormItem label={i18n.t('operation_form.label_withdraw_amount')}>
                 <span>{rewards.toFixed(5)}&nbsp; AION</span>
             </FormItem>
-            <CommonButton title='Withdraw' className="button-orange" onClick={handle_withdraw}/>
+            <CommonButton title={i18n.t('operation.button_withdraw')} className="button-orange" onClick={handle_withdraw}/>
             <Modal
                 visible={modalState.visible}
                 title=""
@@ -106,8 +107,8 @@ const withdraw = props => {
                 className='tx_result_modal'
             >
                 <CheckMark width={40} height={40}/>
-                <p>Transaction sent<br/> Waiting for block finalization</p>
-                <p>Transaction will be displayed only after finalization</p>
+                <p>{i18n.t("modal.sent_success_msg1")}<br/>{i18n.t("modal.sent_success_msg2")}</p>
+                <p>{i18n.t("modal.sent_success_msg3")}</p>
                 <p>
                     {formatAddress(modalState.txHash)}
                     <img src={require("@/img/copy2.png")} onClick={() => {
