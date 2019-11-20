@@ -1,4 +1,5 @@
 import React from 'react';
+import i18n from '@utils/i18n';
 
 import './style.less';
 
@@ -16,7 +17,7 @@ const card: React.FC<Icard> = (props) => {
         <div className='card-container'>
             <div key='card-header' className='card-header'>
                 <span>{title}</span>
-                <span><a onClick={() => handleMore()}>{"More >"}</a></span>
+                <span><a onClick={() => handleMore()}>{`${i18n.t('button_more')} >`}</a></span>
             </div>
             <div className='card-body'>
                 <ul>

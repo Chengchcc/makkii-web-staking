@@ -88,7 +88,7 @@ const undelegate = props => {
     }
     return (
         <div className='operation-container undelegate-form'>
-            <FormItem label={i18n.t('operation_form.label_form')} className='operation-form-pool'>
+            <FormItem label={i18n.t('operation_form.label_from')} className='operation-form-pool'>
                 <Image src={meta.logo} className='pool-logo' alt="" />
                 <span style={{marginLeft:'10px'}}>{meta.name || address}</span>
             </FormItem>
@@ -106,7 +106,7 @@ const undelegate = props => {
                     e.preventDefault();
                     const amount = staked.minus(fee_undelegate);
                     inputRef.current.value = amount.gte(0)?staked.toString():'0'
-                }}>All</a>
+                }}>{i18n.t('button_all')}</a>
             </FormItem>
             <CommonButton title={i18n.t('operation.button_unDelegate')} className='button-orange' onClick={handle_undelegate} />
             <Modal

@@ -67,5 +67,7 @@
     "error_no_makkii":"Please open by Makkii",
     "error_sent_fail": "Sent fail",
     "button_ok":"Ok",
-    "button_cancel":"Cancel"
+    "button_cancel":"Cancel",
+    "button_more": "More",
+    "button_all": "All"
 }

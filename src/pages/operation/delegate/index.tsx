@@ -86,7 +86,7 @@ const delegate = props => {
     }
     return (
         <div className='operation-container delegate-form'>
-            <FormItem label={i18n.t('operation_form.label_form')}>{formatAddress(address)}</FormItem>
+            <FormItem label={i18n.t('operation_form.label_from')}>{formatAddress(address)}</FormItem>
             <FormItem label={i18n.t('operation_form.label_to')} className='operation-form-pool'>
                 <Image src={meta.logo} className='pool-logo' alt="" />
                 <span style={{ marginLeft: '10px' }}>{meta.name || address}</span>
@@ -101,7 +101,7 @@ const delegate = props => {
                     e.preventDefault();
                     const amount = balance.minus(fee_delegate);
                     inputRef.current.value = amount.gte(0) ? balance.minus(fee_delegate).toString() : '0'
-                }}>All</a>
+                }}>{i18n.t('button_all')}</a>
             </FormItem>
             <CommonButton title={i18n.t('operation.button_delegate')} className="button-orange" onClick={handle_delegate} />
             <Modal

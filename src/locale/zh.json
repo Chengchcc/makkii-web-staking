@@ -59,7 +59,7 @@
         "label_active": "运行中",
         "label_inActive": "已停止",
         "label_poor": "较差",
-        "label_excellent": "优秀",
+        "label_excellent": "优良",
         "label_moderatae": "中等"
     },
     "error_title": "错误",
@@ -67,5 +67,7 @@
     "error_no_makkii":"请先安装Makkii钱包",
     "error_sent_fail": "发送失败",
     "button_ok": "确定",
-    "button_cancel": "取消"
+    "button_cancel": "取消",
+    "button_more": "更多",
+    "button_all": "全部"
 }

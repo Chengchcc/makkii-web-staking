@@ -30,45 +30,45 @@ const mapToState = ({ account }) => {
 
 const poolDetailInfo = [
     {
-        title: i18n.t('operation.label_fees'),
+        title: 'operation.label_fees',
         dataIndex: 'fee',
         render: val => {
             return <span>{val.times(100).toFixed(4)}</span>
         }
     },
     {
-        title: i18n.t('operation.label_performance'),
+        title: 'operation.label_performance',
         dataIndex: 'performance',
         render: val => {
             const n = val.times(100).toFixed(2);
             // eslint-disable-next-line no-nested-ternary
-            const text = n < 90 ? i18n.t('pool.label_poor') : n > 95 ? i18n.t('pool.label_excellent') : i18n.t('pool.moerate');
+            const text = n < 90 ? i18n.t('pool.label_poor') : n > 95 ? i18n.t('pool.label_excellent') : i18n.t('pool.label_moderate');
 
             return <span>{text}</span>
         }
     },
     {
-        title: i18n.t('operation.label_stake_weight'),
+        title: 'operation.label_stake_weight',
         dataIndex: 'stakeWeight',
         render: val => {
             return <span>{val.times(100).toFixed(4)}</span>
         }
     },
     {
-        title: i18n.t('operation.label_capacity'),
+        title: 'operation.label_capacity',
         render: val => {
             return <span>{val.stakeSelf.times(100).minus(val.stakeTotal).toFixed(4)}</span>
         }
     },
     {
-        title: i18n.t('operation.label_self_bond'),
+        title: 'operation.label_self_bond',
         dataIndex: 'stakeSelf',
         render: val => {
             return <span>{val.toNumber().toFixed(4)}</span>
         }
     },
     {
-        title: i18n.t('operation.label_total_staked'),
+        title: 'operation.label_total_staked',
         dataIndex: 'stakeTotal',
         render: val => {
             return <span>{val.toNumber().toFixed(4)}</span>
@@ -77,12 +77,12 @@ const poolDetailInfo = [
 ]
 const accountDetailInfo = [
     {
-        title: i18n.t('operation.label_account_stake'),
+        title: 'operation.label_account_stake',
         dataIndex: 'stake',
         render: val => <><span>{`${val.toFixed(5)} `}</span><img src={aionLogo} width="16" height="16" alt=""/></>
     },
     {
-        title: i18n.t('operation.label_account_rewards'),
+        title: 'operation.label_account_rewards',
         dataIndex: 'rewards',
         render: val => <><span>{`${val.toFixed(5)} `}</span><img src={aionLogo} width="16" height="16" alt=""/></>
     }
@@ -98,14 +98,14 @@ const renderPoolDetail = (info, src) => {
             return (
                 <div key={title} className='operation-pool-detail-item'>
                     <div className='operation-pool-detail-item-value'>{render(val)}</div>
-                    <div className='operation-pool-detail-item-title'>{title}</div>
+                    <div className='operation-pool-detail-item-title'>{i18n.t(title)}</div>
                 </div>
             )
         }
         return (
             <div key={title} className='operation-pool-detail-item'>
                 <div className='operation-pool-detail-item-value'>{val.toString()}</div>
-                <div className='operation-pool-detail-item-title'>{title}</div>
+                <div className='operation-pool-detail-item-title'>{i18n.t(title)}</div>
             </div>
         )
     })
@@ -119,14 +119,14 @@ const renderAccountDetail = (info, src) => {
             return (
                 <div key={title} className='operation-account-info'>
                     <div className='operation-account-info-value'>{render(val)}</div>
-                    <div className='operation-account-info-title'>{title}</div>
+                    <div className='operation-account-info-title'>{i18n.t(title)}</div>
                 </div>
             )
         }
         return (
             <div key={title} className='operation-account-info'>
                 <div className='ooperation-account-info-value'>{val.toString()}</div>
-                <div className='operation-account-info-title'>{title}</div>
+                <div className='operation-account-info-title'>{i18n.t(title)}</div>
             </div>
         )
     })

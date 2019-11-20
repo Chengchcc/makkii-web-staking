@@ -5,6 +5,7 @@ import IconRight from '@img/arrow_right.svg';
 import Image from '@components/default-img';
 import SwipeAction from "@components/swipe_action";
 import { formatPoolName} from '@utils/index';
+import i18n from '@utils/i18n';
 import './style.less';
 
 interface IPoolItem {
@@ -60,14 +61,14 @@ const lists = (info, src, extra) => {
                     if (render) {
                         return (
                             <div key={title} className='pool-info-label-list'>
-                                <span>{title}: </span>
+                                <span>{i18n.t(title)}: </span>
                                 <span>{render(val, extra)}</span>
                             </div>
                         )
                     }
                     return (
                         <div key={title} className='pool-info-label-list'>
-                            <span>{title}: </span>
+                            <span>{i18n.t(title)}: </span>
                             <span>{val.toString()}</span>
                         </div>
                     )

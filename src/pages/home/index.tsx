@@ -21,12 +21,12 @@ const logo = require("@/img/metaLogo2.png")
 
 export const delegationInfo: Array<Iinfo> = [
     {
-        title: i18n.t('delegations.label_stake'),
+        title: 'delegations.label_stake',
         dataIndex: 'stake',
         render: val => <span>{`${val.toFixed(5)} AION`}</span>
     },
     {
-        title: i18n.t('delegations.label_rewards'),
+        title: 'delegations.label_rewards',
         dataIndex: 'rewards',
         render: val => <span>{`${val.toFixed(5)} AION`}</span>
     }
@@ -34,12 +34,12 @@ export const delegationInfo: Array<Iinfo> = [
 
 export const unDelegationInfo: Array<Iinfo> = [
     {
-        title: i18n.t('undelegations.label_blockNumber'),
+        title: 'undelegations.label_blockNumber',
         dataIndex: 'blockNumber',
         render: val => <span>{`#${val}`}</span>
     },
     {
-        title: i18n.t('undelegations.label_amount'),
+        title: 'undelegations.label_amount',
         dataIndex: 'amount',
         render: val => <span>{`${val.toFixed(3)} AION`}</span>
     }
@@ -88,25 +88,25 @@ const mapToState = ({ account }) => {
 }
 const accountInfo = [
     {
-        title: i18n.t('account.label_balance'),
+        title: 'account.label_balance',
         dataIndex: 'liquidBalance',
         render: val => val.gte(0) ? <><span>{`${val.toFixed(5)} `}</span> <img src={logo} height="16" width="16" alt="" /></> :
             <Spin size='30px' width='2px' />
     },
     {
-        title: i18n.t('account.label_staked_amount'),
+        title: 'account.label_staked_amount',
         dataIndex: 'stakedAmount',
         render: val => val.gte(0) ? <><span>{`${val.toFixed(5)} `}</span><img src={logo} height="16" width="16" alt="" /></> :
             <Spin size='30px' width='2px' />
     },
     {
-        title: i18n.t('account.label_undelegate_amount'),
+        title: 'account.label_undelegate_amount',
         dataIndex: 'undelegationAmount',
         render: val => val.gte(0) ? <><span>{`${val.toFixed(5)} `}</span> <img src={logo} height="16" width="16" alt="" /></> :
             <Spin size='30px' width='2px' />
     },
     {
-        title: i18n.t('account.label_rewards_amount'),
+        title: 'account.label_rewards_amount',
         dataIndex: 'rewards',
         render: val => val.gte(0) ? <><span>{`${val.toFixed(5)} `}</span><img src={logo} height="16" width="16" alt="" /></> :
             <Spin size='30px' width='2px' />
@@ -125,7 +125,7 @@ const renderAccountInfo = (info, src) => {
                             <div className='header-info-item-value'>
                                 {render(val)}
                             </div>
-                            <div className='header-info-item-title'>{title}</div>
+                            <div className='header-info-item-title'>{i18n.t(title)}</div>
                         </div>
                     )
                 })
