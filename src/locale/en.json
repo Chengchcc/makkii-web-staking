@@ -57,7 +57,10 @@
     },
     "pool":{
         "label_active":"Active",
-        "label_inActive":"Inactive"
+        "label_inActive":"Inactive",
+        "label_poor": "Poor",
+        "label_excellent": "Excellent",
+        "label_moderatae": "Moderate"
     },
     "error_title": "Error",
     "error_no_account":"Please import an account first",

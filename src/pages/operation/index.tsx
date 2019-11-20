@@ -42,7 +42,7 @@ const poolDetailInfo = [
         render: val => {
             const n = val.times(100).toFixed(2);
             // eslint-disable-next-line no-nested-ternary
-            const text = n < 90 ? 'Poor' : n > 95 ? 'Excellent' : 'Moderate';
+            const text = n < 90 ? i18n.t('pool.label_poor') : n > 95 ? i18n.t('pool.label_excellent') : i18n.t('pool.moerate');
 
             return <span>{text}</span>
         }
