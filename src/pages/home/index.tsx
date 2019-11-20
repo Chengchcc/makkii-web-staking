@@ -12,6 +12,7 @@ import { createAction } from '@reducers/store';
 import operation from '@pages/operation';
 import ReactPullLoad, { STATS } from '@components/pullLoad';
 import { CommonButton } from '@components/button';
+import i18n from '@utils/i18n';
 import Card from './card';
 import './style.less';
 
@@ -20,12 +21,12 @@ const logo = require("@/img/metaLogo2.png")
 
 export const delegationInfo: Array<Iinfo> = [
     {
-        title: 'Delegate',
+        title: i18n.t('delegations.label_stake'),
         dataIndex: 'stake',
         render: val => <span>{`${val.toFixed(5)} AION`}</span>
     },
     {
-        title: 'Rewards',
+        title: i18n.t('delegations.label_rewards'),
         dataIndex: 'rewards',
         render: val => <span>{`${val.toFixed(5)} AION`}</span>
     }
@@ -33,12 +34,12 @@ export const delegationInfo: Array<Iinfo> = [
 
 export const unDelegationInfo: Array<Iinfo> = [
     {
-        title: 'Block number',
+        title: i18n.t('undelegations.label_blockNumber'),
         dataIndex: 'blockNumber',
         render: val => <span>{`#${val}`}</span>
     },
     {
-        title: 'Amount',
+        title: i18n.t('undelegations.label_amount'),
         dataIndex: 'amount',
         render: val => <span>{`${val.toFixed(3)} AION`}</span>
     }
@@ -87,25 +88,25 @@ const mapToState = ({ account }) => {
 }
 const accountInfo = [
     {
-        title: 'Liquid balance',
+        title: i18n.t('account.label_balance'),
         dataIndex: 'liquidBalance',
         render: val => val.gte(0) ? <><span>{`${val.toFixed(5)} `}</span> <img src={logo} height="16" width="16" alt="" /></> :
             <Spin size='30px' width='2px' />
     },
     {
-        title: 'Staked Amount',
+        title: i18n.t('account.label_staked_amount'),
         dataIndex: 'stakedAmount',
         render: val => val.gte(0) ? <><span>{`${val.toFixed(5)} `}</span><img src={logo} height="16" width="16" alt="" /></> :
             <Spin size='30px' width='2px' />
     },
     {
-        title: 'Currently Undelegating',
+        title: i18n.t('account.label_undelegate_amount'),
         dataIndex: 'undelegationAmount',
         render: val => val.gte(0) ? <><span>{`${val.toFixed(5)} `}</span> <img src={logo} height="16" width="16" alt="" /></> :
             <Spin size='30px' width='2px' />
     },
     {
-        title: 'Total Rewards',
+        title: i18n.t('account.label_rewards_amount'),
         dataIndex: 'rewards',
         render: val => val.gte(0) ? <><span>{`${val.toFixed(5)} `}</span><img src={logo} height="16" width="16" alt="" /></> :
             <Spin size='30px' width='2px' />
@@ -199,7 +200,6 @@ const home = (props: Ihome) => {
 
     const actionTimeOut = ()=>{
         if(actionRef.current === STATS.refreshing){
-            console.log('action timeout',  Date.now())
             setState({
                action: STATS.refreshed,
                isLoading: false
@@ -207,7 +207,6 @@ const home = (props: Ihome) => {
             actionRef.current = STATS.refreshed
         }
         if(actionRef.current === STATS.loading){
-            console.log('action timeout')
             setState({
                action: STATS.reset,
                isLoading: false
@@ -232,7 +231,6 @@ const home = (props: Ihome) => {
             wsSend({ method: 'pools', params: [] })
             wsSend({ method: 'undelegations', params: [address, 0, 10] })
             timerRef.current = setTimeout(actionTimeOut, 10*1000);
-            console.log('start=>', Date.now())
         } else if (action === STATS.loading) {// loading more
             // nothiing
         }
@@ -355,22 +353,22 @@ const home = (props: Ihome) => {
             >
                 <div className='home-header'>
                     <div className='header-account'>
-                        <span style={{ fontSize: '16px' }}>My Account:</span>
+                        <span style={{ fontSize: '16px' }}>{i18n.t('account.label_my_account')}:</span>
                         <span style={{ fontSize: '12px' }}>{`${formatAddress(address)}`}</span>
-                        <CommonButton className='switch-account-button button-orange' title="Switch Account" onClick={handleSwitchAccount} />
+                        <CommonButton className='switch-account-button button-orange' title={i18n.t('account.button_switch_account')} onClick={handleSwitchAccount} />
                     </div>
                     {renderAccountInfo(accountInfo, account)}
                 </div>
                 <div className='home-button-container'>
-                    <CommonButton className='home-button button-orange' title='Delegate' onClick={toDelegate} />
-                    <CommonButton className='home-button button-orange' title='Withdraw' onClick={toWithDraw} disabled={account.rewards.isEqualTo(0)} />
+                    <CommonButton className='home-button button-orange' title={i18n.t('operation.button_delegate')} onClick={toDelegate} />
+                    <CommonButton className='home-button button-orange' title={i18n.t('operation.button_withdraw')} onClick={toWithDraw} disabled={account.rewards.isEqualTo(0)} />
                 </div>
                 {!state.isLoading ?
                     <>
-                        {hasPools && hasDelegations && renderPoolsMore('My Delegations', process_delegations(delegations).slice(0, 3), delegationInfo, toDelegations)}
-                        {hasPools && hasUndelegations && renderPoolsMore('Pending Undelegations', process_undelegations(undelegations).slice(0, 3), unDelegationInfo, toPendingUndlegation)}
-                        {hasPools && renderPools('Top Pools', pools)}
-                        {hasPools && hasHistory && renderTransaction('Stake History', process_transctions(transactions).slice(0, 3), toHistoryList)}
+                        {hasPools && hasDelegations && renderPoolsMore(i18n.t('delegations.card_title'), process_delegations(delegations).slice(0, 3), delegationInfo, toDelegations)}
+                        {hasPools && hasUndelegations && renderPoolsMore(i18n.t('undelegations.card_title'), process_undelegations(undelegations).slice(0, 3), unDelegationInfo, toPendingUndlegation)}
+                        {hasPools && renderPools(i18n.t('pool_lists.card_title'), pools)}
+                        {hasPools && hasHistory && renderTransaction(i18n.t('history.card_title'), process_transctions(transactions).slice(0, 3), toHistoryList)}
                     </> :
                     <div style={{ display: 'flex', flex: 1, alignItems: 'center', justifyContent: 'center', marginTop: '30' }}>
                         <Spin />
