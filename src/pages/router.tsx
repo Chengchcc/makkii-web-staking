@@ -14,7 +14,7 @@ import { useSelector } from 'react-redux';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { parse } from 'querystring';
 import i18n from '@utils/i18n';
-
+import Cookies from 'js-cookie';
 import './theme.less'
 
 const withLockByAccount = (WrappedComponent) => props => {
@@ -34,12 +34,20 @@ const withLockByAccount = (WrappedComponent) => props => {
 }
 
 const router = ({ history }) => {
+    // set lang
+    const cookieLang = Cookies.get('lang');
     const url = new URL(window.location.href);
     const querystr = url.search ? url.search.substr(1) : "";
-    const query = parse(querystr);
-    if (query.lang && query.lang.includes('zh')) {
+    const { lang: queryLang } = parse(querystr) || {};
+    if (queryLang && queryLang !== cookieLang) {
+        Cookies.set('lang', queryLang)
+    }
+    const lang  = String(queryLang || cookieLang || "");
+    if(lang.includes('zh')){
         i18n.changeLanguage('zh')
     }
+
+    
     return (
         <Router history={history}>
             <Switch>

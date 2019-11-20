@@ -20,6 +20,7 @@
     "deploy": "cross-env RELEVANT_PATH=staking node ./scripts/deploy.js"
   },
   "dependencies": {
+    "@types/js-cookie": "^2.2.4",
     "@types/react": "^16.9.9",
     "@types/react-dom": "^16.9.2",
     "@types/react-redux": "^7.1.4",
@@ -31,6 +32,7 @@
     "i18next": "^19.0.1",
     "i18next-browser-languagedetector": "^4.0.1",
     "i18next-xhr-backend": "^3.2.2",
+    "js-cookie": "^2.2.1",
     "makkii-webview-bridge": "https://github.com/chaion/makkii-webview-bridge.git#933db99693f2cde78a5ef03f53fe07d954a7fa6d",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
