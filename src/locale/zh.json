@@ -1,68 +1,71 @@
 {
     "delegations": {
-        "title": "My Delegations",
-        "card_title":"My Delegations",
-        "label_stake": "Delegate",
-        "label_rewards": "Rewards"
+        "title": "我的委托",
+        "card_title":"我的委托",
+        "label_stake": "委托",
+        "label_rewards": "回报"
     },
     "pool_lists": {
-        "title": "Pool列表",
-        "card_title":"Top pools"
+        "title": "矿池列表",
+        "card_title": "矿池"
     },
     "undelegations": {
-        "title": "Pending Undelegations",
-        "card_title": "Pending Undelegations",
-        "label_blockNumber":"Block number",
-        "label_amount":"Amount"
+        "title": "申请撤回中",
+        "card_title": "申请撤回中",
+        "label_blockNumber":"块号",
+        "label_amount":"金额"
     },
     "history": {
-        "title": "Stake History",
-        "card_title": "Stake History"
+        "title": "质押记录",
+        "card_title": "质押记录"
     },
     "account":{
-        "label_my_account":"My Account",
-        "label_balance":"Liquid balance",
-        "label_staked_amount": "Staked Amount",
-        "label_undelegate_amount": "Currently Undelegating",
-        "label_rewards_amount": "Total Rewards",
-        "button_switch_account": "Switch Account"
+        "label_my_account":"我的账户",
+        "label_balance":"余额",
+        "label_staked_amount": "质押金额",
+        "label_undelegate_amount": "申请撤回金额",
+        "label_rewards_amount": "总回报",
+        "button_switch_account": "切换账户"
     },
     "operation": {
-        "button_delegate": "Delegate",
-        "button_unDelegate": "Un-delegate",
-        "button_withdraw": "Withdraw",
-        "label_fees": "Fees",
-        "label_performance": "Performance",
-        "label_stake_weight": "Stake Weight",
-        "label_capacity": "Capacity",
-        "label_self_bond": "Self Bond",
-        "label_total_staked": "Total Staked",
-        "label_account_stake": "Amount delegated to this pool",
-        "label_account_rewards": "Rewards earned in this pool"
+        "button_delegate": "委托",
+        "button_unDelegate": "申请撤回委托",
+        "button_withdraw": "提现",
+        "label_fees": "佣金",
+        "label_performance": "绩效",
+        "label_stake_weight": "质押占比",
+        "label_capacity": "剩余额度",
+        "label_self_bond": "矿池质押",
+        "label_total_staked": "总质押",
+        "label_account_stake": "质押金额",
+        "label_account_rewards": "回报金额"
     },
     "operation_form":{
-        "label_from": "From",
-        "label_to":"To",
-        "label_tx_fee": "Transaction Fee",
-        "label_balance": "Balance",
-        "label_delegate_amount": "Delegate Amount",
-        "label_undelgate_amount": "Unldegate Amount",
-        "label_withdraw_amount":"Withdraw Amount",
-        "label_lock_period": "Lock Period"
+        "label_from": "发送者",
+        "label_to":"接收者",
+        "label_tx_fee": "交易费",
+        "label_balance": "余额",
+        "label_delegate_amount": "质押金额",
+        "label_undelgate_amount": "申请撤回金额",
+        "label_withdraw_amount":"提现金额",
+        "label_lock_period": "锁定期"
     },
     "modal":{
-        "sent_success_msg1": "Transaction sent",
-        "sent_success_msg2": " Waiting for block finalization",
-        "sent_success_msg3": "Transaction will be displayed only after finalization"
+        "sent_success_msg1": "交易已发送",
+        "sent_success_msg2": "等待区块确认",
+        "sent_success_msg3": "交易将在确认撤回后显示"
     },
     "pool":{
-        "label_active":"Active",
-        "label_inActive":"Inactive"
+        "label_active": "运行中",
+        "label_inActive": "已停止",
+        "label_poor": "较差",
+        "label_excellent": "优秀",
+        "label_moderatae": "中等"
     },
-    "error_title": "Error",
-    "error_no_account":"Please import an account first",
-    "error_no_makkii":"Please open by Makkii",
-    "error_sent_fail": "Sent fail",
-    "button_ok":"Ok",
-    "button_cancel":"Cancel"
+    "error_title": "错误",
+    "error_no_account":"请先导入账号",
+    "error_no_makkii":"请先安装Makkii钱包",
+    "error_sent_fail": "发送失败",
+    "button_ok": "确定",
+    "button_cancel": "取消"
 }
