@@ -19,10 +19,10 @@
         border-radius: 50%;
     }
     >span:nth-child(3){
-        width: 140px;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        min-width: 0;
         text-transform: capitalize;
+        width: 140px;
+        white-space: nowrap;
     }
     >.stake-weight{
         position: absolute;
@@ -44,6 +44,7 @@
             width: calc(100% - 60px);
             overflow: hidden;
             text-overflow: ellipsis;
+            white-space: nowrap;
         }
     }
 }
