@@ -69,5 +69,6 @@
     "button_ok": "确定",
     "button_cancel": "取消",
     "button_more": "更多",
-    "button_all": "全部"
+    "button_all": "全部",
+    "message_copied":"已复制"
 }

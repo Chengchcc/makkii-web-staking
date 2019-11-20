@@ -1,6 +1,7 @@
 // libs
 import React from 'react'
 // components
+import i18n from '@utils/i18n';
 import { message } from "@/components/message/utils";
 import Msg from "@/components/icon/msg";
 
@@ -38,6 +39,6 @@ export const copyInputValue = (targetValue) => {
     document.body.appendChild(input);
     input.select();
     document.execCommand('copy');
-    aionMessage('Copied');
+    aionMessage(i18n.t('message_copied'));
     document.body.removeChild(input);
 }

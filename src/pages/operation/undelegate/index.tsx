@@ -113,7 +113,7 @@ const undelegate = props => {
                 visible={modalState.visible}
                 title=""
                 hide={hideModal}
-                actions={[{title: <div className="button button-orange">OK</div>, onPress:()=>{
+                actions={[{title: <div className="button button-orange">{i18n.t('button_ok')}</div>, onPress:()=>{
                     history.replace('/home');
                 }}]}
                 className='tx_result_modal'

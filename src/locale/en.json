@@ -69,5 +69,6 @@
     "button_ok":"Ok",
     "button_cancel":"Cancel",
     "button_more": "More",
-    "button_all": "All"
+    "button_all": "All",
+    "message_copied":"Copied"
 }

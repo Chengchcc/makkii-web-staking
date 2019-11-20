@@ -8,7 +8,7 @@
   "license": "MIT",
   "scripts": {
     "storybook": "start-storybook start -p 6006",
-    "analyze": "cross-env ANALYZE=true npm run dist",
+    "analyze": "cross-env ANALYZE=true npm run build:mainnet",
     "clean": "rimraf ./dist",
     "build:dev": "npm run clean; cross-env NODE_ENV=development cross-env RELEVANT_PATH=staking  cross-env NETWORK=amity  webpack --config ./scripts/webpack.config.js",
     "prestart": "npm run build:dev",
