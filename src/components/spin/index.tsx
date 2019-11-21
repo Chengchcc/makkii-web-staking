@@ -16,7 +16,7 @@ const LoadingSpin:React.FC<Iloading> = (props) => {
         size = '60px',
         width = '6px',
         secondaryColor = '#cccccc',
-        primaryColor = '#1ecd96',
+        primaryColor = '#f50',
         duration = '1.4s',
         timingFunction = 'ease-in-out',
         direction = 'normal',

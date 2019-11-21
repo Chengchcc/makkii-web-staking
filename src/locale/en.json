@@ -46,7 +46,7 @@
         "label_tx_fee": "Transaction Fee",
         "label_balance": "Balance",
         "label_delegate_amount": "Delegate Amount",
-        "label_undelegate_amount": "Unldelegate Amount",
+        "label_undelegate_amount": "Undelegate Amount",
         "label_withdraw_amount":"Withdraw Amount",
         "label_lock_period": "Lock Period"
     },
@@ -61,6 +61,13 @@
         "label_poor": "Poor",
         "label_excellent": "Excellent",
         "label_moderatae": "Moderate"
+    },
+    "transaction":{
+        "label_tx_hash": "Tx Hash",
+        "label_delegate": "Delegate",
+        "label_undelegate": "Undelegate",
+        "label_withdraw":"Withdraw",
+        "label_normal": "Normal"
     },
     "refresh_control":{
         "header_pulling":"Pulling...",

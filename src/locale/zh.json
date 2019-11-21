@@ -62,6 +62,13 @@
         "label_excellent": "优良",
         "label_moderatae": "中等"
     },
+    "transaction":{
+        "label_tx_hash": "交易哈希",
+        "label_delegate": "质押",
+        "label_undelegate": "撤回",
+        "label_withdraw":"体现",
+        "label_normal": "普通"
+    },
     "refresh_control":{
         "header_pulling":"下拉...",
         "header_pulling_enough": "释放以刷新",

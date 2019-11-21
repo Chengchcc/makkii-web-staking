@@ -293,7 +293,7 @@ const home = (props: Ihome) => {
     });
 
     React.useEffect(()=>{
-        if(address&&!state.isLoading){
+        if(accountRef.current.address!==address&&!state.isLoading){
             setState({
                 ...state,
                 isLoading: true,

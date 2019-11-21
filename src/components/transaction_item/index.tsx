@@ -2,6 +2,7 @@ import React from 'react';
 import { Itransaction, Ipool } from '@interfaces/types';
 import Image from '@components/default-img'
 import './style.less';
+import i18n from '@utils/i18n';
 
 
 interface ItransactionItem {
@@ -12,13 +13,13 @@ interface ItransactionItem {
 const tansferType = type => {
     switch (type) {
         case 'ADSDelegated':
-            return 'Delegate:';
+            return `${i18n.t('transaction.label_delegate')} :`;
         case 'ADSUndelegated':
-            return 'Undelegate:';
+            return `${i18n.t('transaction.label_undelegate')} :`;
         case 'ADSWithdraw':
-            return 'Withdraw:';
+            return `${i18n.t('transaction.label_withdraw')} :`;
         default:
-            return 'Normal:'
+            return `${i18n.t('transaction.label_normal')} :`
     }
 }
 
@@ -39,7 +40,7 @@ const TransactionItem: React.FC<ItransactionItem> = props => {
                     <span>{meta.name || pool.address}</span>
                 </div>
                 <div>
-                    <div className='transaction-pool-label'>{/* date */} Tx Hash: { `${hash.substring(0, 8)  }...${  hash.substring(60)}` }</div>
+                    <div className='transaction-pool-label'>{/* date */} {`${i18n.t('transaction.label_tx_hash')} :`} { `${hash.substring(0, 8)  }...${  hash.substring(60)}` }</div>
                     <div className='transaction-pool-label'>
                         <span>{tansferType(type)} </span>
                         <span>{`${amount.toFixed(5)} AION`}</span>
