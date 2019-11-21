@@ -72,22 +72,22 @@
 
 .pull-load-head-default{
     text-align: center; font-size: @fontSize; line-height: @height; color: @fontColor;
-    &:after{
-        .state-pulling &{
-            content: @pullingMsg
-        }
+    // &:after{
+    //     .state-pulling &{
+    //         content: @pullingMsg
+    //     }
 
-        .state-pulling.enough &{
-            content: @pullingEnoughMsg;
-        }
+    //     .state-pulling.enough &{
+    //         content: @pullingEnoughMsg;
+    //     }
 
-        .state-refreshing &{
-            content: @refreshingMsg;
-        }
-        .state-refreshed &{
-            content: @refreshedMsg;
-        }
-    }
+    //     .state-refreshing &{
+    //         content: @refreshingMsg;
+    //     }
+    //     .state-refreshed &{
+    //         content: @refreshedMsg;
+    //     }
+    // }
     .state-pulling &{
         opacity: 1;
 
@@ -169,14 +169,14 @@
 
 .pull-load-footer-default{
     text-align: center; font-size: @fontSize; line-height: @height; color: @fontColor;
-    &:after{
-        .state-loading &{
-            content: @btnLoadMore;
-        }
-    }
-    &.nomore:after{
-        content: @btnLoadNoMore;
-    }
+    // &:after{
+    //     .state-loading &{
+    //         content: @btnLoadMore;
+    //     }
+    // }
+    // &.nomore:after{
+    //     content: @btnLoadNoMore;
+    // }
     .state-loading &{
         i{
             margin-right: 10px;

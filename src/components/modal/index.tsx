@@ -24,6 +24,7 @@ export const alert = (props: {
     }
     ReactDOM.render(
     <Modal
+        maskClosable
         visible
         title={title}
         hide={hide}

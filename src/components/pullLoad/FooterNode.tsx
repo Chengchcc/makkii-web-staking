@@ -1,5 +1,6 @@
 
 import React from 'react'
+import i18n from '@utils/i18n'
 import { STATS } from './constants'
 
 
@@ -15,12 +16,14 @@ const footer:React.FC<Ifooter> = props => {
   } = props
 
   const className = `pull-load-footer-default ${hasMore? "" : "nomore"}`
-
+  let content = hasMore? i18n.t('refresh_control.footer_load_more'): i18n.t('refresh_control.footer_load_no_more');
+  if(loaderState === STATS.loading){
+    content = i18n.t('refresh_control.footer_loading');
+  }
+ 
   return(
     <div className={className}>
-      {
-        loaderState === STATS.loading ? <i/> : ""
-      }
+      <i />{content}
     </div>
   )
 }

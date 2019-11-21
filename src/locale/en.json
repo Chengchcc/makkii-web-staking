@@ -62,6 +62,15 @@
         "label_excellent": "Excellent",
         "label_moderatae": "Moderate"
     },
+    "refresh_control":{
+        "header_pulling":"Pulling...",
+        "header_pulling_enough": "Release to refresh",
+        "header_refreshing": "Refreshing...",
+        "header_refreshed":"Refresh success",
+        "footer_loading": "Loading...",
+        "footer_load_more": "> Load More <",
+        "footer_load_no_more":"> No More <"
+    },
     "error_title": "Error",
     "error_no_account":"Please import an account first",
     "error_no_makkii":"Please open by Makkii",

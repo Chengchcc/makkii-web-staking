@@ -20,7 +20,7 @@ i18n.use(XHR)
         defaultNS: "translations",
         lng: 'en',
         fallbackLng: "en",
-        debug: true,
+        debug: false,
         react: {
             wait: true
         }

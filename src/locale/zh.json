@@ -62,6 +62,15 @@
         "label_excellent": "优良",
         "label_moderatae": "中等"
     },
+    "refresh_control":{
+        "header_pulling":"下拉...",
+        "header_pulling_enough": "释放以刷新",
+        "header_refreshing": "刷新中...",
+        "header_refreshed":"刷新成功",
+        "footer_loading": "加载中...",
+        "footer_load_more": "> 加载更多 <",
+        "footer_load_no_more":"> 没有更多数据 <"
+    },
     "error_title": "错误",
     "error_no_account":"请先导入账号",
     "error_no_makkii":"请先安装Makkii钱包",

@@ -133,7 +133,6 @@ ws.onmessage = e => {
 }
 
 export const wsSend = (payload, time = 1) => {
-    console.log('ws send =>', payload)
     if (ws === null || time < 1) return
     if (ws.readyState !== 1) {
         setTimeout(() => {
@@ -141,6 +140,7 @@ export const wsSend = (payload, time = 1) => {
         }, 2000)
     }
     ws.send(JSON.stringify(payload))
+    console.log('ws send =>', JSON.stringify(payload))
 }
 
 
