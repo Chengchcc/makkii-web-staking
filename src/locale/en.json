@@ -21,7 +21,7 @@
     },
     "account":{
         "label_my_account":"My Account",
-        "label_balance":"Liquid balance",
+        "label_balance":"Balance",
         "label_staked_amount": "Staked Amount",
         "label_undelegate_amount": "Currently Undelegating",
         "label_rewards_amount": "Total Rewards",
@@ -46,7 +46,7 @@
         "label_tx_fee": "Transaction Fee",
         "label_balance": "Balance",
         "label_delegate_amount": "Delegate Amount",
-        "label_undelgate_amount": "Unldegate Amount",
+        "label_undelegate_amount": "Unldelegate Amount",
         "label_withdraw_amount":"Withdraw Amount",
         "label_lock_period": "Lock Period"
     },

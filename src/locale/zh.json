@@ -46,7 +46,7 @@
         "label_tx_fee": "交易费",
         "label_balance": "余额",
         "label_delegate_amount": "质押金额",
-        "label_undelgate_amount": "申请撤回金额",
+        "label_undelegate_amount": "申请撤回金额",
         "label_withdraw_amount":"提现金额",
         "label_lock_period": "锁定期"
     },

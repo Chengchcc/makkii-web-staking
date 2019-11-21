@@ -292,6 +292,14 @@ const home = (props: Ihome) => {
         }
     });
 
+    React.useEffect(()=>{
+        if(address&&!state.isLoading){
+            setState({
+                ...state,
+                isLoading: true,
+            })
+        }
+    }, [address]);
     const renderPools = (title, lists_) => {
         const sorter = (a: any, b: any) => {
             return b.performance.toNumber() - a.performance.toNumber();

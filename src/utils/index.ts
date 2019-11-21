@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 import store, { createAction } from '@reducers/store';
 import { alert } from '@components/modal';
+import BigNumber from 'bignumber.js';
 import { wsSend } from './websocket';
 import i18n from './i18n';
 
@@ -61,7 +62,12 @@ export const handleSwitchAccount = () => {
     if (makkii.isconnect()) {
         makkii.switchAccount().then(r => {
             console.log('handleSwitchAccount', r);
-            store.dispatch(createAction('account/update')({ address: r }))
+            store.dispatch(createAction('account/update')({ 
+                address: r,  
+                liquidBalance: new BigNumber(-1),
+                stakedAmount: new BigNumber(-1),
+                undelegationAmount: new BigNumber(-1),
+                rewards: new BigNumber(-1),}))
             wsSend({ method: 'eth_getBalance', params: [r] })
             wsSend({ method: 'delegations', params: [r, 0, 10] })
             wsSend({ method: 'transactions', params: [r, 0, 10] })
