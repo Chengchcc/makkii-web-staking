@@ -8,7 +8,7 @@ import { hexCharCodeToStr } from '.';
 
 declare const NETWORK: string;
 
-const url = NETWORK==='amity'? WS_URL_AMITY: WS_URL_MAINNET
+const url = NETWORK!=='amity'? WS_URL_AMITY: WS_URL_MAINNET
 // const url =  WS_URL_MAINNET
 const ws = new ReconnectingWebSocket(url);
 /**
@@ -112,7 +112,7 @@ ws.onmessage = e => {
             const history = history_.reduce((map,v)=> {
                 v.amount = new BigNumber(v.amount).shiftedBy(AIONDECIMAL)
                 if (v.amount.toString() === 'NaN') v.amount = new BigNumber(0)
-                map[v.hash] = v;
+                map[v.hash+v.type] = v;
                 return map
             }, {});
             const { history: oldHistory } = store.getState().account

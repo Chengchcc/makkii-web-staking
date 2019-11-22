@@ -96,7 +96,7 @@ const undelegate = props => {
             <FormItem label={i18n.t('operation_form.label_tx_fee')}>
                 ≈ {fee_undelegate.toFixed(5)} AION
             </FormItem>
-            <FormItem label={i18n.t('operation_form.label_lock_period')}>{`${period_block} blocks`}</FormItem>
+            <FormItem label={i18n.t('operation_form.label_lock_period')}>{`${period_block} ${i18n.t('unit_block')} ≈ 1 ${i18n.t('unit_day')}`}</FormItem>
             <FormItem label={i18n.t('operation_form.label_delegate_amount')}>
                 {staked.toFixed(5)} AION
             </FormItem>

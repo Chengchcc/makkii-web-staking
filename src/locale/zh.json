@@ -65,8 +65,9 @@
     "transaction":{
         "label_tx_hash": "交易哈希",
         "label_delegate": "质押",
-        "label_undelegate": "撤回",
-        "label_withdraw":"体现",
+        "label_undelegate": "撤回请求",
+        "label_withdraw":"提现",
+        "label_finalized": "撤回确认",
         "label_normal": "普通"
     },
     "refresh_control":{
@@ -86,5 +87,7 @@
     "button_cancel": "取消",
     "button_more": "更多",
     "button_all": "全部",
-    "message_copied":"已复制"
+    "message_copied":"已复制",
+    "unit_block": "区块",
+    "unit_day": "天"
 }

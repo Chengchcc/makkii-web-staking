@@ -6,8 +6,8 @@
         "label_rewards": "Rewards"
     },
     "pool_lists": {
-        "title": "Pool Lists",
-        "card_title":"Top pools"
+        "title": "Pool List",
+        "card_title":"Top Pools"
     },
     "undelegations": {
         "title": "Pending Undelegations",
@@ -67,6 +67,7 @@
         "label_delegate": "Delegate",
         "label_undelegate": "Undelegate",
         "label_withdraw":"Withdraw",
+        "label_finalized": "Undelegation Finalized",
         "label_normal": "Normal"
     },
     "refresh_control":{
@@ -86,5 +87,7 @@
     "button_cancel":"Cancel",
     "button_more": "More",
     "button_all": "All",
-    "message_copied":"Copied"
+    "message_copied":"Copied",
+    "unit_block":"Blocks",
+    "unit_day":"Day"
 }

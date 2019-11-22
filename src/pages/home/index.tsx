@@ -361,8 +361,7 @@ const home = (props: Ihome) => {
             >
                 <div className='home-header'>
                     <div className='header-account'>
-                        <span style={{ fontSize: '16px' }}>{i18n.t('account.label_my_account')}:</span>
-                        <span style={{ fontSize: '12px' }}>{`${formatAddress(address)}`}</span>
+                        <span style={{ fontSize: '14px' }}><strong>{i18n.t('account.label_my_account')}:</strong>{` ${formatAddress(address)}`}</span>
                         <CommonButton className='switch-account-button button-orange' title={i18n.t('account.button_switch_account')} onClick={handleSwitchAccount} />
                     </div>
                     {renderAccountInfo(accountInfo, account)}

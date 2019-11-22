@@ -18,6 +18,8 @@ const tansferType = type => {
             return `${i18n.t('transaction.label_undelegate')} :`;
         case 'ADSWithdraw':
             return `${i18n.t('transaction.label_withdraw')} :`;
+        case 'UnbondFinalized':
+            return `${i18n.t('transaction.label_finalized')} :`;
         default:
             return `${i18n.t('transaction.label_normal')} :`
     }
@@ -31,7 +33,7 @@ const TransactionItem: React.FC<ItransactionItem> = props => {
     // const date = new Date(parseInt(timestamp, 16)*1000).Format('yyyy-MM-dd hh:mm', 24)
     return (
         <div className='transaction-item'>
-           {/* <div className='transcation-item-header'>
+            {/* <div className='transcation-item-header'>
                 {formatTxHash(hash)}
             </div> */}
             <div className='transaction-info'>
@@ -40,7 +42,7 @@ const TransactionItem: React.FC<ItransactionItem> = props => {
                     <span>{meta.name || pool.address}</span>
                 </div>
                 <div>
-                    <div className='transaction-pool-label'>{/* date */} {`${i18n.t('transaction.label_tx_hash')} :`} { `${hash.substring(0, 8)  }...${  hash.substring(60)}` }</div>
+                    <div className='transaction-pool-label'>{/* date */} {`${i18n.t('transaction.label_tx_hash')} :`} {`${hash.substring(0, 8)}...${hash.substring(60)}`}</div>
                     <div className='transaction-pool-label'>
                         <span>{tansferType(type)} </span>
                         <span>{`${amount.toFixed(5)} AION`}</span>
