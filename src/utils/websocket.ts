@@ -8,7 +8,7 @@ import { hexCharCodeToStr } from '.';
 
 declare const NETWORK: string;
 
-const url = NETWORK!=='amity'? WS_URL_AMITY: WS_URL_MAINNET
+const url = NETWORK==='amity'? WS_URL_AMITY: WS_URL_MAINNET
 // const url =  WS_URL_MAINNET
 const ws = new ReconnectingWebSocket(url);
 /**
