@@ -60,7 +60,7 @@
         "label_inActive":"Inactive",
         "label_poor": "Poor",
         "label_excellent": "Excellent",
-        "label_moderatae": "Moderate"
+        "label_moderate": "Moderate"
     },
     "transaction":{
         "label_tx_hash": "Tx Hash",

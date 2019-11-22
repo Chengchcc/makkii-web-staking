@@ -60,7 +60,7 @@
         "label_inActive": "已停止",
         "label_poor": "较差",
         "label_excellent": "优良",
-        "label_moderatae": "中等"
+        "label_moderate": "中等"
     },
     "transaction":{
         "label_tx_hash": "交易哈希",
