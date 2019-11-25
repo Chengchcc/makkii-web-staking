@@ -67,7 +67,14 @@ export const handleSwitchAccount = () => {
                 liquidBalance: new BigNumber(-1),
                 stakedAmount: new BigNumber(-1),
                 undelegationAmount: new BigNumber(-1),
-                rewards: new BigNumber(-1),}))
+                rewards: new BigNumber(-1),
+                delegations: {},
+                history: {},
+                undelegations:{},
+                delegationsPagination:{current:0, total:0},
+                undelegationsPagination:{current:0, total:0},
+                historyPagination:{current:0, total:0},
+            }))
             wsSend({ method: 'eth_getBalance', params: [r] })
             wsSend({ method: 'delegations', params: [r, 0, 10] })
             wsSend({ method: 'transactions', params: [r, 0, 10] })
