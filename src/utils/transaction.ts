@@ -1,7 +1,7 @@
 /* eslint-disable no-return-await */
 import BigNumber from 'bignumber.js'
 import {gasPrice, gas_delegate, gas_withdraw, gas_undelegate, POOL_REGISTRY_AMITY, POOL_REGISTRY_MAINNET, AIONDECIMAL} from '@utils/constants.json';
-import ABICoder from '../libs/web3-avm-abi'
+import ABICoder from 'aion-web3-avm-abi';
 
 declare const NETWORK: string;
 
