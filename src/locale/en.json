@@ -34,7 +34,7 @@
         "label_fees": "Fees",
         "label_performance": "Performance",
         "label_stake_weight": "Stake Weight",
-        "label_capacity": "Capacity",
+        "label_capacity": "Remaining Capacity",
         "label_self_bond": "Self Bond",
         "label_total_staked": "Total Staked",
         "label_account_stake": "Amount delegated to this pool",
