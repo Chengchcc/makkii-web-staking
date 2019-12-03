@@ -14,6 +14,7 @@ import i18n from '@utils/i18n';
 import FormItem from '../operation_form_item';
 import { commonGoback } from '../util';
 import CheckMark from "@/img/checkMark.svg";
+import { send_event_log } from '@utils/httpclient';
 
 const fee_delegate = new BigNumber(gas_delegate).times(gasPrice).shiftedBy(AIONDECIMAL);
 
@@ -62,7 +63,18 @@ const delegate = props => {
         }
         const res = await call_delegate(operation.pool, amount);
         if (res) {
-            // send succss
+
+            send_event_log({
+                user: 'staking',
+                event: 'STAKING_DELEGATE',
+                data: {
+                    amount: amount,
+                    pool_address: operation.pool,
+                    pool_name: meta.name,
+                }
+            });
+
+            // send success
             setModalState({
                 visible: true,
                 txHash: res

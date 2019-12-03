@@ -14,6 +14,7 @@ import i18n from '@utils/i18n';
 import FormItem from '../operation_form_item';
 import { commonGoback } from '../util';
 import CheckMark from "@/img/checkMark.svg";
+import { send_event_log } from '@utils/httpclient';
 
 const fee_withdraw = new BigNumber(gas_withdraw).times(gasPrice).shiftedBy(AIONDECIMAL);
 
@@ -61,6 +62,17 @@ const withdraw = props => {
         }
         const res = await call_withdraw(operation.pool)
         if(res) {
+
+            send_event_log({
+                user: 'staking',
+                event: 'STAKING_WITHDRAW',
+                data: {
+                    amount: amount,
+                    pool_address: operation.pool,
+                    pool_name: meta.name,
+                }
+            });
+
             // send success
             setModalState({
                 visible: true,

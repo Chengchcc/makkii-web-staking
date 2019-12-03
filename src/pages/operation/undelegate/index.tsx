@@ -13,6 +13,7 @@ import {copyInputValue} from "@utils/util";
 import i18n from '@utils/i18n';
 import FormItem from '../operation_form_item';
 import { commonGoback } from '../util';
+import { send_event_log } from '@utils/httpclient';
 
 import CheckMark from "@/img/checkMark.svg";
 
@@ -64,6 +65,17 @@ const undelegate = props => {
         }
         const res = await call_undelegate(operation.pool, amount, 0)
         if(res){
+
+            send_event_log({
+                user: 'staking',
+                event: 'STAKING_UNDELEGATE',
+                data: {
+                    amount: amount,
+                    pool_address: operation.pool,
+                    pool_name: meta.name,
+                }
+            });
+
             // send success
             setModalState({
                 visible: true,
