@@ -16,7 +16,7 @@ const tansferType = type => {
             return `${i18n.t('transaction.label_delegate')} :`;
         case 'ADSUndelegated':
             return `${i18n.t('transaction.label_undelegate')} :`;
-        case 'ADSWithdraw':
+        case 'ADSWithdrew':
             return `${i18n.t('transaction.label_withdraw')} :`;
         case 'UnbondFinalized':
             return `${i18n.t('transaction.label_finalized')} :`;
