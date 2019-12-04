@@ -11,10 +11,10 @@ import Modal, {alert} from '@components/modal'
 import Image from '@components/default-img'
 import {copyInputValue} from "@utils/util";
 import i18n from '@utils/i18n';
+import { send_event_log } from '@utils/httpclient';
 import FormItem from '../operation_form_item';
 import { commonGoback } from '../util';
 import CheckMark from "@/img/checkMark.svg";
-import { send_event_log } from '@utils/httpclient';
 
 const fee_withdraw = new BigNumber(gas_withdraw).times(gasPrice).shiftedBy(AIONDECIMAL);
 
@@ -67,7 +67,7 @@ const withdraw = props => {
                 user: 'staking',
                 event: 'STAKING_WITHDRAW',
                 data: {
-                    amount: amount,
+                    amount,
                     pool_address: operation.pool,
                     pool_name: meta.name,
                 }
