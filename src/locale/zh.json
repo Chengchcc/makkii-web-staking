@@ -13,7 +13,8 @@
         "title": "申请撤回中",
         "card_title": "申请撤回中",
         "label_blockNumber":"块号",
-        "label_amount":"金额"
+        "label_amount":"金额",
+        "label_blockRemaining": "剩余块数"
     },
     "history": {
         "title": "质押记录",

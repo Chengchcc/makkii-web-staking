@@ -8,25 +8,26 @@ export enum operationType {
     default,
 }
 export interface IAccountState {
-    address: string,
-    liquidBalance: BigNumber,
-    stakedAmount: BigNumber,
-    undelegationAmount: BigNumber,
-    rewards: BigNumber,
-    delegations: { [poolAddres: string]: Idelegation }
-    delegationsPagination: {current:number, total: number}
-    undelegationsPagination: {current:number, total: number}
-    historyPagination:{current:number,total:number}
-    undelegations: { [poolAddres: string]: Iundelegation }
-    pools: { [poolAddres: string]: Ipool }
-    history: {[hash: string]: Itransaction}
+    address: string;
+    liquidBalance: BigNumber;
+    stakedAmount: BigNumber;
+    undelegationAmount: BigNumber;
+    rewards: BigNumber;
+    delegations: { [poolAddres: string]: Idelegation };
+    delegationsPagination: {current: number, total: number};
+    undelegationsPagination: {current: number, total: number};
+    historyPagination:{current: number, total: number};
+    undelegations: { [poolAddres: string]: Iundelegation };
+    pools: { [poolAddres: string]: Ipool };
+    history: {[hash: string]: Itransaction};
     operation: {
         pool: string,
-        type: operationType
-    }
+        type: operationType,
+    };
+    block_number_last: number;
 }
 const defaultState2: IAccountState={
-    address: '',
+    address: '0xa0a63231acabac26e6442814ae50a6dfb6781ebd6194054ec8cd23aac0da4752',
     liquidBalance: new BigNumber(-1),
     stakedAmount: new BigNumber(-1),
     undelegationAmount: new BigNumber(-1),
@@ -39,9 +40,10 @@ const defaultState2: IAccountState={
     undelegationsPagination:{current:0, total:0},
     historyPagination:{current:0, total:0},
     operation: {
-        pool:'',
-        type: operationType.default
-    }
+        pool: "",
+        type: operationType.default,
+    },
+    block_number_last: 0,
 }
 // const defaultState: IAccountState = {
 //     address: '',

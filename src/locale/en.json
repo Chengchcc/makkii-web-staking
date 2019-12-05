@@ -13,7 +13,8 @@
         "title": "Pending Undelegations",
         "card_title": "Pending Undelegations",
         "label_blockNumber":"Block number",
-        "label_amount":"Amount"
+        "label_amount":"Amount",
+        "label_blockRemaining": "Block Remaining"
     },
     "history": {
         "title": "Stake History",

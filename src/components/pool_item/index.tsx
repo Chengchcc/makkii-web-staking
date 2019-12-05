@@ -14,10 +14,10 @@ interface IPoolItem {
 }
 
 interface IPoolItemWithMore {
-    pool: Ipool
-    value: any
-    info: Array<Iinfo>
-    toPool: (pool: string) => any
+    pool: Ipool;
+    value: any;
+    info: Array<Iinfo>;
+    toPool: (pool: string) => any;
 }
 
 export interface Iinfo {
@@ -52,6 +52,7 @@ export interface Iinfo {
 
 
 const lists = (info, src, extra) => {
+
     return (
         <>
             {
@@ -64,7 +65,7 @@ const lists = (info, src, extra) => {
                                 <span>{i18n.t(title)}: </span>
                                 <span>{render(val, extra)}</span>
                             </div>
-                        )
+                        );
                     }
                     return (
                         <div key={title} className='pool-info-label-list'>
@@ -130,7 +131,7 @@ export const PoolItemMore: React.FC<IPoolItemWithMore> = props => {
                 </div>
             </div>
             <div className='pool-info'>
-                {lists(info, value, {})}
+                {lists(info, value, { })}
             </div>
         </div>
     )

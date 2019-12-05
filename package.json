@@ -12,7 +12,7 @@
     "clean": "rimraf ./dist",
     "build:dev": "npm run clean; cross-env NODE_ENV=development cross-env RELEVANT_PATH=staking  cross-env NETWORK=amity  webpack --config ./scripts/webpack.config.js",
     "prestart": "npm run build:dev",
-    "start": "cross-env NODE_ENV=development cross-env RELEVANT_PATH=staking  cross-env NETWORK=amity  webpack-dev-server --config ./scripts/webpack.config.js  --hot ",
+    "start": "cross-env NODE_ENV=development cross-env RELEVANT_PATH=staking  cross-env NETWORK=mainnet  webpack-dev-server --config ./scripts/webpack.config.js  --hot ",
     "build:amity": "npm run clean; cross-env NODE_ENV=production cross-env RELEVANT_PATH=staking  cross-env NETWORK=amity webpack --config ./scripts/webpack.config.js",
     "build:mainnet": "npm run clean; cross-env NODE_ENV=production cross-env RELEVANT_PATH=staking  cross-env NETWORK=mainnet webpack --config ./scripts/webpack.config.js",
     "lint": "eslint src --fix --ext tsx",

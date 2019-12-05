@@ -37,7 +37,7 @@ const Undelegations = (props) => {
         history.push('/operation');
     }
     const hasMore = pagination.current + 1 <pagination.total;
-    
+
     React.useEffect(() => {
         const element = document.getElementById('pullLoadContainer') || document.body;
         const handleScollTop = e => {
@@ -59,7 +59,7 @@ const Undelegations = (props) => {
             hasMore={hasMore}
             data={process_undelegations(undelegations)}
             renderItem={(el) => {
-                return <PoolItemMore pool={pools[el.poolAddress]} value={el} info={unDelegationInfo} toPool={toPool}/>
+                return <PoolItemMore pool={pools[el.poolAddress]} value={el} info={unDelegationInfo} toPool={toPool} type="undelegaion"/>
             }}
         />
     )

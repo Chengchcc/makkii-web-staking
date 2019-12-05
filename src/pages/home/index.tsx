@@ -42,6 +42,11 @@ export const unDelegationInfo: Array<Iinfo> = [
         title: 'undelegations.label_amount',
         dataIndex: 'amount',
         render: val => <span>{`${val.toFixed(3)} AION`}</span>
+    },
+    {
+        title: "undelegations.label_blockRemaining",
+        dataIndex: "block_number_remaining",
+        render: val => <span>{val}</span>
     }
 ]
 
@@ -148,8 +153,8 @@ const home = (props: Ihome) => {
     const timerRef = React.useRef(null);
     const dispath = useDispatch();
     const { address, pools, delegations, undelegations, history: transactions } = account;
-    
-   
+
+
 
     const toDelegate = e => {
         e.preventDefault();
