@@ -27,16 +27,16 @@ const mapToState = ({ account }): {
 let scrollTop = 0;
 const poolList = props => {
     const { history } = props;
-    const { pools, operation, delegations } = useSelector(mapToState);
+    const { pools, operation, delegations, } = useSelector(mapToState);
     const dispatch = useDispatch();
 
+
     const onRefresh = () => {
-        wsSend({ method: 'pools', params: [] })
+        wsSend({ method: 'pools', params: [] });
     }
 
     const onReachEnd = () => {
         wsSend({ method: 'pools', params: [] })
-
     }
 
     const toPool = (pool) => {
@@ -76,7 +76,7 @@ const poolList = props => {
             element.removeEventListener('scroll', handleScollTop);
         }
     });
-   
+
     const [can_undelegate, can_withdraw] = Object.keys(delegations).reduce(([arr1, arr2], el) => {
         const { stake, rewards } = delegations[el];
         if (stake.gt(0)) {

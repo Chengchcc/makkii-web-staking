@@ -4,11 +4,13 @@ import { operationType } from '@reducers/accountReducer';
 import Bignumber from 'bignumber.js';
 import { formatAddress, handleSwitchAccount } from '@utils/index';
 import { CommonButton } from '@components/button';
-import { createAction } from '@reducers/store';
+import store, { createAction } from '@reducers/store';
 import {alert} from '@components/modal';
 import Image from '@components/default-img'
 import i18n from '@utils/i18n';
+import CommissionRateChangeList from "@pages/operation/commission_rate_change_list";
 import './style.less';
+import {wsSend} from "@utils/websocket";
 
 const aionLogo = require("@/img/metaLogo2.png");
 
@@ -22,9 +24,10 @@ const mapToState = ({ account }) => {
         account: account.address !== '' ? {
             address: account.address,
             stake: delegation.stake || new Bignumber(0),
-            rewards: delegation.rewards || new Bignumber(0)
-        } : undefined
-    }
+            rewards: delegation.rewards || new Bignumber(0),
+            commissionRateChanges: account.commissionRateChanges,
+        } : undefined,
+    };
 }
 
 
@@ -33,7 +36,7 @@ const poolDetailInfo = [
         title: 'operation.label_fees',
         dataIndex: 'fee',
         render: val => {
-            return <span>{val.times(100).toFixed(4) } %</span>
+            return <span>{val.times(100).toFixed(4)}%</span>
         }
     },
     {
@@ -51,7 +54,7 @@ const poolDetailInfo = [
         title: 'operation.label_stake_weight',
         dataIndex: 'stakeWeight',
         render: val => {
-            return <span>{val.times(100).toFixed(4)}</span>
+            return <span>{val.times(100).toFixed(4)}%</span>
         }
     },
     {
@@ -198,7 +201,14 @@ const Pageoperation = props => {
         if (!operation.pool) {
             history.replace('/poolList')
         }
-    },[operation])
+
+        console.log("only execute once for operation not change")
+        wsSend({method: "commission_rate_changes",
+            params: [operation.pool, 0, 50]});
+        return () => {
+            store.dispatch(createAction("account/update")({commissionRateChanges: []}));
+        };
+    },[operation]);
 
 
     const accountLabel = () => {
@@ -217,11 +227,12 @@ const Pageoperation = props => {
 
     const { meta: { logo, name, url }, active, address: poolAddress } = pool;
 
-
     return (
         <div className='operation-container'>
             <div className='operation-pool-basic'>
-                <Image src={logo} alt="" />
+                <div>
+                    <Image src={logo} alt="" />
+                </div>
                 <ul>
                     {name&& <li>{name}</li>}
                     <li><span className={active === '0x01' ? 'poolActive' : 'poolInActive'} /> {
@@ -237,6 +248,7 @@ const Pageoperation = props => {
                 {renderPoolDetail(poolDetailInfo, pool)}
             </div>
             <CommonButton title={i18n.t('operation.button_delegate')} onClick={toDelegate} className='button-orange'/>
+            <CommissionRateChangeList commissionRateChanges={account.commissionRateChanges} pool={pool}/>
         </div>
     )
 }

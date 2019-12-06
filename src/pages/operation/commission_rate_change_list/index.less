@@ -1,0 +1,39 @@
+.commission-rate-changes-list{
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-top: 20px;
+  padding: 10px;
+  .commission-rate-changes-title {
+    background-color: #e1dccd;
+    color: #0c0c0c;
+    border-radius: 5px 5px 0 0 ;
+    height: 30px;
+    line-height: 30px;
+    margin: 0;
+  }
+  >.commission-rate_change-item{
+    width: 100%;
+    background-color: #e1dccd;
+    @height: 26px;
+    margin: 5px 0;
+    padding: 0 10px;
+    //min-height: 140px;
+    box-sizing: border-box;
+    >div{
+      width:100%;
+      display: grid;
+      grid-template-columns: 40% 60%;
+      height: @height;
+      *{
+        line-height: @height;
+        color: #0c0c0c;
+        font-size: 14px;
+      }
+    }
+    &:last-child{
+      border-radius: 0 0 5px 5px;
+    }
+  }
+}

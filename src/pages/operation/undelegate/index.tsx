@@ -3,7 +3,7 @@ import '../style.less';
 import { useSelector } from 'react-redux';
 import { operationType } from '@reducers/accountReducer';
 import { formatAddress, validateAmount } from '@utils/index';
-import {gas_undelegate, gasPrice, AIONDECIMAL, period_block} from '@utils/constants.json';
+import {gas_undelegate, gasPrice, AIONDECIMAL, undelegation_lock_blocks} from '@utils/constants.json';
 import BigNumber from 'bignumber.js';
 import { CommonButton } from '@components/button';
 import { call_undelegate } from '@utils/transaction';
@@ -108,7 +108,7 @@ const undelegate = props => {
             <FormItem label={i18n.t('operation_form.label_tx_fee')}>
                 ≈ {fee_undelegate.toFixed(5)} AION
             </FormItem>
-            <FormItem label={i18n.t('operation_form.label_lock_period')}>{`${period_block} ${i18n.t('unit_block')} ≈ 1 ${i18n.t('unit_day')}`}</FormItem>
+            <FormItem label={i18n.t('operation_form.label_lock_period')}>{`${undelegation_lock_blocks} ${i18n.t('unit_block')} ≈ 1 ${i18n.t('unit_day')}`}</FormItem>
             <FormItem label={i18n.t('operation_form.label_delegate_amount')}>
                 {staked.toFixed(5)} AION
             </FormItem>

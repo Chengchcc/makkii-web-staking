@@ -3,8 +3,9 @@
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import BigNumber from 'bignumber.js';
 import store, { createAction } from '../reducers/store';
-import { AIONDECIMAL, WS_URL_AMITY, WS_URL_MAINNET } from './constants.json'
+import { AIONDECIMAL, WS_URL_AMITY, WS_URL_MAINNET, undelegation_lock_blocks, BLOCK_NUMBER_BASE } from './constants.json'
 import { hexCharCodeToStr } from '.';
+import {parse} from "@typescript-eslint/parser";
 
 declare const NETWORK: string;
 
@@ -14,13 +15,13 @@ const ws = new ReconnectingWebSocket(url);
 /**
 name:
 logo:
-url: 
+url:
  */
 
 /**
- * 
- * @param pools 
- * @param callback 
+ *
+ * @param pools
+ * @param callback
  */
 const process_pools = async (pools: { [address: string]: any }, callback) => {
     const map = {};
@@ -96,7 +97,7 @@ ws.onmessage = e => {
             Object.keys(undelegations).forEach(v => {
                 undelegations[v].amount = new BigNumber(undelegations[v].amount).shiftedBy(AIONDECIMAL)
                 undelegations[v].blockNumber = undelegations[v].block_number
-                unDelegated = unDelegated.plus(undelegations[v].amount)
+                unDelegated = unDelegated.plus(undelegations[v].amount);
             })
             const { undelegations: oldUndelegations } = store.getState().account
             store.dispatch(createAction('account/update')(
@@ -126,14 +127,45 @@ ws.onmessage = e => {
             if(!result) break;
             store.dispatch(createAction('account/update')({ liquidBalance: new BigNumber(result||0).shiftedBy(AIONDECIMAL) }))
             break;
+        case "eth_blockNumber": {
+            console.log("ws recv [eth_blockNumber] res=>", result);
+            if (!result) { break; }
+            const blockNumber = parseInt(result, 10);
+            store.dispatch(createAction("account/update")({ block_number_last: isNaN(blockNumber) ? 0 : blockNumber }));
+            const { undelegations, commissionRateChanges, block_number_last } = store.getState().account;
+            Object.values(undelegations).forEach((v) => {
+                v.block_number_remaining = undelegation_lock_blocks - blockNumber +  v.blockNumber;
+                v.block_number_remaining = v.block_number_remaining < 0 ? 0 : v.block_number_remaining;
+            });
+            commissionRateChanges.forEach((v) => {
+                v.block_number_remain = BLOCK_NUMBER_BASE - block_number_last + v.block_number;
+                v.block_number_remain = v.block_number_remain < 0 ? 0 : v.block_number_remain;
+            });
+        }
+                                break;
+        case "commission_rate_changes": {
+            console.log("ws recv [commission_rate_changes] res=>", result);
+            if (!result) { break; }
+            const { block_number_last } = store.getState().account;
+            result.data.forEach((v) => {
+                v.commission_rate = new BigNumber(v.commission_rate).dividedBy(10000, 10);
+                v.block_timestamp = parseInt(v.block_timestamp, 16) * 1000;
+                if (block_number_last) {
+                    v.block_number_remain = BLOCK_NUMBER_BASE - block_number_last + v.block_number;
+                    v.block_number_remain = v.block_number_remain < 0 ? 0 : v.block_number_remain;
+                }
+            });
+            store.dispatch(createAction("account/update")({ commissionRateChanges: result.data }));
+        }
+                                        break;
         default:
-            break
+            break;
 
     }
 }
 
-export const wsSend = (payload, time = 1) => {
-    if (ws === null || time < 1) return
+export const wsSend = (payload, time = 1): boolean => {
+    if (ws === null || time < 1) { return false; }
     if (ws.readyState !== 1) {
         setTimeout(() => {
             wsSend(payload, time === undefined ? 5 : time - 1)
@@ -141,8 +173,12 @@ export const wsSend = (payload, time = 1) => {
     }
     ws.send(JSON.stringify(payload))
     console.log('ws send =>', JSON.stringify(payload))
+    return true;
 }
 
-
-
+function ws_interval(obj) {
+    if (!wsSend(obj) ) { return; }
+    setTimeout(() => ws_interval(obj), 10000);
+}
+ws_interval({ method: 'eth_blockNumber', params: [] });
 export default ws;

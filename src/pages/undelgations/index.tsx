@@ -37,7 +37,7 @@ const Undelegations = (props) => {
         history.push('/operation');
     }
     const hasMore = pagination.current + 1 <pagination.total;
-    
+
     React.useEffect(() => {
         const element = document.getElementById('pullLoadContainer') || document.body;
         const handleScollTop = e => {
