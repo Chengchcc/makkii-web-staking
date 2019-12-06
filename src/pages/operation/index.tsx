@@ -18,6 +18,7 @@ const aionLogo = require("@/img/metaLogo2.png");
 const mapToState = ({ account }) => {
     const poolAddress = account.operation.pool || "";
     const delegation = account.delegations[poolAddress] || {};
+    console.log('account:', account)
     return {
         operation: account.operation,
         pool: account.pools[poolAddress],
@@ -225,7 +226,7 @@ const Pageoperation = props => {
         return <div/>;
     }
 
-    const { meta: { logo, name, url }, active, address: poolAddress } = pool;
+    const { meta: { logo, name, url }, active, address: poolAddress,  } = pool;
 
     return (
         <div className='operation-container'>
@@ -248,7 +249,7 @@ const Pageoperation = props => {
                 {renderPoolDetail(poolDetailInfo, pool)}
             </div>
             <CommonButton title={i18n.t('operation.button_delegate')} onClick={toDelegate} className='button-orange'/>
-            <CommissionRateChangeList commissionRateChanges={account.commissionRateChanges} pool={pool}/>
+            <CommissionRateChangeList commissionRateChanges={(account || {}).commissionRateChanges} pool={pool}/>
         </div>
     )
 }

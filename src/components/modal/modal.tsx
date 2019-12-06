@@ -41,7 +41,7 @@ const Modal: React.FC<ModalProps> = props => {
             )
         })
         : null
-    const footerGrid = { gridTemplateColumns: `repeat(${actions.length},auto)` }
+    const footerGrid = { gridTemplateColumns: `repeat(${actions.length}, ${ 100 / actions.length}%)`}
     console.log('footerGrid', footerGrid);
     return (
         <div className="modal-container"
