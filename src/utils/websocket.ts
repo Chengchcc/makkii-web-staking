@@ -275,7 +275,7 @@ const wsSend_ = (payload, time = 1): boolean => {
 
 const getWsId = () => {
     ws_id += 1;
-    return ws_id;
+    return `${ws_id}`;
 };
 
 export const wsSend = (payload_: any, callback?: (data: any) => any) => {
@@ -303,7 +303,7 @@ export const wsSend = (payload_: any, callback?: (data: any) => any) => {
     };
 };
 
-const get_kick_id = (method: string, id: number) => `KICK_${method}${id}`;
+const get_kick_id = (method: string, id: string) => `KICK_${method}${id}`;
 
 const add_ticket = (id: string, kickFunc: KICK_METHOD) => {
     const kick = WS_TICKET_MAP[id];

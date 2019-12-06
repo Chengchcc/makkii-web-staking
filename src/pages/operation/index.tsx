@@ -18,7 +18,6 @@ const aionLogo = require("@/img/metaLogo2.png");
 const mapToState = ({ account }) => {
     const poolAddress = account.operation.pool || "";
     const delegation = account.delegations[poolAddress] || {};
-    console.log("account:", account);
     return {
         operation: account.operation,
         pool: account.pools[poolAddress],
