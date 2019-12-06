@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 
-const defaultImg = require('@img/default.png');
+const defaultImg = require("@img/default.png");
 
 const Image = props => {
     const { src, ...reset } = props;
@@ -10,11 +10,16 @@ const Image = props => {
             setSource(src);
         }
     }, [src]);
-    return <img src={source} {...reset} alt=""
-    onError={()=>{
-        setSource(defaultImg)
-    }}
-    />
-}
+    return (
+        <img
+            src={source}
+            {...reset}
+            alt=""
+            onError={() => {
+                setSource(defaultImg);
+            }}
+        />
+    );
+};
 
-export default Image
+export default Image;

@@ -1,21 +1,22 @@
 import React, { Component } from "react";
 import "./index.less";
 
-
 let id = 0;
 
-class SwipeAction extends Component<any, {
-    left: number,
-    transition: string
-}> {
+class SwipeAction extends Component<
+    any,
+    {
+        left: number;
+        transition: string;
+    }
+> {
+    startX: number;
 
-    startX: number
-    
-    startY: number
+    startY: number;
 
     timer: NodeJS.Timeout;
 
-    classId: string
+    classId: string;
 
     constructor(props) {
         super(props);
@@ -24,29 +25,28 @@ class SwipeAction extends Component<any, {
             transition: ""
         };
         this.classId = `swipe-${id}`;
-        id+=1;
+        id += 1;
     }
 
     componentDidMount() {
         const element = document.getElementById(this.classId);
-        element.addEventListener('touchstart', this.onTouchStart);
-        element.addEventListener('touchmove', this.onTouchMove);
+        element.addEventListener("touchstart", this.onTouchStart);
+        element.addEventListener("touchmove", this.onTouchMove);
     }
-
 
     componentWillUnmount(): void {
         if (this.timer) clearTimeout(this.timer);
         const element = document.getElementById(this.classId);
-        element.removeEventListener('touchstart', this.onTouchStart);
-        element.removeEventListener('touchmove', this.onTouchMove);
+        element.removeEventListener("touchstart", this.onTouchStart);
+        element.removeEventListener("touchmove", this.onTouchMove);
     }
 
-    onTouchStart = e=>{
+    onTouchStart = e => {
         this.startX = e.touches[0].clientX;
         this.startY = e.touches[0].clientY;
-    }
+    };
 
-    onTouchMove = e=>{
+    onTouchMove = e => {
         const nowX = e.touches[0].clientX;
         const nowY = e.touches[0].clientY;
 
@@ -55,7 +55,11 @@ class SwipeAction extends Component<any, {
 
         this.startX = nowX;
         this.startY = nowY;
-        if (Math.abs(diffY) < 5 && Math.abs(diffY) < Math.abs(diffX) && Math.abs(diffX)> 10) {
+        if (
+            Math.abs(diffY) < 5 &&
+            Math.abs(diffY) < Math.abs(diffX) &&
+            Math.abs(diffX) > 10
+        ) {
             if (diffX < 0) {
                 this.setState({ left: -100 });
             } else if (diffX > 0) {
@@ -70,15 +74,17 @@ class SwipeAction extends Component<any, {
                 }, 3000);
             }
         }
-    }
+    };
 
     render() {
         const { left, transition } = this.state;
         return (
             <div className="swiper-action">
-                <div className="wsiper-action-content"
-                    id = {this.classId}
-                    style={{ left, transition }}>
+                <div
+                    className="wsiper-action-content"
+                    id={this.classId}
+                    style={{ left, transition }}
+                >
                     {this.props.children}
                 </div>
             </div>
