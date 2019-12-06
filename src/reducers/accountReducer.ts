@@ -25,8 +25,9 @@ export interface IAccountState {
         type: operationType,
     };
     block_number_last: number;
+    commissionRateChanges: any[];
 }
-const defaultState2: IAccountState={
+const defaultState2: IAccountState = {
     address: '0xa0a63231acabac26e6442814ae50a6dfb6781ebd6194054ec8cd23aac0da4752',
     liquidBalance: new BigNumber(-1),
     stakedAmount: new BigNumber(-1),
@@ -44,6 +45,7 @@ const defaultState2: IAccountState={
         type: operationType.default,
     },
     block_number_last: 0,
+    commissionRateChanges: [],
 }
 // const defaultState: IAccountState = {
 //     address: '',

@@ -46,7 +46,7 @@ export const unDelegationInfo: Array<Iinfo> = [
     {
         title: "undelegations.label_blockRemaining",
         dataIndex: "block_number_remaining",
-        render: val => <span>{val}</span>
+        render: val => <span>{[null, undefined].indexOf(val) > -1 ? i18n.t("estimating") : `#${val}`}</span>
     }
 ]
 
@@ -158,6 +158,7 @@ const home = (props: Ihome) => {
 
     const toDelegate = e => {
         e.preventDefault();
+
         dispath(createAction('account/update')({
             operation: {
                 ...operation,
@@ -387,7 +388,6 @@ const home = (props: Ihome) => {
                     </div>
                 }
             </ReactPullLoad>
-
         </div>
     )
 }

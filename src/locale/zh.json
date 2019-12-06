@@ -90,5 +90,19 @@
     "button_all": "全部",
     "message_copied":"已复制",
     "unit_block": "区块",
-    "unit_day": "天"
+    "unit_day": "天",
+    "unit_minute": "分钟",
+    "unit_day2": "天",
+    "unit_second": "秒",
+    "unit_hour": "时",
+    "commission_rate_change": {
+        "rate": "佣金",
+        "tx_hash": "交易哈希",
+        "block_number": "块号",
+        "block_number_remain": "剩余块数",
+        "time": "时间",
+        "commission_rate_changes": "佣金变更中"
+    },
+    "estimating": "估算中...",
+    "wait_for_finalization": "等待确认"
 }

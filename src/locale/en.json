@@ -12,7 +12,7 @@
     "undelegations": {
         "title": "Pending Undelegations",
         "card_title": "Pending Undelegations",
-        "label_blockNumber":"Block number",
+        "label_blockNumber":"Block Number",
         "label_amount":"Amount",
         "label_blockRemaining": "Block Remaining"
     },
@@ -90,5 +90,19 @@
     "button_all": "All",
     "message_copied":"Copied",
     "unit_block":"Blocks",
-    "unit_day":"Day"
+    "unit_day":"Day",
+    "unit_minute": "Minute(s)",
+    "unit_day2": "Day(s)",
+    "unit_second": "Second(s)",
+    "unit_hour": "Hour(s)",
+    "commission_rate_change": {
+        "rate": "Rate",
+        "tx_hash": "Tx Hash",
+        "block_number": "Block No",
+        "block_number_remain": "Block Remaining",
+        "time": "Time",
+        "commission_rate_changes": "Pending Fee Changes"
+    },
+    "estimating": "Estimating...",
+    "wait_for_finalization": "Wait For Finalization"
 }
