@@ -14,7 +14,7 @@
         "card_title": "Pending Undelegations",
         "label_blockNumber":"Block Number",
         "label_amount":"Amount",
-        "label_blockRemaining": "Block Remaining"
+        "label_blockRemaining": "Lock Blocks Left"
     },
     "history": {
         "title": "Stake History",
@@ -96,10 +96,10 @@
     "unit_second": "Second(s)",
     "unit_hour": "Hour(s)",
     "commission_rate_change": {
-        "rate": "Rate",
+        "rate": "Fees",
         "tx_hash": "Tx Hash",
         "block_number": "Block No",
-        "block_number_remain": "Block Remaining",
+        "block_number_remain": "Lock Blocks Left",
         "time": "Time",
         "commission_rate_changes": "Pending Fee Changes"
     },

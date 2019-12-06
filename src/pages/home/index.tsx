@@ -4,7 +4,7 @@ import { History } from 'history'
 import { operationType } from '@reducers/accountReducer';
 import Spin from '@components/spin';
 import { useSelector, useDispatch } from 'react-redux';
-import { formatAddress, handleSwitchAccount } from '@utils/index';
+import { formatAddress, handleSwitchAccount , block_remain_to_time } from '@utils/index';
 import { wsSend, wsSendOnce } from '@utils/websocket';
 import { PoolItem, PoolItemMore, Iinfo } from '@components/pool_item';
 import TransactionItem from '@components/transaction_item';
@@ -41,12 +41,12 @@ export const unDelegationInfo: Array<Iinfo> = [
     {
         title: 'undelegations.label_amount',
         dataIndex: 'amount',
-        render: val => <span>{`${val.toFixed(3)} AION`}</span>
+        render: val => <span>{`${val.toFixed(5)} AION`}</span>
     },
     {
         title: "undelegations.label_blockRemaining",
         dataIndex: "block_number_remaining",
-        render: val => <span>{[null, undefined].indexOf(val) > -1 ? i18n.t("estimating") : `#${val}`}</span>
+        render: val => <span>{[null, undefined].indexOf(val) > -1 ? i18n.t("estimating") : `${val} ${block_remain_to_time(val)}`}</span>
     }
 ]
 

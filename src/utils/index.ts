@@ -106,3 +106,13 @@ export const handleSwitchAccount = () => {
     }
 
 }
+export function block_remain_to_time(time_remain){
+    let suffix = null;
+    if (time_remain > 8640) { suffix =  `${Math.ceil(time_remain / 8640)  } ${  i18n.t("unit_day2")}`;
+    } else if (time_remain > 360) { suffix = `${Math.ceil(time_remain / 360)  } ${  i18n.t("unit_hour")}`;
+    } else if (time_remain > 6) { suffix = `${Math.ceil(time_remain / 6)  } ${  i18n.t("unit_minute")}`;
+    } else { suffix = time_remain > 0 ?
+        `≈ ${  time_remain * 10  } ${i18n.t("unit_second")}` : i18n.t("wait_for_finalization");
+    }
+    return time_remain > 6 ? `≈ ${suffix}` : suffix;
+};

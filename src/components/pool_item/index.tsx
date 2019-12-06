@@ -102,7 +102,9 @@ export const PoolItem: React.FC<IPoolItem> = props => {
                 {lists(INFOS, pool, {})}
             </div>
             <IconRight className='pool-detail-img'/> */}
-            <div className="left-logo" style={{background: meta.logo ? `url(${meta.logo})` : `url(${defaultLogo})`, border: meta.logo ? "" : "1px solid #ddd"}} />
+            <div style={{border: meta.logo ? "" : "1px solid #ddd"}}>
+                <img className="left-logo" src={meta.logo || defaultLogo} alt=""/>
+            </div>
             <div style={{backgroundColor: active === "0x01" ? "#08de00" : "#e84f4f"}} />
             <span>{meta.name || pool.address}</span>
             <IconRight className='pool-detail-img'/>
@@ -125,7 +127,7 @@ export const PoolItemMore: React.FC<IPoolItemWithMore> = props => {
             window.scrollTo(0, 0)
         }}>
             <div className='pool-meta'>
-                <Image src={meta.logo} className='pool-logo' alt="" />
+                    <Image src={meta.logo} className='pool-logo' alt="" />
                 <div className='pool-meta-name'>
                     {formatPoolName(meta.name || pool.address)}
                 </div>

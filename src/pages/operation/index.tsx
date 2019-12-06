@@ -18,6 +18,7 @@ const aionLogo = require("@/img/metaLogo2.png");
 const mapToState = ({ account }) => {
     const poolAddress = account.operation.pool || "";
     const delegation = account.delegations[poolAddress] || {};
+    console.log('account:', account)
     return {
         operation: account.operation,
         pool: account.pools[poolAddress],
@@ -36,7 +37,7 @@ const poolDetailInfo = [
         title: 'operation.label_fees',
         dataIndex: 'fee',
         render: val => {
-            return <span>{val.times(100).toFixed(4)}</span>
+            return <span>{val.times(100).toFixed(4)}%</span>
         }
     },
     {
@@ -54,7 +55,7 @@ const poolDetailInfo = [
         title: 'operation.label_stake_weight',
         dataIndex: 'stakeWeight',
         render: val => {
-            return <span>{val.times(100).toFixed(4)}</span>
+            return <span>{val.times(100).toFixed(4)}%</span>
         }
     },
     {
@@ -225,12 +226,14 @@ const Pageoperation = props => {
         return <div/>;
     }
 
-    const { meta: { logo, name, url }, active, address: poolAddress } = pool;
+    const { meta: { logo, name, url }, active, address: poolAddress,  } = pool;
 
     return (
         <div className='operation-container'>
             <div className='operation-pool-basic'>
-                <Image src={logo} alt="" />
+                <div>
+                    <Image src={logo} alt="" />
+                </div>
                 <ul>
                     {name&& <li>{name}</li>}
                     <li><span className={active === '0x01' ? 'poolActive' : 'poolInActive'} /> {
@@ -246,7 +249,7 @@ const Pageoperation = props => {
                 {renderPoolDetail(poolDetailInfo, pool)}
             </div>
             <CommonButton title={i18n.t('operation.button_delegate')} onClick={toDelegate} className='button-orange'/>
-            <CommissionRateChangeList commissionRateChanges={account.commissionRateChanges} pool={pool}/>
+            <CommissionRateChangeList commissionRateChanges={(account || {}).commissionRateChanges} pool={pool}/>
         </div>
     )
 }

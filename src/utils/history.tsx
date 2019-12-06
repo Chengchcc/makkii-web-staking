@@ -23,12 +23,13 @@ export default history;
 export const withNavBar = (WrappedCompnented, title?:string) => (props) => {
     const {goBack,canGoBack} = WrappedCompnented;
     let hasNavbar = history.length >1;
+
     if(canGoBack&&(typeof canGoBack ==='function')){
         hasNavbar = hasNavbar && canGoBack();
     }
     return (
         <>
-            <div style={{marginTop: hasNavbar?'35px':'0px'}}>
+            <div style={{marginTop: "35px"}}>
              <WrappedCompnented {...props} />
             </div>
             <NavBar title={title} hide={!hasNavbar} onLeftClick={() => {
