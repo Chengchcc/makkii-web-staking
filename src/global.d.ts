@@ -11,7 +11,7 @@ declare module '*.svg' {
     export default content
 }
 
-interface Window {
+declare interface Window {
     store: any
     makkii: any
 }

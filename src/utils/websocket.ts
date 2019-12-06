@@ -5,11 +5,18 @@ import BigNumber from 'bignumber.js';
 import store, { createAction } from '../reducers/store';
 import { AIONDECIMAL, WS_URL_AMITY, WS_URL_MAINNET, undelegation_lock_blocks, BLOCK_NUMBER_BASE } from './constants.json'
 import { hexCharCodeToStr } from '.';
-import {parse} from "@typescript-eslint/parser";
 
 declare const NETWORK: string;
 
-const url = NETWORK==='amity'? WS_URL_AMITY: WS_URL_MAINNET
+let ws_id = 0;
+
+type KICK_METHOD = () => any
+
+const WS_TICKET_MAP: { [id: string]: KICK_METHOD } = {}
+
+
+
+const url = NETWORK === 'amity' ? WS_URL_AMITY : WS_URL_MAINNET
 // const url =  WS_URL_MAINNET
 const ws = new ReconnectingWebSocket(url);
 /**
@@ -52,24 +59,24 @@ const process_pools = async (pools: { [address: string]: any }, callback) => {
     }
     Object.values(map).forEach((el: any) => {
         el.posWeight = total_pos_blk.isEqualTo(0) ? new BigNumber(0) : el.posBlkTotal.dividedBy(total_pos_blk);
-        el.stakeWeight = total_stake.isEqualTo(0)? new BigNumber(0) : el.stakeTotal.dividedBy(total_stake);
-        el.performance = el.stakeWeight.isEqualTo(0)? new BigNumber(0): el.posWeight.dividedBy(el.stakeWeight);
+        el.stakeWeight = total_stake.isEqualTo(0) ? new BigNumber(0) : el.stakeTotal.dividedBy(total_stake);
+        el.performance = el.stakeWeight.isEqualTo(0) ? new BigNumber(0) : el.posWeight.dividedBy(el.stakeWeight);
     });
     callback({ pools: map });
 }
-ws.onmessage = e => {
-    const { method, result } = JSON.parse(e.data);
+
+const handle_result = (method, result) => {
     switch (method) {
         case 'pools':
             console.log('ws recv [pools] res=>', result);
-            if(!result) break;
+            if (!result) break;
             process_pools(result, (payload) => {
                 store.dispatch(createAction('account/update')(payload))
             })
             break;
         case 'delegations': {
             console.log('ws recv [delgations] res=>', result);
-            if(!result) break;
+            if (!result) break;
             const { total_pages, current_page, data } = result;
             let stake = new BigNumber(0)
             let rewards = new BigNumber(0)
@@ -84,12 +91,12 @@ ws.onmessage = e => {
             const { delegations: oldDelegations } = store.getState().account
             store.dispatch(createAction('account/update')(
                 { stakedAmount: stake, rewards, delegations: { ...oldDelegations, ...delegations }, delegationsPagination: { current: current_page, total: total_pages } }
-                ))
+            ))
         }
             break;
         case 'undelegations': {
             console.log('ws recv [undelegations] res=>', result);
-            if(!result) break;
+            if (!result) break;
             const { total_pages, current_page, data } = result;
 
             let unDelegated = new BigNumber(0);
@@ -102,30 +109,30 @@ ws.onmessage = e => {
             const { undelegations: oldUndelegations } = store.getState().account
             store.dispatch(createAction('account/update')(
                 { undelegationAmount: unDelegated, undelegations: { ...oldUndelegations, ...undelegations }, undelegationsPagination: { current: current_page, total: total_pages } }
-                ))
+            ))
         }
             break;
         case 'transactions': {
             console.log('ws recv [transactions] res=>', result);
-            if(!result) break;
+            if (!result) break;
             const { total_pages, current_page, data } = result;
             const history_ = [...data];
-            const history = history_.reduce((map,v)=> {
+            const history = history_.reduce((map, v) => {
                 v.amount = new BigNumber(v.amount).shiftedBy(AIONDECIMAL)
                 if (v.amount.toString() === 'NaN') v.amount = new BigNumber(0)
-                map[v.hash+v.type] = v;
+                map[v.hash + v.type] = v;
                 return map
             }, {});
             const { history: oldHistory } = store.getState().account
             store.dispatch(createAction('account/update')(
                 { history: { ...oldHistory, ...history }, historyPagination: { current: current_page, total: total_pages } }
-                ))
+            ))
         }
             break;
         case 'eth_getBalance':
             console.log('ws recv [eth_getBalance] res=>', result);
-            if(!result) break;
-            store.dispatch(createAction('account/update')({ liquidBalance: new BigNumber(result||0).shiftedBy(AIONDECIMAL) }))
+            if (!result) break;
+            store.dispatch(createAction('account/update')({ liquidBalance: new BigNumber(result || 0).shiftedBy(AIONDECIMAL) }))
             break;
         case "eth_blockNumber": {
             console.log("ws recv [eth_blockNumber] res=>", result);
@@ -133,7 +140,7 @@ ws.onmessage = e => {
             const blockNumber = parseInt(result, 10);
             store.dispatch(createAction("account/update")({ block_number_last: isNaN(blockNumber) ? 0 : blockNumber }));
             const { undelegations, commissionRateChanges, block_number_last } = store.getState().account;
-            Object.values(undelegations).forEach((v) => {
+            Object.values(undelegations).forEach((v:any) => {
                 v.block_number_remaining = undelegation_lock_blocks - blockNumber +  v.blockNumber;
                 v.block_number_remaining = v.block_number_remaining < 0 ? 0 : v.block_number_remaining;
             });
@@ -164,11 +171,12 @@ ws.onmessage = e => {
     }
 }
 
-export const wsSend = (payload, time = 1): boolean => {
+
+const wsSend_ = (payload, time = 1): boolean => {
     if (ws === null || time < 1) { return false; }
     if (ws.readyState !== 1) {
         setTimeout(() => {
-            wsSend(payload, time === undefined ? 5 : time - 1)
+            wsSend_(payload, time === undefined ? 5 : time - 1)
         }, 2000)
     }
     ws.send(JSON.stringify(payload))
@@ -176,9 +184,96 @@ export const wsSend = (payload, time = 1): boolean => {
     return true;
 }
 
+
+const getWsId = () => {
+    ws_id += 1
+    return ws_id
+}
+
+
+export const wsSend = (payload_: any, callback?: (data: any) => any) => {
+    const payload = payload_.id ? payload_ : { ...payload_, id: getWsId() }
+    let handler = e => {
+        const { method, result, id } = JSON.parse(e.data);
+        if (method === payload.method && id === payload.id) {
+            ws.removeEventListener('message', handler);
+            handler = null;
+            // default handle result
+            handle_result(method, result)
+            // if callback; handle message data
+            if (callback) {
+                callback(JSON.parse(e.data))
+            }
+        }
+    }
+    ws.addEventListener("message", handler)
+    wsSend_(payload);
+    return () => {
+        if (handler !== null) {
+            ws.removeEventListener('message', handler);
+        }
+    }
+}
+
+const get_kick_id = (method: string, id: number) => `KICK_${method}${id}`;
+
+const add_ticket = (id: string, kickFunc: KICK_METHOD) => {
+    const kick = WS_TICKET_MAP[id];
+    if (typeof kick === 'function') {
+        kick();
+    }
+    WS_TICKET_MAP[id] = kickFunc;
+}
+
+const burn_ticket = (id) => {
+    const kick = WS_TICKET_MAP[id];
+    if (typeof kick === 'function') {
+        kick();
+    }
+    delete WS_TICKET_MAP[id]
+}
+
+export const wsSendOnce = (payload_: {
+    method: string,
+    params: any[]
+}) => {
+    const payload = {
+        ...payload_,
+        id: getWsId()
+    }
+    const kick = wsSend(payload, (data) => {
+        // callback burn kick
+        const { method, id } = data;
+        const kick_id = get_kick_id(method, id);
+        burn_ticket(kick_id);
+    })
+    // add kick
+    const kick_id = get_kick_id(payload.method, payload.id);
+    add_ticket(kick_id, kick)
+}
+
+export const clearWsTikcet = (method: string) => {
+    Object.keys(WS_TICKET_MAP).forEach(k=>{
+        if(k.indexOf(method)>=0){
+            burn_ticket(k)
+        }
+    })
+}
+
+
 function ws_interval(obj) {
     if (!wsSend(obj) ) { return; }
     setTimeout(() => ws_interval(obj), 10000);
 }
+
+
 ws_interval({ method: 'eth_blockNumber', params: [] });
+
+
+
+
+
+
+
+
 export default ws;

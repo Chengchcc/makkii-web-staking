@@ -2,7 +2,7 @@
 import store, { createAction } from '@reducers/store';
 import { alert } from '@components/modal';
 import BigNumber from 'bignumber.js';
-import { wsSend } from './websocket';
+import { wsSend, wsSendOnce, clearWsTikcet } from './websocket';
 import i18n from './i18n';
 
 export const formatPoolName = poolName => {
@@ -62,6 +62,10 @@ export const handleSwitchAccount = () => {
     if (makkii.isconnect()) {
         makkii.switchAccount().then(r => {
             console.log('handleSwitchAccount', r);
+            clearWsTikcet('eth_getBalance');
+            clearWsTikcet('delegations');
+            clearWsTikcet('transactions');
+            clearWsTikcet('undelegations');
             store.dispatch(createAction('account/update')({ 
                 address: r,  
                 liquidBalance: new BigNumber(-1),
@@ -75,11 +79,11 @@ export const handleSwitchAccount = () => {
                 undelegationsPagination:{current:0, total:0},
                 historyPagination:{current:0, total:0},
             }))
-            wsSend({ method: 'eth_getBalance', params: [r] })
-            wsSend({ method: 'delegations', params: [r, 0, 10] })
-            wsSend({ method: 'transactions', params: [r, 0, 10] })
+            wsSendOnce({ method: 'eth_getBalance', params: [r] })
+            wsSendOnce({ method: 'delegations', params: [r, 0, 10] })
+            wsSendOnce({ method: 'transactions', params: [r, 0, 10] })
             wsSend({ method: 'pools', params: [] })
-            wsSend({ method: 'undelegations', params: [r, 0, 10] })
+            wsSendOnce({ method: 'undelegations', params: [r, 0, 10] })
         }).catch(err => {
             console.log('switch account error=>', err);
         })

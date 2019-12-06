@@ -5,7 +5,7 @@ import 'makkii-webview-bridge';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import store, { createAction } from '@reducers/store';
-import { wsSend } from '@utils/websocket';
+import { wsSend, wsSendOnce } from '@utils/websocket';
 import history from '@utils/history';
 import { I18nextProvider } from "react-i18next";
 import i18n from "@utils/i18n";
@@ -44,21 +44,21 @@ if (makkii.isconnect()) {
         store.dispatch(createAction('account/update')({
             address: r
         }))
-        wsSend({ method: 'eth_getBalance', params: [r] })
-        wsSend({ method: 'delegations', params: [r, 0, 10] })
-        wsSend({ method: 'transactions', params: [r, 0, 10] })
+        wsSendOnce({ method: 'eth_getBalance', params: [r] })
+        wsSendOnce({ method: 'delegations', params: [r, 0, 10] })
+        wsSendOnce({ method: 'transactions', params: [r, 0, 10] })
         wsSend({ method: 'pools', params: [] })
-        wsSend({ method: 'undelegations', params: [r, 0, 10] })
+        wsSendOnce({ method: 'undelegations', params: [r, 0, 10] })
         history.push('/home')
     })
 } else {
     const { address: r } = store.getState().account;
     if (r) {
-        wsSend({ method: 'eth_getBalance', params: [r] })
-        wsSend({ method: 'delegations', params: [r, 0, 10] })
-        wsSend({ method: 'transactions', params: [r, 0, 10] })
+        wsSendOnce({ method: 'eth_getBalance', params: [r] })
+        wsSendOnce({ method: 'delegations', params: [r, 0, 10] })
+        wsSendOnce({ method: 'transactions', params: [r, 0, 10] })
         wsSend({ method: 'pools', params: [] })
-        wsSend({ method: 'undelegations', params: [r, 0, 10] })
+        wsSendOnce({ method: 'undelegations', params: [r, 0, 10] })
         history.push('/home')
     }
 }

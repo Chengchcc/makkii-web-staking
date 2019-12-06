@@ -2,8 +2,8 @@
 import React from 'react'
 // components
 import i18n from '@utils/i18n';
-import { message } from "@/components/message/utils";
-import Msg from "@/components/icon/msg";
+import { message } from "@components/message/utils";
+import Msg from "@components/icon/msg";
 
 export const aionMessage = (msg) => {
     message({

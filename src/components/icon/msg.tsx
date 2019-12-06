@@ -1,7 +1,10 @@
+/* eslint-disable radix */
 import React from 'react'
-class Msg extends React.Component {
+
+// eslint-disable-next-line react/prefer-stateless-function
+class Msg extends React.Component<any> {
     render() {
-        const props = this.props
+        const {props} = this
         const { style } = props
         return (
             <svg viewBox = '0 0 1024 1024' width={parseInt(this.props.width)} height={props.height !== undefined ? parseInt(this.props.height) : parseInt(this.props.width)}
@@ -25,9 +28,7 @@ class Msg extends React.Component {
     48.4352-54.016 31.1808S217.0368 487.7824 217.0368 453.376s24.1664-48.4352 54.016-31.1808S325.0688 481.28 325.0688 515.7376zM469.1456 599.04c0
     34.4576-24.1664 48.4352-54.016 31.1808s-54.016-59.2384-54.016-93.6448 24.1664-48.4352 54.016-31.1808S469.1456 564.48 469.1456 599.04zM613.2736
      682.1376c0 34.4576-24.1664 48.4352-54.016 31.1808S505.2416 654.1824 505.2416 619.52s24.1664-48.4352 54.016-31.1808 54.016 59.3408
-     54.016 93.7984z' fill='#F6F6F6'>
-
-                </path>
+     54.016 93.7984z' fill='#F6F6F6' />
             </svg>
         )
     }

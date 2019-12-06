@@ -42,7 +42,8 @@ module.exports = {
     'no-console':[0],
     "@typescript-eslint/no-unused-vars": "error",
     "jsx-a11y/anchor-is-valid": 0,
-    "global-require": 0 
+    "global-require": 0,
+    "no-restricted-globals":["error", "isNAN"] 
   },
   settings: {
     "import/resolver": {

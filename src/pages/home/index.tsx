@@ -5,7 +5,7 @@ import { operationType } from '@reducers/accountReducer';
 import Spin from '@components/spin';
 import { useSelector, useDispatch } from 'react-redux';
 import { formatAddress, handleSwitchAccount } from '@utils/index';
-import { wsSend } from '@utils/websocket';
+import { wsSend, wsSendOnce } from '@utils/websocket';
 import { PoolItem, PoolItemMore, Iinfo } from '@components/pool_item';
 import TransactionItem from '@components/transaction_item';
 import { createAction } from '@reducers/store';
@@ -231,11 +231,11 @@ const home = (props: Ihome) => {
         }
         if (action === STATS.refreshing) {// refreshing
             // onRefresh();
-            wsSend({ method: 'eth_getBalance', params: [address] })
-            wsSend({ method: 'delegations', params: [address, 0, 10] })
-            wsSend({ method: 'transactions', params: [address, 0, 10] })
+            wsSendOnce({ method: 'eth_getBalance', params: [address] })
+            wsSendOnce({ method: 'delegations', params: [address, 0, 10] })
+            wsSendOnce({ method: 'transactions', params: [address, 0, 10] })
             wsSend({ method: 'pools', params: [] })
-            wsSend({ method: 'undelegations', params: [address, 0, 10] })
+            wsSendOnce({ method: 'undelegations', params: [address, 0, 10] })
             timerRef.current = setTimeout(actionTimeOut, 10*1000);
         } else if (action === STATS.loading) {// loading more
             // nothiing

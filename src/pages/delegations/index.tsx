@@ -3,7 +3,7 @@ import MoreList from '@components/more_list';
 import { PoolItemMore } from '@components/pool_item';
 import {process_delegations,delegationInfo } from '@pages/home';
 import { useSelector, useDispatch } from 'react-redux';
-import { wsSend } from '@utils/websocket';
+import { wsSendOnce } from '@utils/websocket';
 import { createAction } from '@reducers/store';
 import { operationType } from '@reducers/accountReducer';
 
@@ -21,10 +21,10 @@ const Delegations = (props) => {
     const {history} = props;
     const { delegations,pools,address,pagination } = useSelector(mapToState);
     const onRefresh = () => {
-        wsSend({ method: 'delegations', params: [address, 0, 10] })
+        wsSendOnce({ method: 'delegations', params: [address, 0, 10] })
     }
     const onReachEnd = () => {
-        wsSend({ method: 'delegations', params: [address, pagination.current, 10] })
+        wsSendOnce({ method: 'delegations', params: [address, pagination.current, 10] })
 
     }
     const dispatch = useDispatch();

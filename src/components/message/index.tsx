@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './index.less';
 
-class Message extends Component {
+class Message extends Component<any, any> {
     constructor(props) {
         super(props)
         this.state = {
@@ -13,6 +13,7 @@ class Message extends Component {
             })
         }, parseFloat(props.duration))
     }
+
     componentDidMount() {
         setTimeout(() => {
             this.setState({
@@ -20,9 +21,10 @@ class Message extends Component {
             })
         }, 0)
     }
+
     render() {
         return (
-            <div className={'common-message ' + this.state.animationClass} style={this.props.style}>
+            <div className={`common-message ${  this.state.animationClass}`} style={this.props.style}>
                 {this.props.children}
             </div>
         )
