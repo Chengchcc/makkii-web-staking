@@ -140,8 +140,8 @@ const handle_result = (method, result) => {
             const blockNumber = parseInt(result, 10);
             store.dispatch(createAction("account/update")({ block_number_last: isNaN(blockNumber) ? 0 : blockNumber }));
             const { undelegations, commissionRateChanges, block_number_last } = store.getState().account;
-            Object.values(undelegations).forEach((v:any) => {
-                v.block_number_remaining = undelegation_lock_blocks - blockNumber +  v.blockNumber;
+            Object.values(undelegations).forEach((v: any) => {
+                v.block_number_remaining = undelegation_lock_blocks - blockNumber + v.blockNumber;
                 v.block_number_remaining = v.block_number_remaining < 0 ? 0 : v.block_number_remaining;
             });
             commissionRateChanges.forEach((v) => {
@@ -149,7 +149,7 @@ const handle_result = (method, result) => {
                 v.block_number_remain = v.block_number_remain < 0 ? 0 : v.block_number_remain;
             });
         }
-                                break;
+            break;
         case "commission_rate_changes": {
             console.log("ws recv [commission_rate_changes] res=>", result);
             if (!result) { break; }
@@ -164,7 +164,7 @@ const handle_result = (method, result) => {
             });
             store.dispatch(createAction("account/update")({ commissionRateChanges: result.data }));
         }
-                                        break;
+            break;
         default:
             break;
 
@@ -211,6 +211,7 @@ export const wsSend = (payload_: any, callback?: (data: any) => any) => {
     return () => {
         if (handler !== null) {
             ws.removeEventListener('message', handler);
+            handler = null;
         }
     }
 }
@@ -253,8 +254,8 @@ export const wsSendOnce = (payload_: {
 }
 
 export const clearWsTikcet = (method: string) => {
-    Object.keys(WS_TICKET_MAP).forEach(k=>{
-        if(k.indexOf(method)>=0){
+    Object.keys(WS_TICKET_MAP).forEach(k => {
+        if (k.indexOf(method) >= 0) {
             burn_ticket(k)
         }
     })
@@ -262,7 +263,7 @@ export const clearWsTikcet = (method: string) => {
 
 
 function ws_interval(obj) {
-    if (!wsSend(obj) ) { return; }
+    if (!wsSend(obj)) { return; }
     setTimeout(() => ws_interval(obj), 10000);
 }
 
