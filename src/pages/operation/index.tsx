@@ -33,7 +33,7 @@ const poolDetailInfo = [
         title: 'operation.label_fees',
         dataIndex: 'fee',
         render: val => {
-            return <span>{val.times(100).toFixed(4)}</span>
+            return <span>{val.times(100).toFixed(4) } %</span>
         }
     },
     {
