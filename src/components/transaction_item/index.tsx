@@ -13,15 +13,15 @@ interface ItransactionItem {
 const tansferType = type => {
     switch (type) {
         case 'ADSDelegated':
-            return `${i18n.t('transaction.label_delegate')} :`;
+            return `${i18n.t('transaction.label_delegate')}: `;
         case 'ADSUndelegated':
-            return `${i18n.t('transaction.label_undelegate')} :`;
+            return `${i18n.t('transaction.label_undelegate')}: `;
         case 'ADSWithdrew':
-            return `${i18n.t('transaction.label_withdraw')} :`;
+            return `${i18n.t('transaction.label_withdraw')}: `;
         case 'UnbondFinalized':
-            return `${i18n.t('transaction.label_finalized')} :`;
+            return `${i18n.t('transaction.label_finalized')}: `;
         default:
-            return `${i18n.t('transaction.label_normal')} :`
+            return `${i18n.t('transaction.label_normal')}: `
     }
 }
 
@@ -42,9 +42,9 @@ const TransactionItem: React.FC<ItransactionItem> = props => {
                     <span>{meta.name || pool.address}</span>
                 </div>
                 <div>
-                    <div className='transaction-pool-label'>{/* date */} {`${i18n.t('transaction.label_tx_hash')} :`} {`${hash.substring(0, 8)}...${hash.substring(60)}`}</div>
+                    <div className='transaction-pool-label'>{/* date */} {`${i18n.t('transaction.label_tx_hash')}:`} {`${hash.substring(0, 8)}...${hash.substring(60)}`}</div>
                     <div className='transaction-pool-label'>
-                        <span>{tansferType(type)} </span>
+                        <span>{tansferType(type)}</span>
                         <span>{`${amount.toFixed(5)} AION`}</span>
                     </div>
                 </div>
