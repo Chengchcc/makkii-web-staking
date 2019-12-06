@@ -59,7 +59,7 @@ const Undelegations = (props) => {
             hasMore={hasMore}
             data={process_undelegations(undelegations)}
             renderItem={(el) => {
-                return <PoolItemMore pool={pools[el.poolAddress]} value={el} info={unDelegationInfo} toPool={toPool} type="undelegaion"/>
+                return <PoolItemMore pool={pools[el.poolAddress]} value={el} info={unDelegationInfo} toPool={toPool}/>
             }}
         />
     )

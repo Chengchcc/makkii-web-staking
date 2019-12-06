@@ -15,7 +15,7 @@ import { CommonButton } from '@components/button';
 import i18n from '@utils/i18n';
 import Card from './card';
 import './style.less';
-
+import { block_remain_to_time } from "../../utils/index";
 const logo = require("@/img/metaLogo2.png")
 
 
@@ -46,7 +46,7 @@ export const unDelegationInfo: Array<Iinfo> = [
     {
         title: "undelegations.label_blockRemaining",
         dataIndex: "block_number_remaining",
-        render: val => <span>{[null, undefined].indexOf(val) > -1 ? i18n.t("estimating") : `#${val}`}</span>
+        render: val => <span>{[null, undefined].indexOf(val) > -1 ? i18n.t("estimating") : `${val} ${block_remain_to_time(val)}`}</span>
     }
 ]
 

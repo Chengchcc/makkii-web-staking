@@ -36,7 +36,7 @@ const poolDetailInfo = [
         title: 'operation.label_fees',
         dataIndex: 'fee',
         render: val => {
-            return <span>{val.times(100).toFixed(4)}</span>
+            return <span>{val.times(100).toFixed(4)}%</span>
         }
     },
     {
@@ -54,7 +54,7 @@ const poolDetailInfo = [
         title: 'operation.label_stake_weight',
         dataIndex: 'stakeWeight',
         render: val => {
-            return <span>{val.times(100).toFixed(4)}</span>
+            return <span>{val.times(100).toFixed(4)}%</span>
         }
     },
     {
@@ -230,7 +230,9 @@ const Pageoperation = props => {
     return (
         <div className='operation-container'>
             <div className='operation-pool-basic'>
-                <Image src={logo} alt="" />
+                <div>
+                    <Image src={logo} alt="" />
+                </div>
                 <ul>
                     {name&& <li>{name}</li>}
                     <li><span className={active === '0x01' ? 'poolActive' : 'poolInActive'} /> {
