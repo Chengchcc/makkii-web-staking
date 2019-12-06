@@ -41,7 +41,7 @@ export const unDelegationInfo: Array<Iinfo> = [
     {
         title: 'undelegations.label_amount',
         dataIndex: 'amount',
-        render: val => <span>{`${val.toFixed(3)} AION`}</span>
+        render: val => <span>{`${val.toFixed(5)} AION`}</span>
     },
     {
         title: "undelegations.label_blockRemaining",

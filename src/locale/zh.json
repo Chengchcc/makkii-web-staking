@@ -32,7 +32,7 @@
         "button_delegate": "委托",
         "button_unDelegate": "申请撤回委托",
         "button_withdraw": "提现",
-        "label_fees": "佣金",
+        "label_fees": "手续费",
         "label_performance": "绩效",
         "label_stake_weight": "质押占比",
         "label_capacity": "剩余额度",
