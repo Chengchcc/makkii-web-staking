@@ -1,11 +1,16 @@
-import { Idelegation, Iundelegation, Ipool, Itransaction } from '@interfaces/index';
-import BigNumber from 'bignumber.js';
+import {
+    Idelegation,
+    Iundelegation,
+    Ipool,
+    Itransaction
+} from "@interfaces/index";
+import BigNumber from "bignumber.js";
 
 export enum operationType {
     delegate,
     withdraw,
     undelegate,
-    default,
+    default
 }
 export interface IAccountState {
     address: string;
@@ -14,15 +19,15 @@ export interface IAccountState {
     undelegationAmount: BigNumber;
     rewards: BigNumber;
     delegations: { [poolAddres: string]: Idelegation };
-    delegationsPagination: {current: number, total: number};
-    undelegationsPagination: {current: number, total: number};
-    historyPagination:{current: number, total: number};
+    delegationsPagination: { current: number; total: number };
+    undelegationsPagination: { current: number; total: number };
+    historyPagination: { current: number; total: number };
     undelegations: { [poolAddres: string]: Iundelegation };
     pools: { [poolAddres: string]: Ipool };
-    history: {[hash: string]: Itransaction};
+    history: { [hash: string]: Itransaction };
     operation: {
-        pool: string,
-        type: operationType,
+        pool: string;
+        type: operationType;
     };
     block_number_last: number;
     commissionRateChanges: any[];
@@ -36,17 +41,17 @@ const defaultState2: IAccountState = {
     delegations: {},
     undelegations: {},
     pools: {},
-    history:{},
-    delegationsPagination:{current:0, total:0},
-    undelegationsPagination:{current:0, total:0},
-    historyPagination:{current:0, total:0},
+    history: {},
+    delegationsPagination: { current: 0, total: 0 },
+    undelegationsPagination: { current: 0, total: 0 },
+    historyPagination: { current: 0, total: 0 },
     operation: {
         pool: "",
-        type: operationType.default,
+        type: operationType.default
     },
     block_number_last: 0,
-    commissionRateChanges: [],
-}
+    commissionRateChanges: []
+};
 // const defaultState: IAccountState = {
 //     address: '',
 //     liquidBalance: new BigNumber(100),
@@ -130,12 +135,16 @@ const defaultState2: IAccountState = {
 //     }
 // }
 
-const accountReducer = (state: IAccountState = defaultState2, action): IAccountState => {
-    if (action.type === 'account/update') {
-        return { ...state, ...action.payload }
-    }if(action.type === 'account/setAccount') {
-        return {...state, address: action.payload}
+const accountReducer = (
+    state: IAccountState = defaultState2,
+    action
+): IAccountState => {
+    if (action.type === "account/update") {
+        return { ...state, ...action.payload };
     }
-    return state
-}
+    if (action.type === "account/setAccount") {
+        return { ...state, address: action.payload };
+    }
+    return state;
+};
 export default accountReducer;
