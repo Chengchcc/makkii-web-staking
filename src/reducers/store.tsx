@@ -1,18 +1,18 @@
 /* eslint-disable global-require */
 /* eslint-disable import/no-extraneous-dependencies */
-import { createStore, combineReducers } from 'redux';
-import accountReducers from '@reducers/accountReducer';
+import { createStore, combineReducers } from "redux";
+import accountReducers from "@reducers/accountReducer";
 
 const reducers = combineReducers({
-    account: accountReducers,
-})
+    account: accountReducers
+});
 
 // eslint-disable-next-line import/no-mutable-exports
 let store;
-if(process.env.NODE_ENV === 'development'){
-    const {devToolsEnhancer} = require('redux-devtools-extension');
-    store =  createStore(reducers, devToolsEnhancer());
-}else{
+if (process.env.NODE_ENV === "development") {
+    const { devToolsEnhancer } = require("redux-devtools-extension");
+    store = createStore(reducers, devToolsEnhancer());
+} else {
     store = createStore(reducers);
 }
 

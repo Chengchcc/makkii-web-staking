@@ -1,9 +1,9 @@
 export enum STATS {
-  init = '',
-  pulling = 'pulling',
-  enough = 'pulling enough',
-  refreshing = 'refreshing',
-  refreshed = 'refreshed',
-  reset = 'reset',
-  loading = 'loading' // loading more
+    init = "",
+    pulling = "pulling",
+    enough = "pulling enough",
+    refreshing = "refreshing",
+    refreshed = "refreshed",
+    reset = "reset",
+    loading = "loading" // loading more
 }

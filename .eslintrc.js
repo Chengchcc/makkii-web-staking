@@ -24,9 +24,11 @@ module.exports = {
   },
   plugins: [
     'react',
+    "prettier",
     '@typescript-eslint',
   ],
   rules: {
+    "prettier/prettier": "error",
     "camelcase":[0],
     "jsx-a11y/no-static-element-interactions":[0],
     "jsx-a11y/click-events-have-key-events":[0],
@@ -42,7 +44,8 @@ module.exports = {
     'no-console':[0],
     "@typescript-eslint/no-unused-vars": "error",
     "jsx-a11y/anchor-is-valid": 0,
-    "global-require": 0 
+    "global-require": 0,
+    "no-restricted-globals":["error", "isNAN"] 
   },
   settings: {
     "import/resolver": {
