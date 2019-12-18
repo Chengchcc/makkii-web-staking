@@ -43,7 +43,7 @@
     "i18next-browser-languagedetector": "^4.0.1",
     "i18next-xhr-backend": "^3.2.2",
     "js-cookie": "^2.2.1",
-    "makkii-webview-bridge": "https://github.com/makkii-dev/makkii-bridge.git#eaf6126e359366d3cff72a35ab9d4a919134cf9e",
+    "makkii-webview-bridge": "https://github.com/makkii-dev/makkii-bridge.git#16f318edb8ba3b7dc22cbf51ef276d5ce81bd898",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
     "react-i18next": "^11.2.2",
