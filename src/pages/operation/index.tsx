@@ -12,6 +12,7 @@ import i18n from "@utils/i18n";
 import CommissionRateChangeList from "@pages/operation/commission_rate_change_list";
 import "./style.less";
 import { wsSend } from "@utils/websocket";
+import makkii from "makkii-webview-bridge";
 
 const aionLogo = require("@/img/metaLogo2.png");
 
@@ -178,7 +179,6 @@ const Pageoperation = props => {
     const { history } = props;
 
     const toDelegate = () => {
-        const { makkii } = window;
         if (makkii.isconnect()) {
             if (!account) {
                 alert({

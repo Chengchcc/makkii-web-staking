@@ -8,7 +8,7 @@
     "gasPrice": 10000000000,
     "POOL_REGISTRY_AMITY":"0xa01b68fa4f947ea4829bebdac148d1f7f8a0be9a8fd5ce33e1696932bef05356",
     "POOL_REGISTRY_MAINNET":"0xa008e42a76e2e779175c589efdb2a0e742b40d8d421df2b93a8a0b13090c7cc8",
-    "WS_URL_AMITY": "wss://47.92.202.146/api",
+    "WS_URL_AMITY": "ws://47.92.202.146/api",
     "WS_URL_MAINNET": "wss://staking.makkii.dev/api",
     "APPSERVER_URL_TEST": "http://47.92.202.146:8080",
     "APPSERVER_URL_PRODUCTION": "https://www.chaion.net/makkii",

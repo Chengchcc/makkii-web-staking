@@ -2,6 +2,7 @@
 import store, { createAction } from "@reducers/store";
 import { alert } from "@components/modal";
 import BigNumber from "bignumber.js";
+import makkii from "makkii-webview-bridge";
 import { wsSend, wsSendOnce, clearWsTikcet } from "./websocket";
 import i18n from "./i18n";
 
@@ -56,7 +57,6 @@ export const genPoolName = () => {
 };
 
 export const handleSwitchAccount = () => {
-    const { makkii } = window;
     if (makkii.isconnect()) {
         makkii
             .switchAccount()

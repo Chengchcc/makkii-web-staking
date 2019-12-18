@@ -9,6 +9,7 @@ import {
     POOL_REGISTRY_MAINNET,
     AIONDECIMAL
 } from "@utils/constants.json";
+import makkii from "makkii-webview-bridge";
 import ABICoder from "../libs/aion-web3-avm-abi";
 
 declare const NETWORK: string;
@@ -17,7 +18,6 @@ const pool_address =
     NETWORK === "amity" ? POOL_REGISTRY_AMITY : POOL_REGISTRY_MAINNET;
 
 const abi = new ABICoder();
-const { makkii } = window;
 const build_transaction = (
     to: string,
     gasPrice_: string,

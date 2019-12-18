@@ -12,5 +12,4 @@ declare module "*.svg" {
 
 declare interface Window {
     store: any;
-    makkii: any;
 }
