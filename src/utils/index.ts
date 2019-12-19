@@ -1,8 +1,10 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable camelcase */
 import store, { createAction } from "@reducers/store";
 import { alert } from "@components/modal";
 import BigNumber from "bignumber.js";
-import { wsSend, wsSendOnce, clearWsTikcet } from "./websocket";
+import makkii from "makkii-webview-bridge";
+import { wsSend, clearWsTikcet } from "./websocket";
 import i18n from "./i18n";
 
 export const formatPoolName = poolName => {
@@ -56,7 +58,6 @@ export const genPoolName = () => {
 };
 
 export const handleSwitchAccount = () => {
-    const { makkii } = window;
     if (makkii.isconnect()) {
         makkii
             .switchAccount()
@@ -81,11 +82,6 @@ export const handleSwitchAccount = () => {
                         historyPagination: { current: 0, total: 0 }
                     })
                 );
-                wsSendOnce({ method: "eth_getBalance", params: [r] });
-                wsSendOnce({ method: "delegations", params: [r, 0, 10] });
-                wsSendOnce({ method: "transactions", params: [r, 0, 10] });
-                wsSend({ method: "pools", params: [] });
-                wsSendOnce({ method: "undelegations", params: [r, 0, 10] });
             })
             .catch(err => {
                 console.log("switch account error=>", err);
@@ -122,4 +118,37 @@ export function block_remain_to_time(time_remain) {
                 : i18n.t("wait_for_finalization");
     }
     return time_remain > 6 ? `≈ ${suffix}` : suffix;
+}
+export function deepMergeObject(obj1, obj2) {
+    Object.keys(obj2).forEach(key => {
+        if (key !== null) {
+            obj1[key] =
+                obj1[key] && obj1[key].toString() === "[object Object]"
+                    ? deepMergeObject(obj1[key], obj2[key])
+                    : (obj1[key] = obj2[key]);
+        }
+    });
+    return obj1;
+}
+const pool_request = [];
+
+export function getPoolLogo(pool): string {
+    if (pool.meta && pool.meta.logo !== null) {
+        if (pool.meta.logo === "undefined") {
+            return "";
+        }
+        return pool.meta.logo;
+    }
+    if (!pool_request.includes(pool.address)) {
+        pool_request.push(pool.address);
+        wsSend({ method: "pool_logo", params: [pool.address] }, () => {
+            pool_request.forEach((addr, idx) => {
+                if (addr === pool.address) {
+                    pool_request.splice(idx, 1);
+                }
+            });
+        });
+    }
+
+    return "";
 }

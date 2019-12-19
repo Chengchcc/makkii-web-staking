@@ -7,6 +7,7 @@ import { wsSend } from "@utils/websocket";
 import store, { createAction } from "@reducers/store";
 import { operationType } from "@reducers/accountReducer";
 import { Ipool, Idelegation } from "@interfaces/types";
+import { performance_low, performance_high } from "@utils/constants.json";
 
 const mapToState = ({
     account
@@ -32,11 +33,11 @@ const poolList = props => {
     const dispatch = useDispatch();
 
     const onRefresh = () => {
-        wsSend({ method: "pools", params: [] });
+        wsSend({ method: "pools", params: [false] });
     };
 
     const onReachEnd = () => {
-        wsSend({ method: "pools", params: [] });
+        wsSend({ method: "pools", params: [false] });
     };
 
     const toPool = pool => {
@@ -61,7 +62,7 @@ const poolList = props => {
 
     React.useEffect(() => {
         if (Object.keys(pools).length === 0) {
-            wsSend({ method: "pools", params: [] });
+            wsSend({ method: "pools", params: [false] });
         }
     }, [pools]);
 
@@ -108,7 +109,11 @@ const poolList = props => {
     const sorter = (a: Ipool, b: Ipool) => {
         const getLevel = (pool: Ipool) => {
             const performanceNumber = pool.performance.times(100).toNumber();
-            return performanceNumber > 95 ? 3 : performanceNumber < 90 ? 1 : 2;
+            return performanceNumber > performance_high
+                ? 3
+                : performanceNumber < performance_low
+                ? 1
+                : 2;
         };
         return getLevel(b) - getLevel(a);
     };

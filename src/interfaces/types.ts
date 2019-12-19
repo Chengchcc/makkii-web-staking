@@ -25,7 +25,7 @@ export interface Ipool {
     stakeWeight: BigNumber;
     posWeight: BigNumber;
     performance: BigNumber;
-    meta?: {
+    meta: {
         name: string;
         logo: string;
         url: string;

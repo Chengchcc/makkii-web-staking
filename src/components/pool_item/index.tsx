@@ -4,7 +4,7 @@ import { Ipool } from "@interfaces/types";
 import IconRight from "@img/arrow_right.svg";
 import Image from "@components/default-img";
 import SwipeAction from "@components/swipe_action";
-import { formatPoolName } from "@utils/index";
+import { formatPoolName, getPoolLogo } from "@utils/index";
 import i18n from "@utils/i18n";
 import "./style.less";
 
@@ -79,6 +79,7 @@ export const PoolItem: React.FC<IPoolItem> = props => {
     const { pool, toPool } = props;
     const { meta, active } = pool;
     const defaultLogo = require("@/img/default.png");
+    const poolLogo = getPoolLogo(pool);
     return (
         <SwipeAction>
             <div
@@ -90,7 +91,7 @@ export const PoolItem: React.FC<IPoolItem> = props => {
                 }}
             >
                 {/* <div className='pool-base'>
-                <Image src={meta.logo} className='pool-logo' alt="" />
+                <Image src={poolLogo} className='pool-logo' alt="" />
                 <div>
                     <span className={active === '0x01' ? 'poolActive' : 'poolInActive'} />
                     &nbsp;
@@ -101,10 +102,10 @@ export const PoolItem: React.FC<IPoolItem> = props => {
                 {lists(INFOS, pool, {})}
             </div>
             <IconRight className='pool-detail-img'/> */}
-                <div style={{ border: meta.logo ? "" : "1px solid #ddd" }}>
+                <div style={{ border: poolLogo ? "" : "1px solid #ddd" }}>
                     <img
                         className="left-logo"
-                        src={meta.logo || defaultLogo}
+                        src={poolLogo || defaultLogo}
                         alt=""
                     />
                 </div>
@@ -127,6 +128,7 @@ export const PoolItem: React.FC<IPoolItem> = props => {
 export const PoolItemMore: React.FC<IPoolItemWithMore> = props => {
     const { pool, info, value, toPool } = props;
     const { meta } = pool;
+    const poolLogo = getPoolLogo(pool);
     return (
         <div
             className="pool-item-two"
@@ -137,7 +139,7 @@ export const PoolItemMore: React.FC<IPoolItemWithMore> = props => {
             }}
         >
             <div className="pool-meta">
-                <Image src={meta.logo} className="pool-logo" alt="" />
+                <Image src={poolLogo} className="pool-logo" alt="" />
                 <div className="pool-meta-name">
                     {formatPoolName(meta.name || pool.address)}
                 </div>

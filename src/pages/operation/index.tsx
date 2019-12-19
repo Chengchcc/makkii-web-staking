@@ -12,6 +12,8 @@ import i18n from "@utils/i18n";
 import CommissionRateChangeList from "@pages/operation/commission_rate_change_list";
 import "./style.less";
 import { wsSend } from "@utils/websocket";
+import makkii from "makkii-webview-bridge";
+import { performance_low, performance_high } from "@utils/constants.json";
 
 const aionLogo = require("@/img/metaLogo2.png");
 
@@ -47,9 +49,9 @@ const poolDetailInfo = [
         render: val => {
             const n = val.times(100).toFixed(2);
             const text =
-                n < 90
+                n < performance_low
                     ? i18n.t("pool.label_poor")
-                    : n > 95
+                    : n > performance_high
                     ? i18n.t("pool.label_excellent")
                     : i18n.t("pool.label_moderate");
 
@@ -178,7 +180,6 @@ const Pageoperation = props => {
     const { history } = props;
 
     const toDelegate = () => {
-        const { makkii } = window;
         if (makkii.isconnect()) {
             if (!account) {
                 alert({

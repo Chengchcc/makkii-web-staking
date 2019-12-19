@@ -2,6 +2,7 @@
 /* eslint-disable no-param-reassign */
 import ReconnectingWebSocket from "reconnecting-websocket";
 import BigNumber from "bignumber.js";
+import { IAccountState } from "@reducers/accountReducer";
 import store, { createAction } from "../reducers/store";
 import {
     AIONDECIMAL,
@@ -53,35 +54,41 @@ const process_pools = async (pools: { [address: string]: any }, callback) => {
             posBlkTotal: new BigNumber(el.pos_blk_total),
             meta: {
                 name: el.meta_name,
-                logo: el.meta_logo,
+                logo: null,
                 url: el.meta_url,
                 tags: el.meta_tags,
                 version: el.meta_version
-            }
+            },
+            performance: new BigNumber(el.performance)
         };
         total_stake = total_stake.plus(stakeTotal);
     }
-    Object.values(map).forEach((el: any) => {
-        el.posWeight = total_pos_blk.isEqualTo(0)
-            ? new BigNumber(0)
-            : el.posBlkTotal.dividedBy(total_pos_blk);
-        el.stakeWeight = total_stake.isEqualTo(0)
-            ? new BigNumber(0)
-            : el.stakeTotal.dividedBy(total_stake);
-        el.performance = el.stakeWeight.isEqualTo(0)
-            ? new BigNumber(0)
-            : el.posWeight.dividedBy(el.stakeWeight);
-    });
     callback({ pools: map });
 };
 
-const handle_result = (method, result) => {
+const handle_result = (method, result, payload_: { params: any[] }) => {
     switch (method) {
+        case "pool_logo":
+            {
+                const address = payload_.params[0];
+                const logo = result || "undefined";
+                if (
+                    store.getState().account.pools[address].meta.logo === null
+                ) {
+                    store.dispatch(
+                        createAction("account/updatePoolLogo")({
+                            pool: address,
+                            logo
+                        })
+                    );
+                }
+            }
+            break;
         case "pools":
             console.log("ws recv [pools] res=>", result);
             if (!result) break;
             process_pools(result, payload => {
-                store.dispatch(createAction("account/update")(payload));
+                store.dispatch(createAction("account/deepUpdate")(payload));
             });
             break;
         case "delegations":
@@ -198,17 +205,15 @@ const handle_result = (method, result) => {
                     break;
                 }
                 const blockNumber = parseInt(result, 10);
-                store.dispatch(
-                    createAction("account/update")({
-                        block_number_last: isNaN(blockNumber) ? 0 : blockNumber
-                    })
-                );
+                const block_number_last = isNaN(blockNumber) ? 0 : blockNumber;
                 const {
                     undelegations,
-                    commissionRateChanges,
-                    block_number_last
-                } = store.getState().account;
-                Object.values(undelegations).forEach((v: any) => {
+                    commissionRateChanges
+                } = store.getState().account as IAccountState;
+                const undelegations_ = { ...undelegations };
+                const commissionRateChanges_ = [...commissionRateChanges];
+
+                Object.values(undelegations_).forEach((v: any) => {
                     v.block_number_remaining =
                         undelegation_lock_blocks - blockNumber + v.blockNumber;
                     v.block_number_remaining =
@@ -216,12 +221,19 @@ const handle_result = (method, result) => {
                             ? 0
                             : v.block_number_remaining;
                 });
-                commissionRateChanges.forEach(v => {
+                commissionRateChanges_.forEach(v => {
                     v.block_number_remain =
                         BLOCK_NUMBER_BASE - block_number_last + v.block_number;
                     v.block_number_remain =
                         v.block_number_remain < 0 ? 0 : v.block_number_remain;
                 });
+                store.dispatch(
+                    createAction("account/update")({
+                        block_number_last,
+                        undelegations: undelegations_,
+                        commissionRateChanges: commissionRateChanges_
+                    })
+                );
             }
             break;
         case "commission_rate_changes":
@@ -270,7 +282,6 @@ const wsSend_ = (payload, time = 1): boolean => {
         }, 2000);
     }
     ws.send(JSON.stringify(payload));
-    console.log("ws send =>", JSON.stringify(payload));
     return true;
 };
 
@@ -287,7 +298,7 @@ export const wsSend = (payload_: any, callback?: (data: any) => any) => {
             ws.removeEventListener("message", handler);
             handler = null;
             // default handle result
-            handle_result(method, result);
+            handle_result(method, result, payload);
             // if callback; handle message data
             if (callback) {
                 callback(JSON.parse(e.data));
@@ -322,7 +333,10 @@ const burn_ticket = id => {
     delete WS_TICKET_MAP[id];
 };
 
-export const wsSendOnce = (payload_: { method: string; params: any[] }) => {
+export const wsSendOnce = (
+    payload_: { method: string; params: any[] },
+    cb?: () => void
+) => {
     const payload = {
         ...payload_,
         id: getWsId()
@@ -332,6 +346,9 @@ export const wsSendOnce = (payload_: { method: string; params: any[] }) => {
         const { method, id } = data;
         const kick_id = get_kick_id(method, id);
         burn_ticket(kick_id);
+        if (cb) {
+            cb();
+        }
     });
     // add kick
     const kick_id = get_kick_id(payload.method, payload.id);
