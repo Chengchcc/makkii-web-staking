@@ -1,6 +1,6 @@
 import React from "react";
 import "../style.less";
-import { useSelector } from "react-redux";
+import { useSelector, shallowEqual } from "react-redux";
 import { operationType } from "@reducers/accountReducer";
 import { formatAddress, validateAmount, getPoolLogo } from "@utils/index";
 import {
@@ -30,8 +30,8 @@ const maptoState = ({ account }) => {
     const { delegations, operation } = account;
     const delegation = delegations[operation.pool] || {};
     return {
-        pools: account.pools,
-        operation,
+        pools: { ...account.pools },
+        operation: { ...operation },
         account: {
             address: account.address,
             staked: delegation.stake || new BigNumber(0)
@@ -44,7 +44,7 @@ const undelegate = props => {
         visible: false,
         txHash: ""
     });
-    const { account, operation, pools } = useSelector(maptoState);
+    const { account, operation, pools } = useSelector(maptoState, shallowEqual);
     const { history } = props;
     const inputRef = React.useRef(null);
     React.useEffect(() => {

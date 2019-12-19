@@ -3,7 +3,7 @@ import React from "react";
 import { History } from "history";
 import { operationType } from "@reducers/accountReducer";
 import Spin from "@components/spin";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import {
     formatAddress,
     handleSwitchAccount,
@@ -94,11 +94,11 @@ const mapToState = ({ account }) => {
         stakedAmount: account.stakedAmount,
         undelegationAmount: account.undelegationAmount,
         rewards: account.rewards,
-        pools: account.pools,
-        delegations: account.delegations,
-        undelegations: account.undelegations,
-        history: account.history,
-        operation: account.operation
+        pools: { ...account.pools },
+        delegations: { ...account.delegations },
+        undelegations: { ...account.undelegations },
+        history: { ...account.history },
+        operation: { ...account.operation }
     };
 };
 const accountInfo = [
@@ -181,7 +181,7 @@ let scrollTop = 0;
 
 const home = (props: Ihome) => {
     const { history } = props;
-    const account = useSelector(mapToState);
+    const account = useSelector(mapToState, shallowEqual);
     const accountRef = React.useRef(account);
     const [state, setState] = React.useState({
         action: STATS.init,

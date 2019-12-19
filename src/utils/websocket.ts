@@ -63,6 +63,14 @@ const process_pools = async (pools: { [address: string]: any }, callback) => {
         };
         total_stake = total_stake.plus(stakeTotal);
     }
+    Object.values(map).forEach((el: any) => {
+        el.posWeight = total_pos_blk.isEqualTo(0)
+            ? new BigNumber(0)
+            : el.posBlkTotal.dividedBy(total_pos_blk);
+        el.stakeWeight = total_stake.isEqualTo(0)
+            ? new BigNumber(0)
+            : el.stakeTotal.dividedBy(total_stake);
+    });
     callback({ pools: map });
 };
 

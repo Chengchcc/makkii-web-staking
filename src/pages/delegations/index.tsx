@@ -2,7 +2,7 @@ import React from "react";
 import MoreList from "@components/more_list";
 import { PoolItemMore } from "@components/pool_item";
 import { process_delegations, delegationInfo } from "@pages/home";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import { wsSendOnce } from "@utils/websocket";
 import { createAction } from "@reducers/store";
 import { operationType } from "@reducers/accountReducer";
@@ -10,16 +10,19 @@ import { operationType } from "@reducers/accountReducer";
 const mapToState = ({ account }) => {
     return {
         address: account.address,
-        delegations: account.delegations,
-        pools: account.pools,
+        delegations: { ...account.delegations },
+        pools: { ...account.pools },
         stakedAmount: account.stakedAmount,
-        pagination: account.delegationsPagination
+        pagination: { ...account.delegationsPagination }
     };
 };
 let scrollTop = 0;
 const Delegations = props => {
     const { history } = props;
-    const { delegations, pools, address, pagination } = useSelector(mapToState);
+    const { delegations, pools, address, pagination } = useSelector(
+        mapToState,
+        shallowEqual
+    );
     const onRefresh = () => {
         wsSendOnce({ method: "delegations", params: [address, 0, 10] });
     };

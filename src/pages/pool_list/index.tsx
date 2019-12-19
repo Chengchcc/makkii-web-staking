@@ -2,34 +2,37 @@
 import React from "react";
 import MoreList from "@components/more_list";
 import { PoolItem } from "@components/pool_item";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import { wsSend } from "@utils/websocket";
 import store, { createAction } from "@reducers/store";
 import { operationType } from "@reducers/accountReducer";
 import { Ipool, Idelegation } from "@interfaces/types";
 import { performance_low, performance_high } from "@utils/constants.json";
 
-const mapToState = ({
-    account
-}): {
-    pools: { [address: string]: Ipool };
-    delegations: { [poolAddres: string]: Idelegation };
-    operation: {
-        pool: string;
-        type: operationType;
-    };
-} => {
+const mapToState = ({ account }) => {
+    console.log("selector trigger");
     return {
-        pools: account.pools,
-        operation: account.operation,
-        delegations: account.delegations
+        pools: { ...account.pools },
+        operation: { ...account.operation },
+        delegations: { ...account.delegations }
     };
 };
 
 let scrollTop = 0;
 const poolList = props => {
     const { history } = props;
-    const { pools, operation, delegations } = useSelector(mapToState);
+    const {
+        pools,
+        operation,
+        delegations
+    }: {
+        pools: { [address: string]: Ipool };
+        delegations: { [poolAddres: string]: Idelegation };
+        operation: {
+            pool: string;
+            type: operationType;
+        };
+    } = useSelector(mapToState, shallowEqual);
     const dispatch = useDispatch();
 
     const onRefresh = () => {
@@ -64,7 +67,7 @@ const poolList = props => {
         if (Object.keys(pools).length === 0) {
             wsSend({ method: "pools", params: [false] });
         }
-    }, [pools]);
+    }, []);
 
     React.useEffect(() => {
         const element =

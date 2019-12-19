@@ -1,6 +1,6 @@
 /* eslint-disable no-nested-ternary */
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import { operationType } from "@reducers/accountReducer";
 import Bignumber from "bignumber.js";
 import { formatAddress, handleSwitchAccount } from "@utils/index";
@@ -21,15 +21,17 @@ const mapToState = ({ account }) => {
     const poolAddress = account.operation.pool || "";
     const delegation = account.delegations[poolAddress] || {};
     return {
-        operation: account.operation,
-        pool: account.pools[poolAddress],
+        operation: { ...account.operation },
+        pool: { ...account.pools[poolAddress] },
         account:
             account.address !== ""
                 ? {
                       address: account.address,
                       stake: delegation.stake || new Bignumber(0),
                       rewards: delegation.rewards || new Bignumber(0),
-                      commissionRateChanges: account.commissionRateChanges
+                      commissionRateChanges: {
+                          ...account.commissionRateChanges
+                      }
                   }
                 : undefined
     };
@@ -175,7 +177,7 @@ const renderAccountDetail = (info, src) => {
 };
 
 const Pageoperation = props => {
-    const { operation, account, pool } = useSelector(mapToState);
+    const { operation, account, pool } = useSelector(mapToState, shallowEqual);
     const dispatch = useDispatch();
     const { history } = props;
 
@@ -248,7 +250,9 @@ const Pageoperation = props => {
         if (!operation.pool) {
             history.replace("/poolList");
         }
+    }, [operation]);
 
+    React.useEffect(() => {
         console.log("only execute once for operation not change");
         wsSend({
             method: "commission_rate_changes",
@@ -259,7 +263,7 @@ const Pageoperation = props => {
                 createAction("account/update")({ commissionRateChanges: [] })
             );
         };
-    }, [operation]);
+    }, []);
 
     const accountLabel = () => {
         if (!account) return null;

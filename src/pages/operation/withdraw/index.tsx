@@ -1,6 +1,6 @@
 import React from "react";
 import "../style.less";
-import { useSelector } from "react-redux";
+import { useSelector, shallowEqual } from "react-redux";
 import { operationType } from "@reducers/accountReducer";
 import { formatAddress, validateAmount, getPoolLogo } from "@utils/index";
 import { gas_withdraw, gasPrice, AIONDECIMAL } from "@utils/constants.json";
@@ -24,8 +24,8 @@ const maptoState = ({ account }) => {
     const { delegations, operation } = account;
     const delegation = delegations[operation.pool] || {};
     return {
-        pools: account.pools,
-        operation,
+        pools: { ...account.pools },
+        operation: { ...operation },
         account: {
             address: account.address,
             rewards: delegation.rewards || new BigNumber(0)
@@ -38,7 +38,7 @@ const withdraw = props => {
         visible: false,
         txHash: ""
     });
-    const { account, operation, pools } = useSelector(maptoState);
+    const { account, operation, pools } = useSelector(maptoState, shallowEqual);
     const { history } = props;
     React.useEffect(() => {
         if (operationType.withdraw !== operation.type) {

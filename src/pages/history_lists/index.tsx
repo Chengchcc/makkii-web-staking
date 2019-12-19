@@ -1,22 +1,23 @@
 import React from "react";
 import MoreList from "@components/more_list";
 import TransactionItem from "@components/transaction_item";
-import { useSelector } from "react-redux";
+import { useSelector, shallowEqual } from "react-redux";
 import { wsSendOnce } from "@utils/websocket";
 import { process_transctions } from "@pages/home";
 
 const mapToState = ({ account }) => {
     return {
         address: account.address,
-        transactions: account.history,
-        pools: account.pools,
-        pagination: account.historyPagination
+        transactions: { ...account.history },
+        pools: { ...account.pools },
+        pagination: { ...account.historyPagination }
     };
 };
 let scrollTop = 0;
 const HistoryLists = () => {
     const { transactions, pools, address, pagination } = useSelector(
-        mapToState
+        mapToState,
+        shallowEqual
     );
     const onRefresh = () => {
         wsSendOnce({ method: "transactions", params: [address, 0, 10] });

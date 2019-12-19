@@ -121,7 +121,7 @@ export function block_remain_to_time(time_remain) {
 }
 export function deepMergeObject(obj1, obj2) {
     Object.keys(obj2).forEach(key => {
-        if (key !== null) {
+        if (obj2[key] !== null) {
             obj1[key] =
                 obj1[key] && obj1[key].toString() === "[object Object]"
                     ? deepMergeObject(obj1[key], obj2[key])

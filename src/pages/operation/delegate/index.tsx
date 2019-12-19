@@ -1,6 +1,6 @@
 import React from "react";
 import "../style.less";
-import { useSelector } from "react-redux";
+import { useSelector, shallowEqual } from "react-redux";
 import { operationType } from "@reducers/accountReducer";
 import { formatAddress, validateAmount, getPoolLogo } from "@utils/index";
 import { gas_delegate, gasPrice, AIONDECIMAL } from "@utils/constants.json";
@@ -22,8 +22,8 @@ const fee_delegate = new BigNumber(gas_delegate)
 
 const maptoState = ({ account }) => {
     return {
-        pools: account.pools,
-        operation: account.operation,
+        pools: { ...account.pools },
+        operation: { ...account.operation },
         account: {
             address: account.address,
             balance: account.liquidBalance
@@ -36,7 +36,7 @@ const delegate = props => {
         visible: false,
         txHash: ""
     });
-    const { account, operation, pools } = useSelector(maptoState);
+    const { account, operation, pools } = useSelector(maptoState, shallowEqual);
     const { history } = props;
     const inputRef = React.useRef(null);
     React.useEffect(() => {
