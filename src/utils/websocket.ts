@@ -232,10 +232,11 @@ const handle_result = (method, result) => {
                 }
                 const { block_number_last } = store.getState().account;
                 result.data.forEach(v => {
+                    console.log("v.block_timestamp", v.block_timestamp);
                     v.commission_rate = new BigNumber(
                         v.commission_rate
                     ).dividedBy(10000, 10);
-                    v.block_timestamp = parseInt(v.block_timestamp, 16) * 1000;
+                    v.block_timestamp = parseInt(v.block_timestamp) * 1000;
                     if (block_number_last) {
                         v.block_number_remain =
                             BLOCK_NUMBER_BASE -

@@ -21,13 +21,13 @@ const mapToState = ({ account }) => {
     return {
         operation: account.operation,
         pool: account.pools[poolAddress],
+        commissionRateChanges: account.commissionRateChanges || [],
         account:
             account.address !== ""
                 ? {
                       address: account.address,
                       stake: delegation.stake || new Bignumber(0),
                       rewards: delegation.rewards || new Bignumber(0),
-                      commissionRateChanges: account.commissionRateChanges
                   }
                 : undefined
     };
@@ -173,7 +173,7 @@ const renderAccountDetail = (info, src) => {
 };
 
 const Pageoperation = props => {
-    const { operation, account, pool } = useSelector(mapToState);
+    const { operation, account, pool, commissionRateChanges } = useSelector(mapToState);
     const dispatch = useDispatch();
     const { history } = props;
 
@@ -289,7 +289,6 @@ const Pageoperation = props => {
         active,
         address: poolAddress
     } = pool;
-
     return (
         <div className="operation-container">
             <div className="operation-pool-basic">
@@ -331,7 +330,7 @@ const Pageoperation = props => {
                 className="button-orange"
             />
             <CommissionRateChangeList
-                commissionRateChanges={(account || {}).commissionRateChanges}
+                commissionRateChanges={commissionRateChanges}
                 pool={pool}
             />
         </div>
