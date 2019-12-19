@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import {
     Idelegation,
     Iundelegation,
@@ -5,6 +6,7 @@ import {
     Itransaction
 } from "@interfaces/index";
 import BigNumber from "bignumber.js";
+import { deepMergeObject } from "@utils/index";
 
 export enum operationType {
     delegate,
@@ -141,6 +143,17 @@ const accountReducer = (
 ): IAccountState => {
     if (action.type === "account/update") {
         return { ...state, ...action.payload };
+    }
+    if (action.type === "account/updatePoolLogo") {
+        const { pool, logo } = action.payload;
+        if (state.pools[pool]) {
+            state.pools[pool].meta.logo = logo;
+            return { ...state };
+        }
+    }
+    if (action.type === "account/deepUpdate") {
+        const newState: IAccountState = deepMergeObject(state, action.payload);
+        return { ...newState };
     }
     if (action.type === "account/setAccount") {
         return { ...state, address: action.payload };

@@ -13,5 +13,7 @@
     "APPSERVER_URL_TEST": "http://47.92.202.146:8080",
     "APPSERVER_URL_PRODUCTION": "https://www.chaion.net/makkii",
     "BLOCK_NUMBER_BASE": 60480,
-    "undelegation_lock_blocks":8640
+    "undelegation_lock_blocks":8640,
+    "performance_low": 80,
+    "performance_high": 90
 }

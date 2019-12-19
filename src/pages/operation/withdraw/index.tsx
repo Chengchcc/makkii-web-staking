@@ -2,7 +2,7 @@ import React from "react";
 import "../style.less";
 import { useSelector } from "react-redux";
 import { operationType } from "@reducers/accountReducer";
-import { formatAddress, validateAmount } from "@utils/index";
+import { formatAddress, validateAmount, getPoolLogo } from "@utils/index";
 import { gas_withdraw, gasPrice, AIONDECIMAL } from "@utils/constants.json";
 import BigNumber from "bignumber.js";
 import { CommonButton } from "@components/button";
@@ -101,13 +101,14 @@ const withdraw = props => {
             txHash: ""
         });
     };
+    const poolLogo = getPoolLogo(pool);
     return (
         <div className="operation-container withdraw-form">
             <FormItem
                 label={i18n.t("operation_form.label_from")}
                 className="operation-form-pool"
             >
-                <Image src={meta.logo} className="pool-logo" alt="" />
+                <Image src={poolLogo} className="pool-logo" alt="" />
                 <span style={{ marginLeft: "10px" }}>
                     {meta.name || address}
                 </span>

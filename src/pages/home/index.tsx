@@ -185,7 +185,7 @@ const home = (props: Ihome) => {
     const accountRef = React.useRef(account);
     const [state, setState] = React.useState({
         action: STATS.init,
-        isLoading: false
+        isLoading: true
     });
     const actionRef = React.useRef(state.action);
     const timerRef = React.useRef(null);
@@ -287,7 +287,7 @@ const home = (props: Ihome) => {
             wsSendOnce({ method: "eth_getBalance", params: [address] });
             wsSendOnce({ method: "delegations", params: [address, 0, 10] });
             wsSendOnce({ method: "transactions", params: [address, 0, 10] });
-            wsSend({ method: "pools", params: [] });
+            wsSend({ method: "pools", params: [false] });
             wsSendOnce({ method: "undelegations", params: [address, 0, 10] });
             timerRef.current = setTimeout(actionTimeOut, 10 * 1000);
         } else if (action === STATS.loading) {
@@ -300,24 +300,14 @@ const home = (props: Ihome) => {
             action
         });
     };
-    React.useEffect(() => {
-        if (!Object.keys(pools).length) {
-            setState({
-                ...state,
-                isLoading: true
-            });
-        }
-    }, []);
 
     React.useEffect(() => {
         const {
-            pools: pools_,
             delegations: delegations_,
             undelegations: undelegations_,
             history: transactions_
         } = accountRef.current;
         if (
-            pools_ !== pools &&
             delegations_ !== delegations &&
             undelegations_ !== undelegations &&
             transactions_ !== transactions
@@ -363,13 +353,34 @@ const home = (props: Ihome) => {
     });
 
     React.useEffect(() => {
+        if (Object.keys(pools).length > 0 && state.isLoading) {
+            setState({
+                ...state,
+                isLoading: false
+            });
+        }
+        if (Object.keys(pools).length === 0) {
+            wsSendOnce({ method: "eth_getBalance", params: [address] });
+            wsSendOnce({ method: "delegations", params: [address, 0, 10] });
+            wsSendOnce({ method: "transactions", params: [address, 0, 10] });
+            wsSend({ method: "pools", params: [false] });
+            wsSendOnce({ method: "undelegations", params: [address, 0, 10] });
+        }
+    }, []);
+
+    React.useEffect(() => {
         if (accountRef.current.address !== address && !state.isLoading) {
             setState({
                 ...state,
                 isLoading: true
             });
         }
+        wsSendOnce({ method: "eth_getBalance", params: [address] });
+        wsSendOnce({ method: "delegations", params: [address, 0, 10] });
+        wsSendOnce({ method: "transactions", params: [address, 0, 10] });
+        wsSendOnce({ method: "undelegations", params: [address, 0, 10] });
     }, [address]);
+
     const renderPools = (title, lists_) => {
         const sorter = (a: any, b: any) => {
             return b.performance.toNumber() - a.performance.toNumber();

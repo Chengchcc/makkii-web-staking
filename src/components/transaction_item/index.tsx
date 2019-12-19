@@ -3,6 +3,7 @@ import { Itransaction, Ipool } from "@interfaces/types";
 import Image from "@components/default-img";
 import "./style.less";
 import i18n from "@utils/i18n";
+import { getPoolLogo } from "@utils/index";
 
 interface ItransactionItem {
     pool: Ipool;
@@ -28,6 +29,7 @@ const TransactionItem: React.FC<ItransactionItem> = props => {
     const { transaction, pool } = props;
     const { hash, type, amount } = transaction;
     const { meta } = pool;
+    const poolLogo = getPoolLogo(pool);
     // const date = new Date(parseInt(timestamp, 16)*1000).Format('yyyy-MM-dd hh:mm', 24)
     return (
         <div className="transaction-item">
@@ -36,8 +38,7 @@ const TransactionItem: React.FC<ItransactionItem> = props => {
             </div> */}
             <div className="transaction-info">
                 <div className="transaction-pool">
-                    <Image src={meta.logo} className="pool-logo" alt="" />{" "}
-                    &nbsp;
+                    <Image src={poolLogo} className="pool-logo" alt="" /> &nbsp;
                     <span>{meta.name || pool.address}</span>
                 </div>
                 <div>
