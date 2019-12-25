@@ -1,28 +1,28 @@
 import React from "react";
-import "../style.less";
-import { useSelector, shallowEqual } from "react-redux";
-import { operationType } from "@reducers/accountReducer";
+import { useSelector } from "react-redux";
 import { formatAddress, validateAmount, getPoolLogo } from "@utils/index";
 import {
-    gas_undelegate,
+    gas_delegate,
     gasPrice,
     AIONDECIMAL,
-    undelegation_lock_blocks
+    transfer_lock_blocks
 } from "@utils/constants.json";
 import BigNumber from "bignumber.js";
 import { CommonButton } from "@components/button";
-import { call_undelegate } from "@utils/transaction";
+import { call_transfer } from "@utils/transaction";
 import Modal, { alert } from "@components/modal";
 import Image from "@components/default-img";
 import { copyInputValue } from "@utils/util";
 import i18n from "@utils/i18n";
-import { send_event_log } from "@utils/httpclient";
+// import { send_event_log } from "@utils/httpclient";
+import IconRight from "@img/arrow_right.svg";
+import store from "@reducers/store";
 import FormItem from "../operation_form_item";
 import { commonGoback } from "../util";
-
 import CheckMark from "@/img/checkMark.svg";
+import "../style.less";
 
-const fee_undelegate = new BigNumber(gas_undelegate)
+const fee_delegate = new BigNumber(gas_delegate)
     .times(gasPrice)
     .shiftedBy(AIONDECIMAL);
 
@@ -30,8 +30,6 @@ const maptoState = ({ account }) => {
     const { delegations, operation } = account;
     const delegation = delegations[operation.pool] || {};
     return {
-        pools: { ...account.pools },
-        operation: { ...operation },
         account: {
             address: account.address,
             staked: delegation.stake || new BigNumber(0)
@@ -39,28 +37,53 @@ const maptoState = ({ account }) => {
     };
 };
 
-const undelegate = props => {
+const PageTransfer = props => {
     const [modalState, setModalState] = React.useState({
         visible: false,
         txHash: ""
     });
-    const { account, operation, pools } = useSelector(maptoState, shallowEqual);
+    const {
+        account
+    }: {
+        account: {
+            address: string;
+            staked: BigNumber;
+        };
+    } = useSelector(maptoState, (l, r) => {
+        return (
+            l.account.address === r.account.address &&
+            l.account.staked.toNumber() === r.account.staked.toNumber()
+        );
+    });
+    const { pools, operation } = store.getState().account;
     const { history } = props;
     const inputRef = React.useRef(null);
+
     React.useEffect(() => {
-        if (operationType.undelegate !== operation.type) {
+        if (typeof operation.type !== "string") {
             history.replace("/operation");
         }
     }, [operation]);
-    const pool = pools[operation.pool];
-    const { meta } = pool;
-    const { address, staked } = account;
-    const handle_undelegate = async (e: MouseEvent) => {
+
+    const { staked } = account;
+    const handle_transfer = async (e: MouseEvent) => {
         e.preventDefault();
+        const to = operation.type;
+        if (!to) {
+            alert({
+                title: i18n.t("error_title"),
+                message: i18n.t("error_to_address_empty"),
+                actions: [
+                    {
+                        title: i18n.t("button_ok")
+                    }
+                ]
+            });
+            return;
+        }
         const amount = inputRef.current.value;
         const valid = validateAmount(amount);
-        const insufficientBalance = new BigNumber(amount).gt(staked);
-        if (!valid || parseFloat(amount) === 0 || insufficientBalance) {
+        if (!valid || parseFloat(amount) === 0) {
             alert({
                 title: i18n.t("error_title"),
                 message: i18n.t("error_invalid_amount"),
@@ -72,17 +95,17 @@ const undelegate = props => {
             });
             return;
         }
-        const res = await call_undelegate(operation.pool, amount, 0);
+        const res = await call_transfer(operation.pool, operation.type, amount);
         if (res) {
-            send_event_log({
-                user: "staking",
-                event: "STAKING_UNDELEGATE",
-                data: {
-                    amount,
-                    pool_address: operation.pool,
-                    pool_name: meta.name
-                }
-            });
+            // send_event_log({
+            //     user: "staking",
+            //     event: "STAKING_DELEGATE",
+            //     data: {
+            //         amount,
+            //         pool_address: operation.pool,
+            //         pool_name: meta.name
+            //     }
+            // });
 
             // send success
             setModalState({
@@ -102,48 +125,88 @@ const undelegate = props => {
             });
         }
     };
+
     const hideModal = () => {
         setModalState({
             visible: false,
             txHash: ""
         });
     };
-    const poolLogo = getPoolLogo(pool);
+
+    const pool_from_address = operation.pool;
+    const pool_to_address = operation.type;
+    const pool_from: any = pools[pool_from_address] || {};
+    const pool_to: any = pools[pool_to_address] || {};
+    const pool_from_logo = getPoolLogo(pool_from);
+    const pool_to_logo = getPoolLogo(pool_to);
+
     return (
-        <div className="operation-container undelegate-form">
+        <div className="operation-container delegate-form">
             <FormItem
                 label={i18n.t("operation_form.label_from")}
                 className="operation-form-pool"
             >
-                <Image src={poolLogo} className="pool-logo" alt="" />
+                <Image src={pool_from_logo} className="pool-logo" alt="" />
                 <span style={{ marginLeft: "10px" }}>
-                    {meta.name || address}
+                    {(!!pool_from.meta && pool_from.meta.name) ||
+                        pool_from.address}
                 </span>
             </FormItem>
-            <FormItem label={i18n.t("operation_form.label_to")}>
-                {formatAddress(address)}
+            <FormItem
+                label={i18n.t("operation_form.label_to")}
+                className="operation-form-pool"
+            >
+                {pool_to.address ? (
+                    <>
+                        <Image
+                            src={pool_to_logo}
+                            className="pool-logo"
+                            alt=""
+                        />
+                        <span style={{ marginLeft: "10px" }}>
+                            {(pool_to.meta && pool_to.meta.name) ||
+                                pool_to.address}
+                        </span>
+                    </>
+                ) : (
+                    i18n.t("operation_form.label_transfer_to")
+                )}
+                <span
+                    style={{ position: "absolute", right: "10px" }}
+                    onClick={() => {
+                        history.push("/poolList");
+                    }}
+                >
+                    <IconRight className="pool-detail-img" />
+                </span>
             </FormItem>
             <FormItem label={i18n.t("operation_form.label_tx_fee")}>
-                ≈ {fee_undelegate.toFixed(5)} AION
+                ≈ {fee_delegate.toFixed(5)}&nbsp;{" "}
+                <img
+                    src={require("@/img/metaLogo2.png")}
+                    width="14"
+                    height="14"
+                    alt=""
+                />
             </FormItem>
             <FormItem
                 label={i18n.t("operation_form.label_lock_period")}
-            >{`${undelegation_lock_blocks} ${i18n.t("unit_block")} ≈ 1 ${i18n.t(
-                "unit_day"
+            >{`${transfer_lock_blocks} ${i18n.t("unit_block")} ≈ 10 ${i18n.t(
+                "unit_minute"
             )}`}</FormItem>
             <FormItem label={i18n.t("operation_form.label_delegate_amount")}>
                 {staked.toFixed(5)} AION
             </FormItem>
             <FormItem
-                label={i18n.t("operation_form.label_undelegate_amount")}
-                className="undelegate-input"
+                label={i18n.t("operation_form.label_transfer_amount")}
+                className="delegate-input"
             >
-                <input type="number" ref={inputRef} /> &nbsp; AION &nbsp;
+                <input ref={inputRef} type="number" /> &nbsp; AION &nbsp;
                 <a
                     className="button button-orange"
                     onClick={e => {
                         e.preventDefault();
-                        const amount = staked.minus(fee_undelegate);
+                        const amount = staked.minus(fee_delegate);
                         inputRef.current.value = amount.gte(0)
                             ? staked.toString()
                             : "0";
@@ -153,9 +216,9 @@ const undelegate = props => {
                 </a>
             </FormItem>
             <CommonButton
-                title={i18n.t("operation.button_unDelegate")}
+                title={i18n.t("operation.button_transfer")}
                 className="button-orange"
-                onClick={handle_undelegate}
+                onClick={handle_transfer}
             />
             <Modal
                 visible={modalState.visible}
@@ -196,6 +259,6 @@ const undelegate = props => {
         </div>
     );
 };
-undelegate.goBack = commonGoback;
+PageTransfer.goBack = commonGoback;
 
-export default undelegate;
+export default PageTransfer;

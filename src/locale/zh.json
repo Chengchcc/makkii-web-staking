@@ -16,6 +16,12 @@
         "label_amount":"金额",
         "label_blockRemaining": "剩余块数"
     },
+    "transfers":{
+        "title": "转投中",
+        "card_title": "转投中",
+        "label_transfering": "申请转投中",
+        "label_transferred": "转投完成"
+    },
     "history": {
         "title": "质押记录",
         "card_title": "质押记录"
@@ -32,6 +38,8 @@
         "button_delegate": "委托",
         "button_unDelegate": "申请撤回委托",
         "button_withdraw": "提现",
+        "button_transfer": "转投",
+        "label_auto_delegate_rewards":"自动委托收益",
         "label_fees": "手续费",
         "label_performance": "绩效",
         "label_stake_weight": "质押占比",
@@ -49,7 +57,9 @@
         "label_delegate_amount": "质押金额",
         "label_undelegate_amount": "申请撤回金额",
         "label_withdraw_amount":"提现金额",
-        "label_lock_period": "锁定期"
+        "label_transfer_amount":"转移金额",
+        "label_lock_period": "锁定期",
+        "label_transfer_to": "选择你想转移的池子"
     },
     "modal":{
         "sent_success_msg1": "交易已发送",
@@ -69,6 +79,7 @@
         "label_undelegate": "撤回请求",
         "label_withdraw":"提现",
         "label_finalized": "撤回确认",
+        "label_auto_delegate": "自动委托",
         "label_normal": "普通"
     },
     "refresh_control":{
@@ -84,6 +95,8 @@
     "error_no_account":"请先导入账号",
     "error_no_makkii":"请先安装Makkii钱包",
     "error_sent_fail": "发送失败",
+    "error_to_address_empty": "目标池子不能为空",
+    "error_invalid_amount":"金额不正确",
     "button_ok": "确定",
     "button_cancel": "取消",
     "button_more": "更多",

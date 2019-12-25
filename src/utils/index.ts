@@ -1,3 +1,5 @@
+/* eslint-disable no-prototype-builtins */
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable no-param-reassign */
 /* eslint-disable camelcase */
 import store, { createAction } from "@reducers/store";
@@ -62,11 +64,11 @@ export const handleSwitchAccount = () => {
         makkii
             .switchAccount()
             .then(r => {
-                console.log("handleSwitchAccount", r);
                 clearWsTikcet("eth_getBalance");
                 clearWsTikcet("delegations");
                 clearWsTikcet("transactions");
                 clearWsTikcet("undelegations");
+                clearWsTikcet("delegation_transfers");
                 store.dispatch(
                     createAction("account/update")({
                         address: r,
@@ -87,7 +89,6 @@ export const handleSwitchAccount = () => {
                 console.log("switch account error=>", err);
             });
     } else {
-        console.log("not in makkii env");
         alert({
             title: i18n.t("error_title"),
             message: i18n.t("error_no_makkii"),
@@ -130,24 +131,54 @@ export function deepMergeObject(obj1, obj2) {
     });
     return obj1;
 }
+
+export function deepEqual(x, y) {
+    if (x === y) {
+        return true;
+    }
+    if (BigNumber.isBigNumber(x) && BigNumber.isBigNumber(y)) {
+        return x.eq(y);
+    }
+    if (
+        !(typeof x === "object" && x != null) ||
+        !(typeof y === "object" && y != null)
+    ) {
+        return false;
+    }
+    if (Object.keys(x).length !== Object.keys(y).length) {
+        return false;
+    }
+    for (const prop in x) {
+        if (y.hasOwnProperty(prop)) {
+            if (!deepEqual(x[prop], y[prop])) {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+    return true;
+}
 const pool_request = [];
 
 export function getPoolLogo(pool): string {
-    if (pool.meta && pool.meta.logo !== null) {
-        if (pool.meta.logo === "undefined") {
-            return "";
+    if (pool && pool.address) {
+        if (pool.meta && pool.meta.logo !== null) {
+            if (pool.meta.logo === "undefined") {
+                return "";
+            }
+            return pool.meta.logo;
         }
-        return pool.meta.logo;
-    }
-    if (!pool_request.includes(pool.address)) {
-        pool_request.push(pool.address);
-        wsSend({ method: "pool_logo", params: [pool.address] }, () => {
-            pool_request.forEach((addr, idx) => {
-                if (addr === pool.address) {
-                    pool_request.splice(idx, 1);
-                }
+        if (!pool_request.includes(pool.address)) {
+            pool_request.push(pool.address);
+            wsSend({ method: "pool_logo", params: [pool.address] }, () => {
+                pool_request.forEach((addr, idx) => {
+                    if (addr === pool.address) {
+                        pool_request.splice(idx, 1);
+                    }
+                });
             });
-        });
+        }
     }
 
     return "";

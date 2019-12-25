@@ -3,6 +3,7 @@ import BigNumber from "bignumber.js";
 export interface Idelegation {
     stake: BigNumber;
     rewards: BigNumber;
+    auto_delegate_rewards: boolean;
 }
 
 export interface Iundelegation {
@@ -38,5 +39,12 @@ export interface Itransaction {
     amount: BigNumber;
     timestamp: string;
     pool: string;
+    pool_to?: string;
     hash: string;
+}
+
+export interface Itransfer {
+    amount: BigNumber;
+    pool: string;
+    pool_to: string;
 }

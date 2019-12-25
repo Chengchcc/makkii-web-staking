@@ -1,259 +1,129 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
-import { History } from "history";
-import { operationType } from "@reducers/accountReducer";
+import { operationType, IAccountState } from "@reducers/accountReducer";
 import Spin from "@components/spin";
-import { useSelector, useDispatch, shallowEqual } from "react-redux";
-import {
-    formatAddress,
-    handleSwitchAccount,
-    block_remain_to_time
-} from "@utils/index";
+import { useSelector } from "react-redux";
+import { formatAddress, handleSwitchAccount, deepEqual } from "@utils/index";
 import { wsSend, wsSendOnce } from "@utils/websocket";
-import { PoolItem, PoolItemMore, Iinfo } from "@components/pool_item";
-import TransactionItem from "@components/transaction_item";
-import { createAction } from "@reducers/store";
-import operation from "@pages/operation";
+import store, { createAction } from "@reducers/store";
 import ReactPullLoad, { STATS } from "@components/pullLoad";
 import { CommonButton } from "@components/button";
 import i18n from "@utils/i18n";
-import Card from "./card";
+import history from "@utils/history";
 import "./style.less";
+import {
+    renderAccountInfo,
+    renderDelegations,
+    renderUnDelegations,
+    renderPools,
+    renderTransaction,
+    renderTransfers
+} from "./components";
+import {
+    process_delegations,
+    process_undelegations,
+    process_transctions,
+    process_transfers
+} from "./template";
 
-const logo = require("@/img/metaLogo2.png");
+export * from "./template";
 
-export const delegationInfo: Array<Iinfo> = [
-    {
-        title: "delegations.label_stake",
-        dataIndex: "stake",
-        render: val => <span>{`${val.toFixed(5)} AION`}</span>
-    },
-    {
-        title: "delegations.label_rewards",
-        dataIndex: "rewards",
-        render: val => <span>{`${val.toFixed(5)} AION`}</span>
-    }
-];
-
-export const unDelegationInfo: Array<Iinfo> = [
-    {
-        title: "undelegations.label_blockNumber",
-        dataIndex: "blockNumber",
-        render: val => <span>{`#${val}`}</span>
-    },
-    {
-        title: "undelegations.label_amount",
-        dataIndex: "amount",
-        render: val => <span>{`${val.toFixed(5)} AION`}</span>
-    },
-    {
-        title: "undelegations.label_blockRemaining",
-        dataIndex: "block_number_remaining",
-        render: val => (
-            <span>
-                {[null, undefined].indexOf(val) > -1
-                    ? i18n.t("estimating")
-                    : `${val} ${block_remain_to_time(val)}`}
-            </span>
-        )
-    }
-];
-
-export const process_delegations = delegations => {
-    return Object.keys(delegations).reduce((arr, el) => {
-        arr.push({
-            ...delegations[el],
-            poolAddress: el
-        });
-        return arr;
-    }, []);
-};
-
-export const process_undelegations = undelegations => {
-    return Object.keys(undelegations).reduce((arr, el) => {
-        arr.push({
-            ...undelegations[el],
-            poolAddress: undelegations[el].pool
-        });
-        return arr;
-    }, []);
-};
-
-export const process_transctions = transctions => {
-    return Object.values(transctions).sort(
-        (a: any, b: any) => a.timestamp - b.timestamp
+const toDelegate = e => {
+    e.preventDefault();
+    const { operation } = store.getState().account;
+    store.dispatch(
+        createAction("account/update")({
+            operation: {
+                ...operation,
+                type: operationType.delegate
+            }
+        })
     );
+    history.push("/poollist");
 };
-interface Ihome {
-    history: History;
-}
-const mapToState = ({ account }) => {
-    return {
-        address: account.address,
-        liquidBalance: account.liquidBalance,
-        stakedAmount: account.stakedAmount,
-        undelegationAmount: account.undelegationAmount,
-        rewards: account.rewards,
-        pools: { ...account.pools },
-        delegations: { ...account.delegations },
-        undelegations: { ...account.undelegations },
-        history: { ...account.history },
-        operation: { ...account.operation }
-    };
-};
-const accountInfo = [
-    {
-        title: "account.label_balance",
-        dataIndex: "liquidBalance",
-        render: val =>
-            val.gte(0) ? (
-                <>
-                    <span>{`${val.toFixed(5)} `}</span>{" "}
-                    <img src={logo} height="16" width="16" alt="" />
-                </>
-            ) : (
-                <Spin size="30px" width="2px" />
-            )
-    },
-    {
-        title: "account.label_staked_amount",
-        dataIndex: "stakedAmount",
-        render: val =>
-            val.gte(0) ? (
-                <>
-                    <span>{`${val.toFixed(5)} `}</span>
-                    <img src={logo} height="16" width="16" alt="" />
-                </>
-            ) : (
-                <Spin size="30px" width="2px" />
-            )
-    },
-    {
-        title: "account.label_undelegate_amount",
-        dataIndex: "undelegationAmount",
-        render: val =>
-            val.gte(0) ? (
-                <>
-                    <span>{`${val.toFixed(5)} `}</span>{" "}
-                    <img src={logo} height="16" width="16" alt="" />
-                </>
-            ) : (
-                <Spin size="30px" width="2px" />
-            )
-    },
-    {
-        title: "account.label_rewards_amount",
-        dataIndex: "rewards",
-        render: val =>
-            val.gte(0) ? (
-                <>
-                    <span>{`${val.toFixed(5)} `}</span>
-                    <img src={logo} height="16" width="16" alt="" />
-                </>
-            ) : (
-                <Spin size="30px" width="2px" />
-            )
-    }
-];
-
-const renderAccountInfo = (info, src) => {
-    return (
-        <div className="header-info">
-            {info.map(el => {
-                const { dataIndex, title, render } = el;
-                const val = src[dataIndex];
-                return (
-                    <div key={title} className="header-info-item ">
-                        <div className="header-info-item-value">
-                            {render(val)}
-                        </div>
-                        <div className="header-info-item-title">
-                            {i18n.t(title)}
-                        </div>
-                    </div>
-                );
-            })}
-        </div>
+const toWithDraw = e => {
+    e.preventDefault();
+    const { operation } = store.getState().account;
+    store.dispatch(
+        createAction("account/update")({
+            operation: {
+                ...operation,
+                type: operationType.withdraw
+            }
+        })
     );
+    history.push("/poollist");
 };
 
 let scrollTop = 0;
 
-const home = (props: Ihome) => {
-    const { history } = props;
-    const account = useSelector(mapToState, shallowEqual);
-    const accountRef = React.useRef(account);
+const useHomeSelector = () => {
+    const delegations = useSelector(
+        (state: { account: IAccountState }) => ({
+            ...state.account.delegations
+        }),
+        deepEqual
+    );
+    const undelegations = useSelector(
+        (state: { account: IAccountState }) => ({
+            ...state.account.undelegations
+        }),
+        deepEqual
+    );
+    const delegationTransfers = useSelector(
+        (state: { account: IAccountState }) => ({
+            ...state.account.delegationTransfers
+        }),
+        deepEqual
+    );
+    const transactions = useSelector(
+        (state: { account: IAccountState }) => ({
+            ...state.account.history
+        }),
+        deepEqual
+    );
+    const pools = useSelector((state: { account: IAccountState }) => ({
+        ...state.account.pools
+    }));
+    const account = useSelector(
+        (state: { account: IAccountState }) => ({
+            address: state.account.address,
+            liquidBalance: state.account.liquidBalance,
+            stakedAmount: state.account.stakedAmount,
+            undelegationAmount: state.account.undelegationAmount,
+            rewards: state.account.rewards
+        }),
+        deepEqual
+    );
+    return {
+        delegations,
+        undelegations,
+        delegationTransfers,
+        pools,
+        transactions,
+        account
+    };
+};
+
+const home = () => {
+    // selector
+    const {
+        delegations,
+        undelegations,
+        delegationTransfers,
+        pools,
+        transactions,
+        account
+    } = useHomeSelector();
+    const { address } = account;
     const [state, setState] = React.useState({
         action: STATS.init,
         isLoading: true
     });
+    const addressRef = React.useRef(address);
     const actionRef = React.useRef(state.action);
     const timerRef = React.useRef(null);
-    const dispath = useDispatch();
-    const {
-        address,
-        pools,
-        delegations,
-        undelegations,
-        history: transactions
-    } = account;
-
-    const toDelegate = e => {
-        e.preventDefault();
-
-        dispath(
-            createAction("account/update")({
-                operation: {
-                    ...operation,
-                    type: operationType.delegate
-                }
-            })
-        );
-        history.push("/poollist");
-    };
-    const toWithDraw = e => {
-        e.preventDefault();
-        dispath(
-            createAction("account/update")({
-                operation: {
-                    ...operation,
-                    type: operationType.withdraw
-                }
-            })
-        );
-        history.push("/poollist");
-    };
-    const toPoolList = () => {
-        dispath(
-            createAction("account/update")({
-                operation: {
-                    ...operation,
-                    type: operationType.default // reset operation
-                }
-            })
-        );
-        history.push("/poollist");
-    };
-    const toDelegations = () => {
-        history.push("/delegations");
-    };
-    const toPendingUndlegation = () => {
-        history.push("/pendingundelegation");
-    };
-    const toHistoryList = () => {
-        history.push("/history");
-    };
-    const toPool = pool => {
-        dispath(
-            createAction("account/update")({
-                operation: {
-                    pool
-                }
-            })
-        );
-        history.push("/operation");
-    };
-
+    const updators = React.useRef([false, false, false, false]);
     const actionTimeOut = () => {
         if (actionRef.current === STATS.refreshing) {
             setState({
@@ -270,7 +140,32 @@ const home = (props: Ihome) => {
             actionRef.current = STATS.reset;
         }
     };
+    const updateIdx = idx => {
+        updators.current[idx] = true;
+    };
 
+    const fetchData = () => {
+        updators.current = [false, false, false, false];
+        wsSendOnce({ method: "eth_getBalance", params: [address] });
+        wsSendOnce({ method: "delegations", params: [address, 0, 10] }, () =>
+            updateIdx(0)
+        );
+        wsSendOnce({ method: "transactions", params: [address, 0, 10] }, () =>
+            updateIdx(1)
+        );
+        wsSend({ method: "pools", params: [false] });
+        wsSendOnce({ method: "undelegations", params: [address, 0, 10] }, () =>
+            updateIdx(2)
+        );
+        wsSendOnce(
+            {
+                method: "delegation_transfers",
+                params: [address, 0, 10]
+            },
+            () => updateIdx(3)
+        );
+        timerRef.current = setTimeout(actionTimeOut, 10 * 1000);
+    };
     const handleAction = action => {
         actionRef.current = action;
         if (
@@ -283,16 +178,7 @@ const home = (props: Ihome) => {
         }
         if (action === STATS.refreshing) {
             // refreshing
-            // onRefresh();
-            wsSendOnce({ method: "eth_getBalance", params: [address] });
-            wsSendOnce({ method: "delegations", params: [address, 0, 10] });
-            wsSendOnce({ method: "transactions", params: [address, 0, 10] });
-            wsSend({ method: "pools", params: [false] });
-            wsSendOnce({ method: "undelegations", params: [address, 0, 10] });
-            timerRef.current = setTimeout(actionTimeOut, 10 * 1000);
-        } else if (action === STATS.loading) {
-            // loading more
-            // nothiing
+            fetchData();
         }
         // DO NOT modify below code
         setState({
@@ -302,16 +188,7 @@ const home = (props: Ihome) => {
     };
 
     React.useEffect(() => {
-        const {
-            delegations: delegations_,
-            undelegations: undelegations_,
-            history: transactions_
-        } = accountRef.current;
-        if (
-            delegations_ !== delegations &&
-            undelegations_ !== undelegations &&
-            transactions_ !== transactions
-        ) {
+        if (!updators.current.slice(0, 4).some(r => !r)) {
             const newState = { ...state };
             let update = false;
             if (state.isLoading) {
@@ -333,9 +210,8 @@ const home = (props: Ihome) => {
                 actionRef.current = newState.action;
                 setState(newState);
             }
-            accountRef.current = account;
         }
-    }, [pools, delegations, undelegations, transactions]);
+    }, [pools, delegations, undelegations, transactions, delegationTransfers]);
 
     React.useEffect(() => {
         const element =
@@ -360,90 +236,26 @@ const home = (props: Ihome) => {
             });
         }
         if (Object.keys(pools).length === 0) {
-            wsSendOnce({ method: "eth_getBalance", params: [address] });
-            wsSendOnce({ method: "delegations", params: [address, 0, 10] });
-            wsSendOnce({ method: "transactions", params: [address, 0, 10] });
-            wsSend({ method: "pools", params: [false] });
-            wsSendOnce({ method: "undelegations", params: [address, 0, 10] });
+            fetchData();
         }
     }, []);
 
     React.useEffect(() => {
-        if (accountRef.current.address !== address && !state.isLoading) {
+        if (addressRef.current !== address && !state.isLoading) {
             setState({
                 ...state,
                 isLoading: true
             });
+            fetchData();
         }
-        wsSendOnce({ method: "eth_getBalance", params: [address] });
-        wsSendOnce({ method: "delegations", params: [address, 0, 10] });
-        wsSendOnce({ method: "transactions", params: [address, 0, 10] });
-        wsSendOnce({ method: "undelegations", params: [address, 0, 10] });
+        addressRef.current = address;
     }, [address]);
-
-    const renderPools = (title, lists_) => {
-        const sorter = (a: any, b: any) => {
-            return b.performance.toNumber() - a.performance.toNumber();
-        };
-
-        const lists = Object.values(lists_)
-            .sort(sorter)
-            .slice(0, 3);
-        return (
-            <Card
-                title={title}
-                lists={lists}
-                renderItem={(el, key) => {
-                    return <PoolItem key={key} pool={el} toPool={toPool} />;
-                }}
-                handleMore={toPoolList}
-            />
-        );
-    };
-
-    const renderPoolsMore = (title, lists, info, handleMore) => {
-        return (
-            <Card
-                title={title}
-                lists={lists}
-                renderItem={(el, key) => {
-                    return (
-                        <PoolItemMore
-                            key={key}
-                            pool={pools[el.poolAddress]}
-                            value={el}
-                            info={info}
-                            toPool={toPool}
-                        />
-                    );
-                }}
-                handleMore={handleMore}
-            />
-        );
-    };
-    const renderTransaction = (title, lists, handleMore) => {
-        return (
-            <Card
-                title={title}
-                lists={lists}
-                renderItem={(el, key) => {
-                    return (
-                        <TransactionItem
-                            key={key}
-                            pool={pools[el.pool]}
-                            transaction={el}
-                        />
-                    );
-                }}
-                handleMore={handleMore}
-            />
-        );
-    };
 
     const hasPools = Object.keys(pools).length > 0;
     const hasDelegations = Object.keys(delegations).length > 0;
     const hasUndelegations = Object.keys(undelegations).length > 0;
     const hasHistory = Object.keys(transactions).length > 0;
+    const hasTransfers = Object.keys(delegationTransfers).length > 0;
     return (
         <div className="flex-container">
             <ReactPullLoad
@@ -468,7 +280,7 @@ const home = (props: Ihome) => {
                             onClick={handleSwitchAccount}
                         />
                     </div>
-                    {renderAccountInfo(accountInfo, account)}
+                    {renderAccountInfo(account)}
                 </div>
                 <div className="home-button-container">
                     <CommonButton
@@ -487,31 +299,33 @@ const home = (props: Ihome) => {
                     <>
                         {hasPools &&
                             hasDelegations &&
-                            renderPoolsMore(
+                            renderDelegations(
                                 i18n.t("delegations.card_title"),
-                                process_delegations(delegations).slice(0, 3),
-                                delegationInfo,
-                                toDelegations
+                                process_delegations(delegations).slice(0, 3)
                             )}
                         {hasPools &&
                             hasUndelegations &&
-                            renderPoolsMore(
+                            renderUnDelegations(
                                 i18n.t("undelegations.card_title"),
-                                process_undelegations(undelegations).slice(
-                                    0,
-                                    3
-                                ),
-                                unDelegationInfo,
-                                toPendingUndlegation
+                                process_undelegations(undelegations).slice(0, 3)
                             )}
+
                         {hasPools &&
                             renderPools(i18n.t("pool_lists.card_title"), pools)}
                         {hasPools &&
                             hasHistory &&
                             renderTransaction(
                                 i18n.t("history.card_title"),
-                                process_transctions(transactions).slice(0, 3),
-                                toHistoryList
+                                process_transctions(transactions).slice(0, 3)
+                            )}
+                        {hasPools &&
+                            hasTransfers &&
+                            renderTransfers(
+                                i18n.t("transfers.card_title"),
+                                process_transfers(delegationTransfers).slice(
+                                    0,
+                                    3
+                                )
                             )}
                     </>
                 ) : (

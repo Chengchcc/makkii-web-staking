@@ -3,7 +3,8 @@ import {
     Idelegation,
     Iundelegation,
     Ipool,
-    Itransaction
+    Itransaction,
+    Itransfer
 } from "@interfaces/index";
 import BigNumber from "bignumber.js";
 import { deepMergeObject } from "@utils/index";
@@ -25,17 +26,20 @@ export interface IAccountState {
     undelegationsPagination: { current: number; total: number };
     historyPagination: { current: number; total: number };
     undelegations: { [poolAddres: string]: Iundelegation };
+    delegationTransfers: { [id: string]: Itransfer };
+    delegationTransfersPagination: { current: number; total: number };
     pools: { [poolAddres: string]: Ipool };
     history: { [hash: string]: Itransaction };
     operation: {
         pool: string;
-        type: operationType;
+        type: operationType | string;
     };
     block_number_last: number;
     commissionRateChanges: any[];
 }
 const defaultState2: IAccountState = {
-    address: "",
+    address:
+        "0xa095541186b2e53698244e231274a0754678664d2655d0e233aa3b9a03d21ef4",
     liquidBalance: new BigNumber(-1),
     stakedAmount: new BigNumber(-1),
     undelegationAmount: new BigNumber(-1),
@@ -44,9 +48,11 @@ const defaultState2: IAccountState = {
     undelegations: {},
     pools: {},
     history: {},
+    delegationTransfers: {},
     delegationsPagination: { current: 0, total: 0 },
     undelegationsPagination: { current: 0, total: 0 },
     historyPagination: { current: 0, total: 0 },
+    delegationTransfersPagination: { current: 0, total: 0 },
     operation: {
         pool: "",
         type: operationType.default
@@ -147,7 +153,9 @@ const accountReducer = (
     if (action.type === "account/updatePoolLogo") {
         const { pool, logo } = action.payload;
         if (state.pools[pool]) {
-            state.pools[pool].meta.logo = logo;
+            const { pools } = state;
+            pools[pool].meta.logo = logo;
+            state.pools = { ...pools };
             return { ...state };
         }
     }

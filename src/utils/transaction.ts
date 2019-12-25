@@ -5,6 +5,9 @@ import {
     gas_delegate,
     gas_withdraw,
     gas_undelegate,
+    gas_transfer,
+    gas_disable_auto_delegate,
+    gas_enable_auto_delegate,
     POOL_REGISTRY_AMITY,
     POOL_REGISTRY_MAINNET,
     AIONDECIMAL
@@ -89,6 +92,55 @@ export const call_undelegate = async (pool, amount, fee) => {
         pool_address,
         gasPrice.toFixed(),
         gas_undelegate.toFixed(),
+        data,
+        "0"
+    );
+    return await sendTx(tx);
+};
+
+export const call_transfer = async (from, to, amount) => {
+    const data = abi.encodeMethod(
+        "transferDelegation",
+        ["Address", "Address", "BigInteger", "BigInteger"],
+        [from, to, new BigNumber(amount).shiftedBy(-AIONDECIMAL).toFixed(), 0]
+    );
+    // build tx
+    const tx = build_transaction(
+        pool_address,
+        gasPrice.toFixed(),
+        gas_transfer.toFixed(),
+        data,
+        "0"
+    );
+    return await sendTx(tx);
+};
+
+export const call_enable_auto_delegate = async (pool, feePercentage = 0) => {
+    const data = abi.encodeMethod(
+        "enableAutoRewardsDelegation",
+        ["Address", "int"],
+        [pool, feePercentage]
+    );
+    const tx = build_transaction(
+        pool_address,
+        gasPrice.toFixed(),
+        gas_enable_auto_delegate.toFixed(),
+        data,
+        "0"
+    );
+    return await sendTx(tx);
+};
+
+export const call_disable_auto_delegate = async pool => {
+    const data = abi.encodeMethod(
+        "disableAutoRewardsDedelegation",
+        ["Address"],
+        [pool]
+    );
+    const tx = build_transaction(
+        pool_address,
+        gasPrice.toFixed(),
+        gas_disable_auto_delegate.toFixed(),
         data,
         "0"
     );

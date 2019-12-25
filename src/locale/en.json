@@ -16,6 +16,12 @@
         "label_amount":"Amount",
         "label_blockRemaining": "Lock Blocks Left"
     },
+    "transfers":{
+        "title": "Pending Transfers",
+        "card_title": "Pending Transfers",
+        "label_transfering": "Transferring",
+        "label_transferred": "Transferred"
+    },
     "history": {
         "title": "Stake History",
         "card_title": "Stake History"
@@ -32,6 +38,8 @@
         "button_delegate": "Delegate",
         "button_unDelegate": "Un-delegate",
         "button_withdraw": "Withdraw",
+        "button_transfer": "Transfer",
+        "label_auto_delegate_rewards":"Auto delegate rewards",
         "label_fees": "Fees",
         "label_performance": "Performance",
         "label_stake_weight": "Stake Weight",
@@ -49,7 +57,9 @@
         "label_delegate_amount": "Delegate Amount",
         "label_undelegate_amount": "Undelegate Amount",
         "label_withdraw_amount":"Withdraw Amount",
-        "label_lock_period": "Lock Period"
+        "label_transfer_amount":"Transfer Amount",
+        "label_lock_period": "Lock Period",
+        "label_transfer_to": "Choose a pool you want to transfer"
     },
     "modal":{
         "sent_success_msg1": "Transaction sent",
@@ -69,6 +79,7 @@
         "label_undelegate": "Undelegate",
         "label_withdraw":"Withdraw",
         "label_finalized": "Undelegation Finalized",
+        "label_auto_delegate": "Auto delegate",
         "label_normal": "Normal"
     },
     "refresh_control":{
@@ -84,6 +95,8 @@
     "error_no_account":"Please import an account first",
     "error_no_makkii":"Please open by Makkii",
     "error_sent_fail": "Sent fail",
+    "error_to_address_empty": "Target Pool should not be empty",
+    "error_invalid_amount": "Invalid amount",
     "button_ok":"Ok",
     "button_cancel":"Cancel",
     "button_more": "More",

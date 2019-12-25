@@ -1,5 +1,4 @@
 import React from "react";
-import "../style.less";
 import { useSelector, shallowEqual } from "react-redux";
 import { operationType } from "@reducers/accountReducer";
 import { formatAddress, validateAmount, getPoolLogo } from "@utils/index";
@@ -15,6 +14,7 @@ import { send_event_log } from "@utils/httpclient";
 import FormItem from "../operation_form_item";
 import { commonGoback } from "../util";
 import CheckMark from "@/img/checkMark.svg";
+import "../style.less";
 
 const fee_withdraw = new BigNumber(gas_withdraw)
     .times(gasPrice)
@@ -56,7 +56,7 @@ const withdraw = props => {
         if (!valid || parseFloat(amount) === 0 || insufficientBalance) {
             alert({
                 title: i18n.t("error_title"),
-                message: "Invalid amount",
+                message: i18n.t("error_invalid_amount"),
                 actions: [
                     {
                         title: i18n.t("button_ok")

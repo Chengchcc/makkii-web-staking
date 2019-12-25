@@ -1,0 +1,52 @@
+@switch-size: 24px;
+@border-width: 1px;
+
+.switch-container {
+    display: inline-block;
+}
+
+input[type="checkbox"].react-switch-checkbox  {
+    position: absolute;
+    opacity: 0;
+    width: @switch-size*2 + @border-width*2;
+	height: @switch-size + @border-width*2;
+}
+
+input[type="checkbox"].react-switch-checkbox + div {
+	width: @switch-size*2 + @border-width*2;
+	height: @switch-size + @border-width*2;
+	border-radius: 999px;
+	background-color: gray;
+	-webkit-transition-duration: .4s;
+	transition-duration: .4s;
+	-webkit-transition-property: background-color, box-shadow;
+	transition-property: background-color, box-shadow;
+}
+
+
+input[type="checkbox"].react-switch-checkbox:checked + div {
+    background-color: #f50;
+}
+
+
+input[type="checkbox"].react-switch-checkbox + div > div {
+	float: left;
+	width: @switch-size; height: @switch-size;
+	border-radius: inherit;
+	background: #ffffff;
+	-webkit-transition-timing-function: cubic-bezier(1,0,0,1);
+	transition-timing-function: cubic-bezier(1,0,0,1);
+	-webkit-transition-duration: 0.4s;
+	transition-duration: 0.4s;
+	-webkit-transition-property: transform, background-color;
+	transition-property: transform, background-color;
+	margin-top: @border-width;
+    margin-left: @border-width;
+}
+
+
+input[type="checkbox"].react-switch-checkbox:checked + div > div {
+	-webkit-transform: translate3d(@switch-size, 0, 0);
+	transform: translate3d(@switch-size, 0, 0);
+}
+

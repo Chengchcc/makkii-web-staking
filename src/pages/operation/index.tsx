@@ -1,39 +1,37 @@
 /* eslint-disable no-nested-ternary */
 import React from "react";
-import { useSelector, useDispatch, shallowEqual } from "react-redux";
-import { operationType } from "@reducers/accountReducer";
-import Bignumber from "bignumber.js";
+import { useSelector, shallowEqual } from "react-redux";
+import { operationType, IAccountState } from "@reducers/accountReducer";
+import BigNumber from "bignumber.js";
 import { formatAddress, handleSwitchAccount } from "@utils/index";
 import { CommonButton } from "@components/button";
 import store, { createAction } from "@reducers/store";
-import { alert } from "@components/modal";
+import Modal, { alert } from "@components/modal";
 import Image from "@components/default-img";
+import Switch from "@components/switch";
 import i18n from "@utils/i18n";
 import CommissionRateChangeList from "@pages/operation/commission_rate_change_list";
-import "./style.less";
 import { wsSend } from "@utils/websocket";
 import makkii from "makkii-webview-bridge";
-import { performance_low, performance_high } from "@utils/constants.json";
+import {
+    performance_low,
+    performance_high,
+    gas_disable_auto_delegate,
+    gas_enable_auto_delegate,
+    gasPrice,
+    AIONDECIMAL
+} from "@utils/constants.json";
+import history from "@utils/history";
+import { Ipool } from "@interfaces/index";
+import {
+    call_enable_auto_delegate,
+    call_disable_auto_delegate
+} from "@utils/transaction";
+import { copyInputValue } from "@utils/util";
+import CheckMark from "@/img/checkMark.svg";
+import "./style.less";
 
 const aionLogo = require("@/img/metaLogo2.png");
-
-const mapToState = ({ account }) => {
-    const poolAddress = account.operation.pool || "";
-    const delegation = account.delegations[poolAddress] || {};
-    return {
-        operation: account.operation,
-        pool: account.pools[poolAddress],
-        commissionRateChanges: [...account.commissionRateChanges] || [],
-        account:
-            account.address !== ""
-                ? {
-                      address: account.address,
-                      stake: delegation.stake || new Bignumber(0),
-                      rewards: delegation.rewards || new Bignumber(0)
-                  }
-                : undefined
-    };
-};
 
 const poolDetailInfo = [
     {
@@ -174,79 +172,137 @@ const renderAccountDetail = (info, src) => {
     });
 };
 
-const Pageoperation = props => {
-    const { operation, account, pool, commissionRateChanges } = useSelector(
-        mapToState,
-        shallowEqual
-    );
-    const dispatch = useDispatch();
-    const { history } = props;
-
-    const toDelegate = () => {
-        if (makkii.isconnect()) {
-            if (!account) {
-                alert({
-                    title: i18n.t("error_title"),
-                    message: i18n.t("error_no_account"),
-                    actions: [
-                        {
-                            title: i18n.t("button_ok"),
-                            onPress: handleSwitchAccount
-                        }
-                    ]
-                });
-            } else {
-                dispatch(
-                    createAction("account/update")({
-                        operation: {
-                            ...operation,
-                            type: operationType.delegate
-                        }
-                    })
-                );
-                history.push("/delegate");
-            }
-        } else {
+const checkoutAccount = (cb: () => any) => {
+    if (makkii.isconnect()) {
+        if (!store.getState().account) {
             alert({
                 title: i18n.t("error_title"),
-                message: i18n.t("error_no_makkii"),
+                message: i18n.t("error_no_account"),
                 actions: [
                     {
                         title: i18n.t("button_ok"),
-                        onPress: () => {
-                            window.location.href =
-                                "https://www.chaion.net/download/makkii_latest.apk";
-                        }
+                        onPress: handleSwitchAccount
                     }
                 ]
             });
+        } else {
+            cb();
         }
-    };
+    } else {
+        alert({
+            title: i18n.t("error_title"),
+            message: i18n.t("error_no_makkii"),
+            actions: [
+                {
+                    title: i18n.t("button_ok"),
+                    onPress: () => {
+                        window.location.href =
+                            "https://www.chaion.net/download/makkii_latest.apk";
+                    }
+                }
+            ]
+        });
+    }
+};
 
-    const toUndelegate = () => {
-        dispatch(
+const toDelegate = () => {
+    checkoutAccount(() => {
+        store.dispatch(
             createAction("account/update")({
                 operation: {
-                    ...operation,
+                    ...store.getState().account.operation,
+                    type: operationType.delegate
+                }
+            })
+        );
+        history.push("/delegate");
+    });
+};
+
+const toUndelegate = () => {
+    checkoutAccount(() => {
+        store.dispatch(
+            createAction("account/update")({
+                operation: {
+                    ...store.getState().account.operation,
                     type: operationType.undelegate
                 }
             })
         );
         history.push("/undelegate");
-    };
+    });
+};
 
-    const toWithdraw = () => {
-        dispatch(
+const toWithdraw = () => {
+    checkoutAccount(() => {
+        store.dispatch(
             createAction("account/update")({
                 operation: {
-                    ...operation,
+                    ...store.getState().account.operation,
                     type: operationType.withdraw
                 }
             })
         );
         history.push("/withdraw");
-    };
+    });
+};
 
+const toTransfer = () => {
+    checkoutAccount(() => {
+        store.dispatch(
+            createAction("account/update")({
+                operation: {
+                    ...store.getState().account.operation,
+                    type: ""
+                }
+            })
+        );
+        history.push("/transfer");
+    });
+};
+
+const Pageoperation = () => {
+    const [modalState, setModalState] = React.useState({
+        visible: false,
+        txHash: ""
+    });
+
+    const { operation } = store.getState().account;
+    const pool: Ipool = store.getState().account.pools[operation.pool];
+    const account = {
+        address: store.getState().account.address,
+        stake: useSelector(
+            (state: { account: IAccountState }) =>
+                (
+                    state.account.delegations[operation.pool] || {
+                        stake: new BigNumber(0)
+                    }
+                ).stake,
+            (l, r) => l.toNumber() === r.toNumber()
+        ),
+        rewards: useSelector(
+            (state: { account: IAccountState }) =>
+                (
+                    state.account.delegations[operation.pool] || {
+                        rewards: new BigNumber(0)
+                    }
+                ).rewards,
+            (l, r) => l.toNumber() === r.toNumber()
+        )
+    };
+    const commissionRateChanges = useSelector(
+        (state: { account: IAccountState }) =>
+            state.account.commissionRateChanges,
+        shallowEqual
+    );
+    const autoDelegationRewards = useSelector(
+        (state: { account: IAccountState }) =>
+            (
+                state.account.delegations[operation.pool] || {
+                    auto_delegate_rewards: false
+                }
+            ).auto_delegate_rewards
+    );
     React.useEffect(() => {
         if (!operation.pool) {
             history.replace("/poolList");
@@ -254,7 +310,6 @@ const Pageoperation = props => {
     }, [operation]);
 
     React.useEffect(() => {
-        console.log("only execute once for operation not change");
         wsSend({
             method: "commission_rate_changes",
             params: [operation.pool, 0, 50]
@@ -265,6 +320,58 @@ const Pageoperation = props => {
             );
         };
     }, []);
+
+    const handle_toggle = async v => {
+        const {
+            liquidBalance,
+            operation: { pool: poolAddress }
+        }: IAccountState = store.getState().account;
+        const gasLimit = new BigNumber(
+            v ? gas_enable_auto_delegate : gas_disable_auto_delegate
+        );
+        if (
+            liquidBalance.isLessThan(
+                gasLimit.times(gasPrice).shiftedBy(AIONDECIMAL)
+            )
+        ) {
+            // gas limit insufficient
+            alert({
+                title: "",
+                message: ""
+            });
+        }
+        let res;
+        if (v) {
+            res = await call_enable_auto_delegate(poolAddress);
+        } else {
+            res = await call_disable_auto_delegate(poolAddress);
+        }
+        if (res) {
+            // send success
+            setModalState({
+                visible: true,
+                txHash: res
+            });
+        } else {
+            // send fail
+            alert({
+                title: i18n.t("error_title"),
+                message: i18n.t("error_sent_fail"),
+                actions: [
+                    {
+                        title: i18n.t("button_ok")
+                    }
+                ]
+            });
+        }
+    };
+
+    const hideModal = () => {
+        setModalState({
+            visible: false,
+            txHash: ""
+        });
+    };
 
     const accountLabel = () => {
         if (!account) return null;
@@ -295,6 +402,8 @@ const Pageoperation = props => {
         active,
         address: poolAddress
     } = pool;
+    const hasDelegated = account && account.stake.isGreaterThan(0);
+    const notSelfBond = account.address !== pool.address;
     return (
         <div className="operation-container">
             <div className="operation-pool-basic">
@@ -333,12 +442,70 @@ const Pageoperation = props => {
             <CommonButton
                 title={i18n.t("operation.button_delegate")}
                 onClick={toDelegate}
-                className="button-orange"
+                className="button-orange operation-basic-button"
             />
+            {hasDelegated ? (
+                <>
+                    {notSelfBond ? (
+                        <CommonButton
+                            title={i18n.t("operation.button_transfer")}
+                            onClick={toTransfer}
+                            className="button-orange operation-basic-button"
+                        />
+                    ) : null}
+
+                    <div className="operation-switch">
+                        <span>
+                            {i18n.t("operation.label_auto_delegate_rewards")}
+                        </span>
+                        <Switch
+                            className="operation-switch-button"
+                            value={autoDelegationRewards}
+                            handleToggle={handle_toggle}
+                        />
+                    </div>
+                </>
+            ) : null}
             <CommissionRateChangeList
                 commissionRateChanges={commissionRateChanges}
                 pool={pool}
             />
+            <Modal
+                visible={modalState.visible}
+                title=""
+                hide={hideModal}
+                actions={[
+                    {
+                        title: (
+                            <div className="button button-orange">
+                                {i18n.t("button_ok")}
+                            </div>
+                        ),
+                        onPress: () => {
+                            history.replace("/home");
+                        }
+                    }
+                ]}
+                className="tx_result_modal"
+            >
+                <CheckMark width={40} height={40} />
+                <p>
+                    {i18n.t("modal.sent_success_msg1")}
+                    <br />
+                    {i18n.t("modal.sent_success_msg2")}
+                </p>
+                <p>{i18n.t("modal.sent_success_msg3")}</p>
+                <p>
+                    {formatAddress(modalState.txHash)}
+                    <img
+                        src={require("@/img/copy2.png")}
+                        onClick={() => {
+                            copyInputValue(modalState.txHash);
+                        }}
+                        alt=""
+                    />
+                </p>
+            </Modal>
         </div>
     );
 };

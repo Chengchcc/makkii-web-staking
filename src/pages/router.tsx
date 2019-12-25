@@ -7,6 +7,8 @@ import PagePendingUndelegation from "@pages/undelgations";
 import PagePoolList from "@pages/pool_list";
 import PageUndelegate from "@pages/operation/undelegate";
 import PageWithdraw from "@pages/operation/withdraw";
+import PageTransfer from "@pages/operation/transfer";
+import PageDelegationTransfers from "@pages/delegation_transfers";
 import PageHistoryList from "@pages/history_lists";
 import PageOperation from "@pages/operation";
 import { withNavBar } from "@utils/history";
@@ -91,6 +93,19 @@ const router = ({ history }) => {
                     path="/history"
                     component={withLockByAccount(
                         withNavBar(PageHistoryList, i18n.t("history.title"))
+                    )}
+                />
+                <Route
+                    path="/transfer"
+                    component={withLockByAccount(withNavBar(PageTransfer))}
+                />
+                <Route
+                    path="/transfers"
+                    component={withLockByAccount(
+                        withNavBar(
+                            PageDelegationTransfers,
+                            i18n.t("transfers.title")
+                        )
                     )}
                 />
                 <Route

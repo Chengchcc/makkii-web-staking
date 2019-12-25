@@ -171,6 +171,34 @@ const handle_result = (method, result, payload_: { params: any[] }) => {
                 );
             }
             break;
+        case "delegation_transfers":
+            {
+                console.log("ws recv [delegation_transfers] res=>", result);
+                if (!result) break;
+                const { total_pages, current_page, data } = result;
+                const transfers = { ...data };
+                Object.keys(transfers).forEach(v => {
+                    transfers[v].amount = new BigNumber(
+                        transfers[v].amount
+                    ).shiftedBy(AIONDECIMAL);
+                });
+                const {
+                    delegationTransfers: oldDelegationTransfers
+                } = store.getState().account;
+                store.dispatch(
+                    createAction("account/update")({
+                        delegationTransfers: {
+                            ...oldDelegationTransfers,
+                            ...transfers
+                        },
+                        delegationTransfersPagination: {
+                            current: current_page,
+                            total: total_pages
+                        }
+                    })
+                );
+            }
+            break;
         case "transactions":
             {
                 console.log("ws recv [transactions] res=>", result);

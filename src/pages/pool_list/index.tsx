@@ -2,15 +2,15 @@
 import React from "react";
 import MoreList from "@components/more_list";
 import { PoolItem } from "@components/pool_item";
-import { useSelector, useDispatch, shallowEqual } from "react-redux";
+import { useSelector, shallowEqual } from "react-redux";
 import { wsSend } from "@utils/websocket";
 import store, { createAction } from "@reducers/store";
 import { operationType } from "@reducers/accountReducer";
 import { Ipool, Idelegation } from "@interfaces/types";
+import history from "@utils/history";
 import { performance_low, performance_high } from "@utils/constants.json";
 
 const mapToState = ({ account }) => {
-    console.log("selector trigger");
     return {
         pools: { ...account.pools },
         operation: { ...account.operation },
@@ -18,9 +18,7 @@ const mapToState = ({ account }) => {
     };
 };
 
-let scrollTop = 0;
-const poolList = props => {
-    const { history } = props;
+const usePools = () => {
     const {
         pools,
         operation,
@@ -30,60 +28,9 @@ const poolList = props => {
         delegations: { [poolAddres: string]: Idelegation };
         operation: {
             pool: string;
-            type: operationType;
+            type: operationType | string;
         };
     } = useSelector(mapToState, shallowEqual);
-    const dispatch = useDispatch();
-
-    const onRefresh = () => {
-        wsSend({ method: "pools", params: [false] });
-    };
-
-    const onReachEnd = () => {
-        wsSend({ method: "pools", params: [false] });
-    };
-
-    const toPool = pool => {
-        dispatch(
-            createAction("account/update")({
-                operation: {
-                    ...operation,
-                    pool
-                }
-            })
-        );
-        if (operationType.default === operation.type) {
-            history.push("/operation");
-        } else if (operationType.delegate === operation.type) {
-            history.push("/delegate");
-        } else if (operationType.undelegate === operation.type) {
-            history.push("/undelegate");
-        } else if (operationType.withdraw === operation.type) {
-            history.push("/withdraw");
-        }
-    };
-
-    React.useEffect(() => {
-        if (Object.keys(pools).length === 0) {
-            wsSend({ method: "pools", params: [false] });
-        }
-    }, []);
-
-    React.useEffect(() => {
-        const element =
-            document.getElementById("pullLoadContainer") || document.body;
-        const handleScollTop = e => {
-            scrollTop = e.target.scrollTop;
-        };
-        element.addEventListener("scroll", handleScollTop);
-        if (scrollTop && navigator.userAgent.match("Android")) {
-            element.scrollTop = scrollTop;
-        }
-        return () => {
-            element.removeEventListener("scroll", handleScollTop);
-        };
-    });
-
     const [can_undelegate, can_withdraw] = Object.keys(delegations).reduce(
         ([arr1, arr2], el) => {
             const { stake, rewards } = delegations[el];
@@ -109,6 +56,14 @@ const poolList = props => {
         default:
             filters = Object.keys(pools);
     }
+    if (typeof operation.type === "string") {
+        // when transfer, should filter 'from' pool
+        filters.forEach((addr, idx) => {
+            if (operation.pool === addr) {
+                filters.splice(idx, 1);
+            }
+        });
+    }
     const sorter = (a: Ipool, b: Ipool) => {
         const getLevel = (pool: Ipool) => {
             const performanceNumber = pool.performance.times(100).toNumber();
@@ -120,14 +75,82 @@ const poolList = props => {
         };
         return getLevel(b) - getLevel(a);
     };
+    return Object.values(pools)
+        .filter(el => filters.includes(el.address))
+        .sort(sorter);
+};
+
+const onRefresh = () => {
+    wsSend({ method: "pools", params: [false] });
+};
+
+const onReachEnd = () => {
+    wsSend({ method: "pools", params: [false] });
+};
+
+const toPool = pool => {
+    const { operation } = store.getState().account;
+    if (typeof operation.type === "string") {
+        store.dispatch(
+            createAction("account/update")({
+                operation: {
+                    ...operation,
+                    type: pool
+                }
+            })
+        );
+        history.replace("/transfer");
+    } else {
+        store.dispatch(
+            createAction("account/update")({
+                operation: {
+                    ...operation,
+                    pool
+                }
+            })
+        );
+        if (operationType.default === operation.type) {
+            history.push("/operation");
+        } else if (operationType.delegate === operation.type) {
+            history.push("/delegate");
+        } else if (operationType.undelegate === operation.type) {
+            history.push("/undelegate");
+        } else if (operationType.withdraw === operation.type) {
+            history.push("/withdraw");
+        }
+    }
+};
+
+let scrollTop = 0;
+const poolList = () => {
+    const pools = usePools();
+
+    React.useEffect(() => {
+        if (Object.keys(pools).length === 0) {
+            wsSend({ method: "pools", params: [false] });
+        }
+    }, []);
+
+    React.useEffect(() => {
+        const element =
+            document.getElementById("pullLoadContainer") || document.body;
+        const handleScollTop = e => {
+            scrollTop = e.target.scrollTop;
+        };
+        element.addEventListener("scroll", handleScollTop);
+        if (scrollTop && navigator.userAgent.match("Android")) {
+            element.scrollTop = scrollTop;
+        }
+        return () => {
+            element.removeEventListener("scroll", handleScollTop);
+        };
+    });
     return (
         <MoreList
             onReachEnd={onReachEnd}
             onRefresh={onRefresh}
             hasMore={false}
-            data={Object.values(pools)
-                .filter(el => filters.includes(el.address))
-                .sort(sorter)}
+            data={pools}
             renderItem={pool => {
                 return <PoolItem pool={pool} toPool={toPool} />;
             }}
