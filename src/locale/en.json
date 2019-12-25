@@ -80,6 +80,8 @@
         "label_withdraw":"Withdraw",
         "label_finalized": "Undelegation Finalized",
         "label_auto_delegate": "Auto delegate",
+        "label_enable_auto_delegate":"Enable auto delegate rewards",
+        "label_disable_auto_delegate":"Disable auto delegate rewards",
         "label_normal": "Normal"
     },
     "refresh_control":{

@@ -80,6 +80,8 @@
         "label_withdraw":"提现",
         "label_finalized": "撤回确认",
         "label_auto_delegate": "自动委托",
+        "label_enable_auto_delegate":"开启奖励自动委托",
+        "label_disable_auto_delegate":"关闭奖励自动委托",
         "label_normal": "普通"
     },
     "refresh_control":{

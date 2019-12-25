@@ -24,6 +24,10 @@ const transferType = type => {
             return `${i18n.t("transaction.label_finalized")}: `;
         case "AutoADSDelegated":
             return `${i18n.t("transaction.label_auto_delegate")}: `;
+        case "ADSAutoRewardsDelegationEnabled":
+            return `${i18n.t("transaction.label_enable_auto_delegate")}`;
+        case "ADSAutoRewardsDelegationDisabled":
+            return `${i18n.t("transaction.label_disable_auto_delegate")}`;
         default:
             return `${i18n.t("transaction.label_normal")}: `;
     }
@@ -55,7 +59,9 @@ const TransactionItem: React.FC<ItransactionItem> = props => {
                     </div>
                     <div className="transaction-pool-label">
                         <span>{transferType(type)}</span>
-                        <span>{`${amount.toFixed(5)} AION`}</span>
+                        {amount.gt(0) ? (
+                            <span>{`${amount.toFixed(5)} AION`}</span>
+                        ) : null}
                     </div>
                 </div>
             </div>
