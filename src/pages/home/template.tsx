@@ -135,7 +135,7 @@ export const process_transfers = transfers => {
 
 export const process_transactions = transctions => {
     return Object.values(transctions).sort(
-        (a: any, b: any) => a.timestamp - b.timestamp
+        (a: any, b: any) => b.timestamp - a.timestamp
     );
 };
 

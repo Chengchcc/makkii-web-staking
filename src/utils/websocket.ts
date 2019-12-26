@@ -210,6 +210,7 @@ const handle_result = (method, result, payload_: { params: any[] }) => {
                     if (v.amount.toString() === "NaN")
                         v.amount = new BigNumber(0);
                     map[v.hash + v.type] = v;
+                    v.timestamp = v.block_timestamp;
                     return map;
                 }, {});
                 const { history: oldHistory } = store.getState().account;
