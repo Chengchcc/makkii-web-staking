@@ -3,7 +3,7 @@ import MoreList from "@components/more_list";
 import TransactionItem from "@components/transaction_item";
 import { useSelector, shallowEqual } from "react-redux";
 import { wsSendOnce } from "@utils/websocket";
-import { process_transctions } from "@pages/home";
+import { process_transactions } from "@pages/home";
 
 const mapToState = ({ account }) => {
     return {
@@ -49,7 +49,7 @@ const HistoryLists = () => {
             onReachEnd={onReachEnd}
             onRefresh={onRefresh}
             hasMore={hasMore}
-            data={process_transctions(transactions)}
+            data={process_transactions(transactions)}
             renderItem={el => {
                 return (
                     <TransactionItem pool={pools[el.pool]} transaction={el} />

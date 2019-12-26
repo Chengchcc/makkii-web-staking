@@ -22,7 +22,7 @@ import {
 import {
     process_delegations,
     process_undelegations,
-    process_transctions,
+    process_transactions,
     process_transfers
 } from "./template";
 
@@ -316,7 +316,7 @@ const home = () => {
                             hasHistory &&
                             renderTransaction(
                                 i18n.t("history.card_title"),
-                                process_transctions(transactions).slice(0, 3)
+                                process_transactions(transactions).slice(0, 3)
                             )}
                         {hasPools &&
                             hasTransfers &&
