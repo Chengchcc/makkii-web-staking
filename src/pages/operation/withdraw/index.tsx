@@ -1,7 +1,7 @@
 import React from "react";
-import { useSelector, shallowEqual } from "react-redux";
+import { useSelector } from "react-redux";
 import { operationType } from "@reducers/accountReducer";
-import { formatAddress, validateAmount, getPoolLogo } from "@utils/index";
+import { formatAddress, getPoolLogo } from "@utils/index";
 import { gas_withdraw, gasPrice, AIONDECIMAL } from "@utils/constants.json";
 import BigNumber from "bignumber.js";
 import { CommonButton } from "@components/button";
@@ -11,6 +11,7 @@ import Image from "@components/default-img";
 import { copyInputValue } from "@utils/util";
 import i18n from "@utils/i18n";
 import { send_event_log } from "@utils/httpclient";
+import store from "@reducers/store";
 import FormItem from "../operation_form_item";
 import { commonGoback } from "../util";
 import CheckMark from "@/img/checkMark.svg";
@@ -24,8 +25,6 @@ const maptoState = ({ account }) => {
     const { delegations, operation } = account;
     const delegation = delegations[operation.pool] || {};
     return {
-        pools: { ...account.pools },
-        operation: { ...operation },
         account: {
             address: account.address,
             rewards: delegation.rewards || new BigNumber(0)
@@ -38,7 +37,20 @@ const withdraw = props => {
         visible: false,
         txHash: ""
     });
-    const { account, operation, pools } = useSelector(maptoState, shallowEqual);
+    const {
+        account
+    }: {
+        account: {
+            address: string;
+            rewards: BigNumber;
+        };
+    } = useSelector(maptoState, (l, r) => {
+        return (
+            l.account.address === r.account.address &&
+            l.account.rewards.toNumber() === r.account.rewards.toNumber()
+        );
+    });
+    const { pools, operation } = store.getState().account;
     const { history } = props;
     React.useEffect(() => {
         if (operationType.withdraw !== operation.type) {
@@ -50,21 +62,7 @@ const withdraw = props => {
     const { address, rewards } = account;
     const handle_withdraw = async (e: MouseEvent) => {
         e.preventDefault();
-        const amount = rewards;
-        const valid = validateAmount(amount);
-        const insufficientBalance = new BigNumber(amount).gt(rewards);
-        if (!valid || parseFloat(amount) === 0 || insufficientBalance) {
-            alert({
-                title: i18n.t("error_title"),
-                message: i18n.t("error_invalid_amount"),
-                actions: [
-                    {
-                        title: i18n.t("button_ok")
-                    }
-                ]
-            });
-            return;
-        }
+        const amount = rewards.toNumber();
         const res = await call_withdraw(operation.pool);
         if (res) {
             send_event_log({

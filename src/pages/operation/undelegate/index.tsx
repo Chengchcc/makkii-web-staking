@@ -1,6 +1,6 @@
 import React from "react";
 import "../style.less";
-import { useSelector, shallowEqual } from "react-redux";
+import { useSelector } from "react-redux";
 import { operationType } from "@reducers/accountReducer";
 import { formatAddress, validateAmount, getPoolLogo } from "@utils/index";
 import {
@@ -17,6 +17,7 @@ import Image from "@components/default-img";
 import { copyInputValue } from "@utils/util";
 import i18n from "@utils/i18n";
 import { send_event_log } from "@utils/httpclient";
+import store from "@reducers/store";
 import FormItem from "../operation_form_item";
 import { commonGoback } from "../util";
 
@@ -30,8 +31,6 @@ const maptoState = ({ account }) => {
     const { delegations, operation } = account;
     const delegation = delegations[operation.pool] || {};
     return {
-        pools: { ...account.pools },
-        operation: { ...operation },
         account: {
             address: account.address,
             staked: delegation.stake || new BigNumber(0)
@@ -44,7 +43,20 @@ const undelegate = props => {
         visible: false,
         txHash: ""
     });
-    const { account, operation, pools } = useSelector(maptoState, shallowEqual);
+    const {
+        account
+    }: {
+        account: {
+            address: string;
+            staked: BigNumber;
+        };
+    } = useSelector(maptoState, (l, r) => {
+        return (
+            l.account.address === r.account.address &&
+            l.account.staked.toNumber() === r.account.staked.toNumber()
+        );
+    });
+    const { pools, operation } = store.getState().account;
     const { history } = props;
     const inputRef = React.useRef(null);
     React.useEffect(() => {
