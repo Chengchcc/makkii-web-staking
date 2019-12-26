@@ -102,8 +102,12 @@ export const PoolItem: React.FC<IPoolItem> = props => {
                 {lists(INFOS, pool, {})}
             </div>
             <IconRight className='pool-detail-img'/> */}
-                <div style={{ border: poolLogo ? "" : "1px solid #ddd" }}>
+                <div>
                     <img
+                        style={{
+                            border: poolLogo ? "" : "1px solid #ddd",
+                            boxSizing: "border-box"
+                        }}
                         className="left-logo"
                         src={poolLogo || defaultLogo}
                         alt=""

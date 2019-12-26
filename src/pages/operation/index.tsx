@@ -174,7 +174,7 @@ const renderAccountDetail = (info, src) => {
 
 const checkoutAccount = (cb: () => any) => {
     if (makkii.isconnect()) {
-        if (!store.getState().account) {
+        if (!store.getState().account.address) {
             alert({
                 title: i18n.t("error_title"),
                 message: i18n.t("error_no_account"),
