@@ -40,7 +40,17 @@ const TransactionItem: React.FC<ItransactionItem> = props => {
     const poolLogo = getPoolLogo(pool);
     // const date = new Date(parseInt(timestamp, 16)*1000).Format('yyyy-MM-dd hh:mm', 24)
     if (type === "ADSDelegationTransferred" || type === "TransferFinalized") {
-        return <TransferItem transfer={process_transfer(transaction) as any} />;
+        return (
+            <div>
+                <div className="transfer-hash-label ">
+                    {`${i18n.t("transaction.label_tx_hash")}:`}{" "}
+                    {`${hash.substring(0, 10)}...${hash.substring(
+                        hash.length - 8
+                    )}`}
+                </div>
+                <TransferItem transfer={process_transfer(transaction) as any} />
+            </div>
+        );
     }
     return (
         <div className="transaction-item">
@@ -54,7 +64,7 @@ const TransactionItem: React.FC<ItransactionItem> = props => {
                 </div>
                 <div>
                     <div className="transaction-pool-label">
-                        {/* date */} {`${i18n.t("transaction.label_tx_hash")}:`}{" "}
+                        {`${i18n.t("transaction.label_tx_hash")}:`}{" "}
                         {`${hash.substring(0, 8)}...${hash.substring(60)}`}
                     </div>
                     <div className="transaction-pool-label">
