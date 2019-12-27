@@ -6,8 +6,13 @@ import store, { createAction } from "@reducers/store";
 import { alert } from "@components/modal";
 import BigNumber from "bignumber.js";
 import makkii from "makkii-webview-bridge";
-import { wsSend, clearWsTikcet } from "./websocket";
+import { clearWsTikcet } from "./websocket";
+import { HTTP_URL_AMITY, HTTP_URL_MAINNET } from "./constants.json";
 import i18n from "./i18n";
+
+declare const NETWORK: string;
+
+const http_base_url = NETWORK === "amity" ? HTTP_URL_AMITY : HTTP_URL_MAINNET;
 
 export const formatPoolName = poolName => {
     let newPoolName = poolName[0].toUpperCase() + poolName.substr(1);
@@ -171,13 +176,38 @@ export function getPoolLogo(pool): string {
         }
         if (!pool_request.includes(pool.address)) {
             pool_request.push(pool.address);
-            wsSend({ method: "pool_logo", params: [pool.address] }, () => {
-                pool_request.forEach((addr, idx) => {
-                    if (addr === pool.address) {
-                        pool_request.splice(idx, 1);
+            fetch(http_base_url, {
+                method: "POST",
+                body: JSON.stringify({
+                    method: "pool_logo",
+                    params: [pool.address],
+                    id: "1"
+                }),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+                .then(resp => resp.json())
+                .then(payload => {
+                    pool_request.forEach((addr, idx) => {
+                        if (addr === pool.address) {
+                            pool_request.splice(idx, 1);
+                        }
+                    });
+                    const { address } = pool;
+                    const logo = payload.result || "undefined";
+                    if (
+                        store.getState().account.pools[address].meta.logo ===
+                        null
+                    ) {
+                        store.dispatch(
+                            createAction("account/updatePoolLogo")({
+                                pool: address,
+                                logo
+                            })
+                        );
                     }
                 });
-            });
         }
     }
 

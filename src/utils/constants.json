@@ -12,6 +12,8 @@
     "POOL_REGISTRY_MAINNET":"0xa008e42a76e2e779175c589efdb2a0e742b40d8d421df2b93a8a0b13090c7cc8",
     "WS_URL_AMITY": "ws://47.92.202.146/api",
     "WS_URL_MAINNET": "wss://staking.makkii.dev/api",
+    "HTTP_URL_AMITY": "http://47.92.202.146/relay_api",
+    "HTTP_URL_MAINNET": "http://47.92.202.146/relay_api",
     "APPSERVER_URL_TEST": "http://47.92.202.146:8080",
     "APPSERVER_URL_PRODUCTION": "https://www.chaion.net/makkii",
     "BLOCK_NUMBER_BASE": 60480,
