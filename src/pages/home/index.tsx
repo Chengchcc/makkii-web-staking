@@ -27,7 +27,7 @@ import {
 } from "./template";
 
 export * from "./template";
-
+declare const CURRENTVERSION: string;
 const toDelegate = e => {
     e.preventDefault();
     const { operation } = store.getState().account;
@@ -264,7 +264,12 @@ const home = () => {
                 handleAction={handleAction}
                 action={state.action}
                 hasMore={false}
-                FooterNode={() => <div />}
+                FooterNode={() => (
+                    <div className="footer">
+                        <p>Powered by Makkii</p>
+                        <p>{`Version: ${CURRENTVERSION}`}</p>
+                    </div>
+                )}
             >
                 <div className="home-header">
                     <div className="header-account">
@@ -333,7 +338,8 @@ const home = () => {
                         style={{
                             display: "flex",
                             flex: 1,
-                            alignItems: "center",
+                            height: "90%",
+                            alignItems: "flex-start",
                             justifyContent: "center",
                             marginTop: "30"
                         }}

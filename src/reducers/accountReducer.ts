@@ -38,7 +38,8 @@ export interface IAccountState {
     commissionRateChanges: any[];
 }
 const defaultState2: IAccountState = {
-    address: "",
+    address:
+        "0xa095541186b2e53698244e231274a0754678664d2655d0e233aa3b9a03d21ef4",
     liquidBalance: new BigNumber(-1),
     stakedAmount: new BigNumber(-1),
     undelegationAmount: new BigNumber(-1),

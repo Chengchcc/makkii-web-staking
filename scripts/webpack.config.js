@@ -5,7 +5,7 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const webpack = require('webpack');
 const path = require('path');
-
+const fs = require('fs');
 const mode = process.env.NODE_ENV;
 const baseapi = process.env.BASE_API;
 const isAnaylize = process.env.ANALYZE;
@@ -19,6 +19,12 @@ const cssplugin = !isDev? [new MiniCssExtractPlugin({
   filename: '[name].[hash:8].css',
   chunkFilename: '[name]-[id].[hash:8].css',
 })]:[]
+
+const packagejson = require(path.resolve(__dirname,'../package.json'))
+const gitHead = fs.readFileSync(path.resolve(__dirname, '../.git/HEAD'), 'utf-8').trim().split(': ')[1];
+const gitID = fs.readFileSync(path.resolve(__dirname, `../.git/${gitHead}`), 'utf-8').trim().slice(0,7);
+const currentVersion = `V${packagejson.version}~${gitID}`
+
 module.exports = {
   entry: {
     bundle: './src/index.tsx'
@@ -57,7 +63,8 @@ module.exports = {
     new webpack.DefinePlugin({
       BASENAME: JSON.stringify(RELEVANT_PATH),
       BASEAPI: JSON.stringify(baseapi),
-      NETWORK: JSON.stringify(network)
+      NETWORK: JSON.stringify(network),
+      CURRENTVERSION: JSON.stringify(currentVersion)
     }),
   ],
   module: {
