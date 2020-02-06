@@ -108,7 +108,7 @@ module.exports = {
   },
   mode, // 'production' or 'development' webpack mode
   devServer: {
-    // http2: true,
+    http2: true,
     historyApiFallback: true,
     contentBase: path.resolve(__dirname, '../dist'),
     open: true,
