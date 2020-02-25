@@ -67,7 +67,9 @@ const usePools = () => {
     const sorter = (a: Ipool, b: Ipool) => {
         const getLevel = (pool: Ipool) => {
             const performanceNumber = pool.performance.times(100).toNumber();
-            return performanceNumber > performance_high
+            return !pool.active
+                ? 0
+                : performanceNumber > performance_high
                 ? 3
                 : performanceNumber < performance_low
                 ? 1

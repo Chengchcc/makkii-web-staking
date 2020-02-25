@@ -20,7 +20,7 @@ export interface Ipool {
     stakeTotal: BigNumber;
     stakeSelf: BigNumber;
     fee: BigNumber;
-    active: string;
+    active: boolean;
     metaDataurl: string;
     posBlkTotal: BigNumber;
     stakeWeight: BigNumber;

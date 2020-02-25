@@ -45,12 +45,16 @@ const process_pools = async (pools: { [address: string]: any }, callback) => {
         const meta_data_url = hexCharCodeToStr(el.meta_data_url);
         total_pos_blk = total_pos_blk.plus(el.pos_blk_total);
         const stakeTotal = new BigNumber(el.stake_total).shiftedBy(AIONDECIMAL);
+        const stakeSelf = new BigNumber(el.stake_self).shiftedBy(AIONDECIMAL);
         map[el.address] = {
             address: el.address,
-            stakeTotal: new BigNumber(el.stake_total).shiftedBy(AIONDECIMAL),
-            stakeSelf: new BigNumber(el.stake_self).shiftedBy(AIONDECIMAL),
+            stakeTotal,
+            stakeSelf,
             fee: new BigNumber(el.fee).shiftedBy(-6),
-            active: el.active,
+            active:
+                el.active === "0x01" &&
+                stakeSelf.toNumber() >= 1000 &&
+                stakeTotal.toNumber() <= stakeSelf.toNumber() * 99,
             metaDataurl: meta_data_url,
             posBlkTotal: new BigNumber(el.pos_blk_total),
             meta: {
