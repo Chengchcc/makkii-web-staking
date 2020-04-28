@@ -68,10 +68,13 @@ const poolDetailInfo = [
         render: val => {
             return (
                 <span>
-                    {val.stakeSelf
-                        .times(100)
-                        .minus(val.stakeTotal)
-                        .toFixed(4)}
+                    {Math.max(
+                        0,
+                        val.stakeSelf
+                            .times(100)
+                            .minus(val.stakeTotal)
+                            .toNumber()
+                    ).toFixed(4)}
                 </span>
             );
         }
@@ -414,13 +417,9 @@ const Pageoperation = () => {
                     {name && <li>{name}</li>}
                     <li>
                         <span
-                            className={
-                                active === "0x01"
-                                    ? "poolActive"
-                                    : "poolInActive"
-                            }
+                            className={active ? "poolActive" : "poolInActive"}
                         />{" "}
-                        {active === "0x01"
+                        {active
                             ? i18n.t("pool.label_active")
                             : i18n.t("pool.label_inActive")}
                     </li>
@@ -440,6 +439,7 @@ const Pageoperation = () => {
                 {renderPoolDetail(poolDetailInfo, pool)}
             </div>
             <CommonButton
+                disabled={!active}
                 title={i18n.t("operation.button_delegate")}
                 onClick={toDelegate}
                 className="button-orange operation-basic-button"

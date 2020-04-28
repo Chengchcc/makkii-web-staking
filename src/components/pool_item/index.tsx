@@ -115,8 +115,7 @@ export const PoolItem: React.FC<IPoolItem> = props => {
                 </div>
                 <div
                     style={{
-                        backgroundColor:
-                            active === "0x01" ? "#08de00" : "#e84f4f"
+                        backgroundColor: active ? "#08de00" : "#e84f4f"
                     }}
                 />
                 <span>{meta.name || pool.address}</span>
