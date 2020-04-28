@@ -13,7 +13,7 @@ import {
     AIONDECIMAL
 } from "@utils/constants.json";
 import makkii from "makkii-webview-bridge";
-import ABICoder from "../libs/aion-web3-avm-abi";
+import ABICoder from "@makkii/aion-web3-avm-abi";
 
 declare const NETWORK: string;
 

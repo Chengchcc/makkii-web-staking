@@ -16,7 +16,6 @@
     "build:amity": "npm run clean; cross-env NODE_ENV=production cross-env RELEVANT_PATH=staking  cross-env NETWORK=amity webpack --config ./scripts/webpack.config.js",
     "build:mainnet": "npm run clean; cross-env NODE_ENV=production cross-env RELEVANT_PATH=staking  cross-env NETWORK=mainnet webpack --config ./scripts/webpack.config.js",
     "lint": "eslint src/**/*.{tsx,js,jsx,ts} --fix",
-    "postinstall": "cd src/libs/aion-web3-avm-abi&&npm install&&cd -",
     "deploy": "cross-env RELEVANT_PATH=staking node ./scripts/deploy.js"
   },
   "husky": {
@@ -31,6 +30,7 @@
     ]
   },
   "dependencies": {
+    "@makkii/aion-web3-avm-abi": "^1.0.0",
     "@types/js-cookie": "^2.2.4",
     "@types/react": "^16.9.9",
     "@types/react-dom": "^16.9.2",
