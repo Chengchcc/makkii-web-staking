@@ -37,6 +37,7 @@
     "operation": {
         "button_delegate": "委托",
         "button_unDelegate": "申请撤回委托",
+        "button_withdraw_all": "全部提现",
         "button_withdraw": "提现",
         "button_transfer": "转投",
         "label_auto_delegate_rewards":"自动委托收益",
@@ -56,7 +57,7 @@
         "label_balance": "余额",
         "label_delegate_amount": "质押金额",
         "label_undelegate_amount": "申请撤回金额",
-        "label_withdraw_amount":"提现金额",
+        "label_withdraw_amount":"奖励总额",
         "label_transfer_amount":"转移金额",
         "label_lock_period": "锁定期",
         "label_transfer_to": "选择你想转移的池子"

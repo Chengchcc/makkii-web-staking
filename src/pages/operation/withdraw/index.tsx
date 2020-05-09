@@ -123,7 +123,7 @@ const withdraw = props => {
                 <span>{rewards.toFixed(5)}&nbsp; AION</span>
             </FormItem>
             <CommonButton
-                title={i18n.t("operation.button_withdraw")}
+                title={i18n.t("operation.button_withdraw_all")}
                 className="button-orange"
                 onClick={handle_withdraw}
             />

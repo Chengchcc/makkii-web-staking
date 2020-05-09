@@ -389,7 +389,7 @@ const Pageoperation = () => {
                 />
                 <CommonButton
                     className="operation-button button-orange"
-                    title={i18n.t("operation.button_withdraw")}
+                    title={i18n.t("operation.button_withdraw_all")}
                     onClick={toWithdraw}
                     disabled={account.rewards.toNumber() === 0}
                 />

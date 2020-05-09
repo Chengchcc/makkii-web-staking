@@ -38,6 +38,7 @@
         "button_delegate": "Delegate",
         "button_unDelegate": "Un-delegate",
         "button_withdraw": "Withdraw",
+        "button_withdraw_all": "Withdraw All",
         "button_transfer": "Transfer",
         "label_auto_delegate_rewards":"Auto delegate rewards",
         "label_fees": "Fees",
@@ -56,7 +57,7 @@
         "label_balance": "Balance",
         "label_delegate_amount": "Delegate Amount",
         "label_undelegate_amount": "Undelegate Amount",
-        "label_withdraw_amount":"Withdraw Amount",
+        "label_withdraw_amount":"Total Rewards",
         "label_transfer_amount":"Transfer Amount",
         "label_lock_period": "Lock Period",
         "label_transfer_to": "Choose a pool you want to transfer"
