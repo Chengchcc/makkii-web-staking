@@ -18,10 +18,9 @@ import { copyInputValue } from "@utils/util";
 import i18n from "@utils/i18n";
 import { send_event_log } from "@utils/httpclient";
 import store from "@reducers/store";
+import CheckMark from "@/img/checkMark.svg";
 import FormItem from "../operation_form_item";
 import { commonGoback } from "../util";
-
-import CheckMark from "@/img/checkMark.svg";
 
 const fee_undelegate = new BigNumber(gas_undelegate)
     .times(gasPrice)
@@ -84,24 +83,26 @@ const undelegate = props => {
             });
             return;
         }
-        const res = await call_undelegate(operation.pool, amount, 0);
-        if (res) {
-            send_event_log({
-                user: "staking",
-                event: "STAKING_UNDELEGATE",
-                data: {
-                    amount,
-                    pool_address: operation.pool,
-                    pool_name: meta.name
-                }
-            });
+        try {
+            const res = await call_undelegate(operation.pool, amount, 0);
+            if (res) {
+                send_event_log({
+                    user: "staking",
+                    event: "STAKING_UNDELEGATE",
+                    data: {
+                        amount,
+                        pool_address: operation.pool,
+                        pool_name: meta.name
+                    }
+                });
 
-            // send success
-            setModalState({
-                visible: true,
-                txHash: res
-            });
-        } else {
+                // send success
+                setModalState({
+                    visible: true,
+                    txHash: res
+                });
+            }
+        } catch (err) {
             // send fail
             alert({
                 title: i18n.t("error_title"),

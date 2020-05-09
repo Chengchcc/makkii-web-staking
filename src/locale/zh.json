@@ -82,7 +82,11 @@
         "label_auto_delegate": "自动委托",
         "label_enable_auto_delegate":"开启奖励自动委托",
         "label_disable_auto_delegate":"关闭奖励自动委托",
-        "label_normal": "普通"
+        "label_normal": "普通",
+        "alert_title": "友情提示",
+        "alert_message": "请保留足够的AION以支付将来的交易费用。",
+        "button_cancel": "取消",
+        "button_continue": "继续"
     },
     "refresh_control":{
         "header_pulling":"下拉...",
@@ -119,5 +123,8 @@
         "commission_rate_changes": "佣金变更中"
     },
     "estimating": "估算中...",
-    "wait_for_finalization": "等待确认"
+    "wait_for_finalization": "等待确认",
+    "sort_fee": "交易费用",
+    "sort_perfomance": "绩效",
+    "sort_status": "状态"
 }

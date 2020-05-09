@@ -1,34 +1,26 @@
 /* eslint-disable import/no-extraneous-dependencies */
 
 const HtmlPlugin = require('html-webpack-plugin');
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const webpack = require('webpack');
 const path = require('path');
-const mode = process.env.NODE_ENV;
 const baseapi = process.env.BASE_API;
-const isAnaylize = process.env.ANALYZE;
 const network = process.env.NETWORK;
-const isDev = mode === 'development';
-const template = path.resolve(__dirname, '../public/index.html');
+const isDev = process.argv.indexOf('--mode=development') > -1;
+const template = path.join(__dirname, '../public/index.html');
 const { RELEVANT_PATH } = process.env;
-const publicPath = RELEVANT_PATH?`/${RELEVANT_PATH}/`:'/';
-const analyzerPlugin = isAnaylize ? [new BundleAnalyzerPlugin()] : [];
-const cssplugin = !isDev? [new MiniCssExtractPlugin({
-  filename: '[name].[hash:8].css',
-  chunkFilename: '[name]-[id].[hash:8].css',
-})]:[]
-const {execSync} = require("child_process")
-const currentVersion = execSync("git describe --always --dirty=-modified",{encoding:"utf-8"});
-console.log("currentVersion",currentVersion)
+const publicPath = RELEVANT_PATH ? `/${RELEVANT_PATH}/` : '/';
+const { execSync } = require("child_process")
+const currentVersion = execSync("git describe --always --dirty=-modified", { encoding: "utf-8" });
 module.exports = {
   entry: {
     bundle: './src/index.tsx'
   },
   output: {
-    path: path.resolve(__dirname, '../dist'),
-    filename: isDev?'[name].js':'[name].[hash:8].js',
-    chunkFilename: isDev?'[name].js':'[name]-[id].[hash:8].js',
+    path: path.join(__dirname, '../dist'),
+    filename: isDev ? '[name].js' : '[name].[hash:8].js',
+    chunkFilename: isDev ? '[name].js' : '[name]-[id].[hash:8].js',
     publicPath,
   },
   // Enable sourcemaps for debugging webpack's output.
@@ -49,12 +41,16 @@ module.exports = {
     }
   },
   plugins: [
-    ...analyzerPlugin,
-    ...cssplugin,
+    new MiniCssExtractPlugin({
+      filename: '[name].[hash:8].css',
+      chunkFilename: '[name]-[id].[hash:8].css',
+    }),
+    new CleanWebpackPlugin(),
     new HtmlPlugin({
       title: 'Aion Staking',
       filename: 'index.html',
       template,
+      meta: !isDev ? { "Cache-Control": { "http-equiv": "Content-Security-Policy", content: "upgrade-insecure-requests" } } : false
     }),
     new webpack.DefinePlugin({
       BASENAME: JSON.stringify(RELEVANT_PATH),
@@ -68,7 +64,9 @@ module.exports = {
       { test: /\.(js|jsx|ts|tsx)$/, exclude: /node_modules/, use: ['babel-loader'] },
       {
         test: [/\.less$/], use: [
-          !isDev? MiniCssExtractPlugin.loader:require.resolve('style-loader'),
+          process.argv.some(v => v.indexOf("webpack-dev-server") > -1) ?
+            'style-loader' :
+            MiniCssExtractPlugin.loader,
           {
             loader: require.resolve('css-loader'),
           },
@@ -98,7 +96,7 @@ module.exports = {
       },
     ]
   },
-  optimization: isDev?{}:{
+  optimization: isDev ? {} : {
     runtimeChunk: {
       name: "manifest"
     },
@@ -106,18 +104,13 @@ module.exports = {
       chunks: 'all'
     }
   },
-  mode, // 'production' or 'development' webpack mode
   devServer: {
-    http2: true,
+    http2: !isDev ? true : false,
     historyApiFallback: true,
-    contentBase: path.resolve(__dirname, '../dist'),
+    contentBase: path.join(process.cwd(), './dist'),
     open: true,
     host: '0.0.0.0',
     port: 8080,
     publicPath,
   },
-  watchOptions: {
-    aggregateTimeout: 300,
-    poll: 1000
-  }
 };

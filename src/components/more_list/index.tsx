@@ -4,7 +4,7 @@ import Spin from "@components/spin";
 import "./style.less";
 
 interface Ilist<T> {
-    title?: string;
+    title?: any;
     data: Array<T>;
     renderItem: (item: T, index?: number) => React.ReactElement<any>;
     onRefresh: () => any;
@@ -91,27 +91,33 @@ const List: React.FC<Ilist<any>> = props => {
     const style = { height: window.innerHeight - 80 };
     return (
         <div style={{ margin: 0, padding: 0, overflow: "hidden" }}>
-            <div className="list-title">{title}</div>
             {!state.isLoading ? (
-                <ReactPullLoad
-                    downEnough={150}
-                    className="loadList"
-                    isBlockContainer
-                    style={style}
-                    action={state.action}
-                    handleAction={handleAction}
-                    hasMore={hasMore}
-                    distanceBottom={1}
-                >
-                    <ul>
-                        {data.map((item, index) => {
-                            return (
-                                // eslint-disable-next-line react/no-array-index-key
-                                <li key={index}>{renderItem(item, index)}</li>
-                            );
-                        })}
-                    </ul>
-                </ReactPullLoad>
+                <>
+                    <div className="list-title">
+                        {typeof title === "function" ? title() : title}
+                    </div>
+                    <ReactPullLoad
+                        downEnough={150}
+                        className="loadList"
+                        isBlockContainer
+                        style={style}
+                        action={state.action}
+                        handleAction={handleAction}
+                        hasMore={hasMore}
+                        distanceBottom={1}
+                    >
+                        <ul>
+                            {data.map((item, index) => {
+                                return (
+                                    // eslint-disable-next-line react/no-array-index-key
+                                    <li key={item.address}>
+                                        {renderItem(item, index)}
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </ReactPullLoad>
+                </>
             ) : (
                 <div
                     style={{

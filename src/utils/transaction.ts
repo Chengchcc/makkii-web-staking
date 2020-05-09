@@ -14,6 +14,7 @@ import {
 } from "@utils/constants.json";
 import makkii from "makkii-webview-bridge";
 import ABICoder from "@makkii/aion-web3-avm-abi";
+import { TransactionAlert } from "@components/modal";
 
 declare const NETWORK: string;
 
@@ -38,14 +39,20 @@ const build_transaction = (
     };
 };
 
-const sendTx = async tx => {
-    console.log("sendTx=>", tx);
-    try {
-        return await makkii.sendTx(tx);
-    } catch (error) {
-        console.log("sendTx error", error);
-        return false;
-    }
+const sendTx = (tx): Promise<string> => {
+    return new Promise((resolve, reject) => {
+        console.log("sendTx=>", tx);
+        try {
+            TransactionAlert(
+                () => {
+                    resolve("");
+                },
+                () => resolve(makkii.sendTx(tx))
+            );
+        } catch (error) {
+            reject(new Error(`sendTx error:${error}`));
+        }
+    });
 };
 
 export const call_delegate = async (pool, amount) => {

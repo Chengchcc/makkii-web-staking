@@ -6,7 +6,7 @@ const createHistory = require("history").createBrowserHistory;
 declare const BASENAME: string;
 
 const history = createHistory({
-    basename: `/${BASENAME}`
+    basename: BASENAME ? `/${BASENAME}` : "/"
 });
 history.listen((location, action) => {
     console.log("history update=>", location, action);

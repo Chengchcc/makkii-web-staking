@@ -82,7 +82,11 @@
         "label_auto_delegate": "Auto delegate",
         "label_enable_auto_delegate":"Enable auto delegate rewards",
         "label_disable_auto_delegate":"Disable auto delegate rewards",
-        "label_normal": "Normal"
+        "label_normal": "Normal",
+        "alert_title": "Warning",
+        "alert_message": "Make sure you have enough balance in your account for future transactions",
+        "button_cancel": "Cancel",
+        "button_continue": "Continue"
     },
     "refresh_control":{
         "header_pulling":"Pulling...",
@@ -119,5 +123,8 @@
         "commission_rate_changes": "Pending Fee Changes"
     },
     "estimating": "Estimating...",
-    "wait_for_finalization": "Wait For Finalization"
+    "wait_for_finalization": "Wait For Finalization",
+    "sort_fee": "Fees",
+    "sort_perfomance": "Perfomance",
+    "sort_status": "Status"
 }

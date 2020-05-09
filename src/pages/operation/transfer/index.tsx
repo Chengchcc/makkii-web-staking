@@ -17,9 +17,9 @@ import i18n from "@utils/i18n";
 // import { send_event_log } from "@utils/httpclient";
 import IconRight from "@img/arrow_right.svg";
 import store from "@reducers/store";
+import CheckMark from "@/img/checkMark.svg";
 import FormItem from "../operation_form_item";
 import { commonGoback } from "../util";
-import CheckMark from "@/img/checkMark.svg";
 import "../style.less";
 
 const fee_delegate = new BigNumber(gas_delegate)
@@ -95,24 +95,30 @@ const PageTransfer = props => {
             });
             return;
         }
-        const res = await call_transfer(operation.pool, operation.type, amount);
-        if (res) {
-            // send_event_log({
-            //     user: "staking",
-            //     event: "STAKING_DELEGATE",
-            //     data: {
-            //         amount,
-            //         pool_address: operation.pool,
-            //         pool_name: meta.name
-            //     }
-            // });
+        try {
+            const res = await call_transfer(
+                operation.pool,
+                operation.type,
+                amount
+            );
+            if (res) {
+                // send_event_log({
+                //     user: "staking",
+                //     event: "STAKING_DELEGATE",
+                //     data: {
+                //         amount,
+                //         pool_address: operation.pool,
+                //         pool_name: meta.name
+                //     }
+                // });
 
-            // send success
-            setModalState({
-                visible: true,
-                txHash: res
-            });
-        } else {
+                // send success
+                setModalState({
+                    visible: true,
+                    txHash: res
+                });
+            }
+        } catch (err) {
             // send fail
             alert({
                 title: i18n.t("error_title"),

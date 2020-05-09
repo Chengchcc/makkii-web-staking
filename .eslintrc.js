@@ -37,6 +37,7 @@ module.exports = {
     "react/prop-types":[0],
     "react/jsx-props-no-spreading":[0],
     "import/prefer-default-export":[0],
+    "import/extensions":[0],
     "react/destructuring-assignment":["off"],
     "prefer-object-spread":[0],
     "max-len": ["error", { "code": 200 }],
@@ -45,7 +46,7 @@ module.exports = {
     "@typescript-eslint/no-unused-vars": "error",
     "jsx-a11y/anchor-is-valid": 0,
     "global-require": 0,
-    "no-restricted-globals":["error", "isNAN"] 
+    "no-restricted-globals":["error", "isNAN"]
   },
   settings: {
     "import/resolver": {

@@ -9,6 +9,8 @@ import { operationType } from "@reducers/accountReducer";
 import { Ipool, Idelegation } from "@interfaces/types";
 import history from "@utils/history";
 import { performance_low, performance_high } from "@utils/constants.json";
+import "./style.less";
+import i18n from "@utils/i18n";
 
 const mapToState = ({ account }) => {
     return {
@@ -124,8 +126,32 @@ const toPool = pool => {
 };
 
 let scrollTop = 0;
+
+enum SORTINGS {
+    fee = "sort_fee",
+    performance = "sort_perfomance",
+    status = "sort_status"
+}
+
+const sortBy = (field: string, seq = false) => (
+    pools: Array<Ipool>
+): Array<Ipool> => {
+    return pools.sort((a, b) =>
+        seq ? b[field] - a[field] : a[field] - b[field]
+    );
+};
+
+const sortings = [SORTINGS.status, SORTINGS.fee, SORTINGS.performance];
 const poolList = () => {
-    const pools = usePools();
+    const poolsOrigin = usePools();
+    const [currSorting, setSorting] = React.useState(SORTINGS.status);
+    const [sortVisiable, setSortVisiable] = React.useState(false);
+    const pools =
+        currSorting === SORTINGS.fee
+            ? sortBy("fee")(poolsOrigin)
+            : currSorting === SORTINGS.performance
+            ? sortBy("performance", true)(poolsOrigin)
+            : poolsOrigin;
 
     React.useEffect(() => {
         if (Object.keys(pools).length === 0) {
@@ -147,6 +173,15 @@ const poolList = () => {
             element.removeEventListener("scroll", handleScollTop);
         };
     });
+
+    // handlers;
+    const openSorting = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        e.preventDefault();
+        setSortVisiable(!sortVisiable);
+    };
+
+    // renders
     return (
         <MoreList
             onReachEnd={onReachEnd}
@@ -156,6 +191,42 @@ const poolList = () => {
             renderItem={pool => {
                 return <PoolItem pool={pool} toPool={toPool} />;
             }}
+            title={() => (
+                <div className="sorting-container">
+                    <div
+                        className={
+                            sortVisiable ? "sort-title open" : "sort-title"
+                        }
+                        onClick={openSorting}
+                    >
+                        {i18n.t(currSorting.toString())}
+                    </div>
+                    <div
+                        className={
+                            sortVisiable
+                                ? "sort-data-set open"
+                                : "sort-data-set"
+                        }
+                    >
+                        <ul>
+                            {sortings.map(el => (
+                                <li
+                                    className={
+                                        el === currSorting ? "selected" : ""
+                                    }
+                                    onClick={e => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        setSorting(el);
+                                    }}
+                                >
+                                    {i18n.t(el.toString())}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+            )}
         />
     );
 };
