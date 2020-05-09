@@ -10,23 +10,24 @@
     text-align: right;
     height: 35px;
     line-height: 35px;
-    padding-right: 35px;
+    padding-right: 25px;
     vertical-align: middle;
     color: #f50;
 
     &:after {
         position: absolute;
+        top: 7px;
         right: 0px;
         content: '';
-        height: 35px;
-        width: 35px;
+        height: 20px;
+        width: 20px;
         background: url('../../img/arrow_down.png') no-repeat center;
-        background-size: 60%;
+        background-size: contain;
     }
 }
 
 .sort-title.open {
-    &::before {
+    &:before {
         position: fixed;
         content: '';
         top: 0;
@@ -38,12 +39,13 @@
 
     &:after {
         position: absolute;
+        top: 7px;
         right: 0px;
         content: '';
-        height: 30px;
-        width: 30px;
+        height: 20px;
+        width: 20px;
         background: url('../../img/arrow_up.png') no-repeat center;
-        background-size: 60%;
+        background-size: contain;
 
     }
 }
